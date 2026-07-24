@@ -32,6 +32,14 @@ class ProductController extends Controller
             'products' => $products,
         ]);
     }
+    public function show(Product $product): Response
+    {
+        $this->authorize('view', $product);
+
+        return Inertia::render('Admin/Products/Show', [
+            'product' => $product->load(['images', 'category', 'brand', 'store', 'allowedCountries']),
+        ]);
+    }
 
     public function create(): Response
     {
