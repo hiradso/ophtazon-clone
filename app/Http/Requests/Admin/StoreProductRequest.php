@@ -20,7 +20,7 @@ class StoreProductRequest extends FormRequest
             'reference' => ['required', 'string', 'max:255', 'unique:products,reference'],
             'title' => ['required', 'array'],
             'title.en' => ['required', 'string', 'max:255'],
-            'title.fr' => ['required', 'string', 'max:255'],
+            'title.fr' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'array'],
             'description.en' => ['nullable', 'string'],
             'description.fr' => ['nullable', 'string'],

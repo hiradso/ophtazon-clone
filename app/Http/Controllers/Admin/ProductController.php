@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Country;
+use App\Models\ProductImage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreProductRequest;
@@ -73,6 +77,7 @@ class ProductController extends Controller
             'categories' => Category::where('is_active', true)->get(['id', 'name']),
             'brands' => Brand::where('is_active', true)->get(['id', 'name']),
             'stores' => $this->availableStores(),
+            'allCountries' => Country::where('is_active', true)->get(['id', 'name']),
         ]);
     }
 
@@ -81,7 +86,7 @@ class ProductController extends Controller
         $product->update($request->validated());
 
         return redirect()
-            ->route('admin.products.edit', $product)
+            ->route('admin.products.index', $product)
             ->with('success', 'Product updated successfully.');
     }
 
@@ -94,6 +99,50 @@ class ProductController extends Controller
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Product deleted successfully.');
+    }
+    public function storeImage(Request $request, Product $product): RedirectResponse
+    {
+        $this->authorize('update', $product);
+
+        $request->validate([
+            'image' => ['required', 'image', 'max:4096'],
+        ]);
+
+        $path = $request->file('image')->store('products/' . $product->id, 'public');
+
+        $nextPosition = $product->images()->max('position');
+        $nextPosition = is_null($nextPosition) ? 0 : $nextPosition + 1;
+
+        $product->images()->create([
+            'url' => $path,
+            'position' => $nextPosition,
+        ]);
+
+        return back()->with('success', 'Image uploaded.');
+    }
+
+    public function destroyImage(Product $product, ProductImage $image): RedirectResponse
+    {
+        $this->authorize('update', $product);
+
+        Storage::disk('public')->delete($image->url);
+        $image->delete();
+
+        return back()->with('success', 'Image removed.');
+    }
+
+    public function syncCountries(Request $request, Product $product): RedirectResponse
+    {
+        $this->authorize('update', $product);
+
+        $request->validate([
+            'country_ids' => ['array'],
+            'country_ids.*' => ['integer', 'exists:countries,id'],
+        ]);
+
+        $product->allowedCountries()->sync($request->input('country_ids', []));
+
+        return back()->with('success', 'Country restrictions updated.');
     }
 
     private function availableStores()
