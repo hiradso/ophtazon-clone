@@ -1,56 +1,64 @@
-import { useEffect, useState } from 'react';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { toast } from 'sonner';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from '@/components/ui/tabs';
+import { useEffect, useState } from "react";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
+import { toast } from "sonner";
+import AdminLayout from "@/Layouts/AdminLayout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { ArrowLeft, Trash2, Upload } from 'lucide-react';
+} from "@/components/ui/select";
+import { ArrowLeft, Trash2, Upload } from "lucide-react";
 
-const CONDITION_LABELS = { new: 'New', used: 'Used', refurbished: 'Refurbished' };
+const CONDITION_LABELS = {
+    new: "New",
+    used: "Used",
+    refurbished: "Refurbished",
+};
 const STATUS_LABELS = {
-    draft: 'Draft',
-    pending_review: 'Pending Review',
-    available: 'Available',
-    reserved: 'Reserved',
-    sold: 'Sold',
-    archived: 'Archived',
+    draft: "Draft",
+    pending_review: "Pending Review",
+    available: "Available",
+    reserved: "Reserved",
+    sold: "Sold",
+    archived: "Archived",
 };
 
-export default function Edit({ product, categories, brands, stores, allCountries }) {
+export default function Edit({
+    product,
+    categories,
+    brands,
+    stores,
+    allCountries,
+}) {
     const { flash } = usePage().props;
 
     const { data, setData, put, processing, errors } = useForm({
-        reference: product.reference ?? '',
-        title: { en: product.title?.en ?? '', fr: product.title?.fr ?? '' },
-        description: { en: product.description?.en ?? '', fr: product.description?.fr ?? '' },
-        slug: product.slug ?? '',
-        category_id: product.category_id ? String(product.category_id) : '',
-        brand_id: product.brand_id ? String(product.brand_id) : '',
-        store_id: product.store_id ? String(product.store_id) : '',
-        condition: product.condition ?? '',
-        status: product.status ?? 'draft',
-        price: product.price ?? '',
-        currency: product.currency ?? 'EUR',
-        manufacture_year: product.manufacture_year ?? '',
-        warranty_months: product.warranty_months ?? '0',
+        reference: product.reference ?? "",
+        title: { en: product.title?.en ?? "", fr: product.title?.fr ?? "" },
+        description: {
+            en: product.description?.en ?? "",
+            fr: product.description?.fr ?? "",
+        },
+        slug: product.slug ?? "",
+        category_id: product.category_id ? String(product.category_id) : "",
+        brand_id: product.brand_id ? String(product.brand_id) : "",
+        store_id: product.store_id ? String(product.store_id) : "",
+        condition: product.condition ?? "",
+        status: product.status ?? "draft",
+        price: product.price ?? "",
+        currency: product.currency ?? "EUR",
+        manufacture_year: product.manufacture_year ?? "",
+        warranty_months: product.warranty_months ?? "0",
         is_checked: product.is_checked ?? false,
     });
 
@@ -62,18 +70,23 @@ export default function Edit({ product, categories, brands, stores, allCountries
 
     const submit = (e) => {
         e.preventDefault();
-        put(route('admin.products.update', product.id));
+        put(route("admin.products.update", product.id));
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
+            breadcrumbs={[
+                { label: "Dashboard", href: route("dashboard") },
+                { label: "Products", href: route("admin.products.index") },
+                { label: product.title?.en ?? product.reference },
+            ]}
             header={
                 <div className="flex items-center gap-3">
                     <Button
                         variant="ghost"
                         size="icon"
                         nativeButton={false}
-                        render={<Link href={route('admin.products.index')} />}
+                        render={<Link href={route("admin.products.index")} />}
                     >
                         <ArrowLeft className="size-4" />
                     </Button>
@@ -81,7 +94,9 @@ export default function Edit({ product, categories, brands, stores, allCountries
                         <h2 className="text-xl font-semibold tracking-tight text-foreground">
                             Edit Product
                         </h2>
-                        <p className="text-sm text-muted-foreground">{product.reference}</p>
+                        <p className="text-sm text-muted-foreground">
+                            {product.reference}
+                        </p>
                     </div>
                 </div>
             }
@@ -90,7 +105,11 @@ export default function Edit({ product, categories, brands, stores, allCountries
 
             <div className="py-8">
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-6">
-                    <form id="product-form" onSubmit={submit} className="space-y-6">
+                    <form
+                        id="product-form"
+                        onSubmit={submit}
+                        className="space-y-6"
+                    >
                         {/* اطلاعات پایه چندزبانه */}
                         <Card>
                             <CardHeader>
@@ -99,59 +118,93 @@ export default function Edit({ product, categories, brands, stores, allCountries
                             <CardContent className="space-y-4">
                                 <Tabs defaultValue="en">
                                     <TabsList>
-                                        <TabsTrigger value="en">English</TabsTrigger>
-                                        <TabsTrigger value="fr">Français</TabsTrigger>
+                                        <TabsTrigger value="en">
+                                            English
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fr">
+                                            Français
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    <TabsContent value="en" className="space-y-4">
+                                    <TabsContent
+                                        value="en"
+                                        className="space-y-4"
+                                    >
                                         <div className="space-y-1.5">
-                                            <Label htmlFor="title_en">Title (EN)</Label>
+                                            <Label htmlFor="title_en">
+                                                Title (EN)
+                                            </Label>
                                             <Input
                                                 id="title_en"
                                                 value={data.title.en}
                                                 onChange={(e) =>
-                                                    setData('title', { ...data.title, en: e.target.value })
+                                                    setData("title", {
+                                                        ...data.title,
+                                                        en: e.target.value,
+                                                    })
                                                 }
                                             />
-                                            {errors['title.en'] && (
-                                                <p className="text-sm text-destructive">{errors['title.en']}</p>
+                                            {errors["title.en"] && (
+                                                <p className="text-sm text-destructive">
+                                                    {errors["title.en"]}
+                                                </p>
                                             )}
                                         </div>
                                         <div className="space-y-1.5">
-                                            <Label htmlFor="description_en">Description (EN)</Label>
+                                            <Label htmlFor="description_en">
+                                                Description (EN)
+                                            </Label>
                                             <Textarea
                                                 id="description_en"
                                                 rows={4}
                                                 value={data.description.en}
                                                 onChange={(e) =>
-                                                    setData('description', { ...data.description, en: e.target.value })
+                                                    setData("description", {
+                                                        ...data.description,
+                                                        en: e.target.value,
+                                                    })
                                                 }
                                             />
                                         </div>
                                     </TabsContent>
 
-                                    <TabsContent value="fr" className="space-y-4">
+                                    <TabsContent
+                                        value="fr"
+                                        className="space-y-4"
+                                    >
                                         <div className="space-y-1.5">
-                                            <Label htmlFor="title_fr">Title (FR)</Label>
+                                            <Label htmlFor="title_fr">
+                                                Title (FR)
+                                            </Label>
                                             <Input
                                                 id="title_fr"
                                                 value={data.title.fr}
                                                 onChange={(e) =>
-                                                    setData('title', { ...data.title, fr: e.target.value })
+                                                    setData("title", {
+                                                        ...data.title,
+                                                        fr: e.target.value,
+                                                    })
                                                 }
                                             />
-                                            {errors['title.fr'] && (
-                                                <p className="text-sm text-destructive">{errors['title.fr']}</p>
+                                            {errors["title.fr"] && (
+                                                <p className="text-sm text-destructive">
+                                                    {errors["title.fr"]}
+                                                </p>
                                             )}
                                         </div>
                                         <div className="space-y-1.5">
-                                            <Label htmlFor="description_fr">Description (FR)</Label>
+                                            <Label htmlFor="description_fr">
+                                                Description (FR)
+                                            </Label>
                                             <Textarea
                                                 id="description_fr"
                                                 rows={4}
                                                 value={data.description.fr}
                                                 onChange={(e) =>
-                                                    setData('description', { ...data.description, fr: e.target.value })
+                                                    setData("description", {
+                                                        ...data.description,
+                                                        fr: e.target.value,
+                                                    })
                                                 }
                                             />
                                         </div>
@@ -162,14 +215,23 @@ export default function Edit({ product, categories, brands, stores, allCountries
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="reference">Reference</Label>
+                                        <Label htmlFor="reference">
+                                            Reference
+                                        </Label>
                                         <Input
                                             id="reference"
                                             value={data.reference}
-                                            onChange={(e) => setData('reference', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "reference",
+                                                    e.target.value,
+                                                )
+                                            }
                                         />
                                         {errors.reference && (
-                                            <p className="text-sm text-destructive">{errors.reference}</p>
+                                            <p className="text-sm text-destructive">
+                                                {errors.reference}
+                                            </p>
                                         )}
                                     </div>
                                     <div className="space-y-1.5">
@@ -177,10 +239,14 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                         <Input
                                             id="slug"
                                             value={data.slug}
-                                            onChange={(e) => setData('slug', e.target.value)}
+                                            onChange={(e) =>
+                                                setData("slug", e.target.value)
+                                            }
                                         />
                                         {errors.slug && (
-                                            <p className="text-sm text-destructive">{errors.slug}</p>
+                                            <p className="text-sm text-destructive">
+                                                {errors.slug}
+                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -197,27 +263,39 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                     <Label>Category</Label>
                                     <Select
                                         value={data.category_id}
-                                        onValueChange={(value) => setData('category_id', value)}
+                                        onValueChange={(value) =>
+                                            setData("category_id", value)
+                                        }
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
                                                 {(value) =>
                                                     value
-                                                        ? categories.find((c) => String(c.id) === value)?.name.en
-                                                        : 'Select category'
+                                                        ? categories.find(
+                                                              (c) =>
+                                                                  String(
+                                                                      c.id,
+                                                                  ) === value,
+                                                          )?.name.en
+                                                        : "Select category"
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {categories.map((category) => (
-                                                <SelectItem key={category.id} value={String(category.id)}>
+                                                <SelectItem
+                                                    key={category.id}
+                                                    value={String(category.id)}
+                                                >
                                                     {category.name.en}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                     {errors.category_id && (
-                                        <p className="text-sm text-destructive">{errors.category_id}</p>
+                                        <p className="text-sm text-destructive">
+                                            {errors.category_id}
+                                        </p>
                                     )}
                                 </div>
 
@@ -225,20 +303,30 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                     <Label>Brand</Label>
                                     <Select
                                         value={data.brand_id}
-                                        onValueChange={(value) => setData('brand_id', value)}
+                                        onValueChange={(value) =>
+                                            setData("brand_id", value)
+                                        }
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
                                                 {(value) =>
                                                     value
-                                                        ? brands.find((b) => String(b.id) === value)?.name
-                                                        : 'No brand'
+                                                        ? brands.find(
+                                                              (b) =>
+                                                                  String(
+                                                                      b.id,
+                                                                  ) === value,
+                                                          )?.name
+                                                        : "No brand"
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {brands.map((brand) => (
-                                                <SelectItem key={brand.id} value={String(brand.id)}>
+                                                <SelectItem
+                                                    key={brand.id}
+                                                    value={String(brand.id)}
+                                                >
                                                     {brand.name}
                                                 </SelectItem>
                                             ))}
@@ -250,27 +338,39 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                     <Label>Store</Label>
                                     <Select
                                         value={data.store_id}
-                                        onValueChange={(value) => setData('store_id', value)}
+                                        onValueChange={(value) =>
+                                            setData("store_id", value)
+                                        }
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
                                                 {(value) =>
                                                     value
-                                                        ? stores.find((s) => String(s.id) === value)?.name
-                                                        : 'Select store'
+                                                        ? stores.find(
+                                                              (s) =>
+                                                                  String(
+                                                                      s.id,
+                                                                  ) === value,
+                                                          )?.name
+                                                        : "Select store"
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {stores.map((store) => (
-                                                <SelectItem key={store.id} value={String(store.id)}>
+                                                <SelectItem
+                                                    key={store.id}
+                                                    value={String(store.id)}
+                                                >
                                                     {store.name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                     {errors.store_id && (
-                                        <p className="text-sm text-destructive">{errors.store_id}</p>
+                                        <p className="text-sm text-destructive">
+                                            {errors.store_id}
+                                        </p>
                                     )}
                                 </div>
                             </CardContent>
@@ -289,10 +389,14 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                         type="number"
                                         step="0.01"
                                         value={data.price}
-                                        onChange={(e) => setData('price', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("price", e.target.value)
+                                        }
                                     />
                                     {errors.price && (
-                                        <p className="text-sm text-destructive">{errors.price}</p>
+                                        <p className="text-sm text-destructive">
+                                            {errors.price}
+                                        </p>
                                     )}
                                 </div>
 
@@ -302,7 +406,12 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                         id="currency"
                                         maxLength={3}
                                         value={data.currency}
-                                        onChange={(e) => setData('currency', e.target.value.toUpperCase())}
+                                        onChange={(e) =>
+                                            setData(
+                                                "currency",
+                                                e.target.value.toUpperCase(),
+                                            )
+                                        }
                                     />
                                 </div>
 
@@ -310,21 +419,37 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                     <Label>Condition</Label>
                                     <Select
                                         value={data.condition}
-                                        onValueChange={(value) => setData('condition', value)}
+                                        onValueChange={(value) =>
+                                            setData("condition", value)
+                                        }
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {(value) => value ? CONDITION_LABELS[value] : 'Select condition'}
+                                                {(value) =>
+                                                    value
+                                                        ? CONDITION_LABELS[
+                                                              value
+                                                          ]
+                                                        : "Select condition"
+                                                }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="new">New</SelectItem>
-                                            <SelectItem value="used">Used</SelectItem>
-                                            <SelectItem value="refurbished">Refurbished</SelectItem>
+                                            <SelectItem value="new">
+                                                New
+                                            </SelectItem>
+                                            <SelectItem value="used">
+                                                Used
+                                            </SelectItem>
+                                            <SelectItem value="refurbished">
+                                                Refurbished
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.condition && (
-                                        <p className="text-sm text-destructive">{errors.condition}</p>
+                                        <p className="text-sm text-destructive">
+                                            {errors.condition}
+                                        </p>
                                     )}
                                 </div>
 
@@ -332,41 +457,71 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                     <Label>Status</Label>
                                     <Select
                                         value={data.status}
-                                        onValueChange={(value) => setData('status', value)}
+                                        onValueChange={(value) =>
+                                            setData("status", value)
+                                        }
                                     >
                                         <SelectTrigger>
                                             <SelectValue>
-                                                {(value) => STATUS_LABELS[value]}
+                                                {(value) =>
+                                                    STATUS_LABELS[value]
+                                                }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="draft">Draft</SelectItem>
-                                            <SelectItem value="pending_review">Pending Review</SelectItem>
-                                            <SelectItem value="available">Available</SelectItem>
-                                            <SelectItem value="reserved">Reserved</SelectItem>
-                                            <SelectItem value="sold">Sold</SelectItem>
-                                            <SelectItem value="archived">Archived</SelectItem>
+                                            <SelectItem value="draft">
+                                                Draft
+                                            </SelectItem>
+                                            <SelectItem value="pending_review">
+                                                Pending Review
+                                            </SelectItem>
+                                            <SelectItem value="available">
+                                                Available
+                                            </SelectItem>
+                                            <SelectItem value="reserved">
+                                                Reserved
+                                            </SelectItem>
+                                            <SelectItem value="sold">
+                                                Sold
+                                            </SelectItem>
+                                            <SelectItem value="archived">
+                                                Archived
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="manufacture_year">Manufacture Year</Label>
+                                    <Label htmlFor="manufacture_year">
+                                        Manufacture Year
+                                    </Label>
                                     <Input
                                         id="manufacture_year"
                                         type="number"
-                                        value={data.manufacture_year ?? ''}
-                                        onChange={(e) => setData('manufacture_year', e.target.value)}
+                                        value={data.manufacture_year ?? ""}
+                                        onChange={(e) =>
+                                            setData(
+                                                "manufacture_year",
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="warranty_months">Warranty (months)</Label>
+                                    <Label htmlFor="warranty_months">
+                                        Warranty (months)
+                                    </Label>
                                     <Input
                                         id="warranty_months"
                                         type="number"
                                         value={data.warranty_months}
-                                        onChange={(e) => setData('warranty_months', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "warranty_months",
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                 </div>
 
@@ -374,9 +529,13 @@ export default function Edit({ product, categories, brands, stores, allCountries
                                     <Switch
                                         id="is_checked"
                                         checked={data.is_checked}
-                                        onCheckedChange={(checked) => setData('is_checked', checked)}
+                                        onCheckedChange={(checked) =>
+                                            setData("is_checked", checked)
+                                        }
                                     />
-                                    <Label htmlFor="is_checked">Checked by Ophtazon</Label>
+                                    <Label htmlFor="is_checked">
+                                        Checked by Ophtazon
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -386,7 +545,10 @@ export default function Edit({ product, categories, brands, stores, allCountries
                     <ProductImages product={product} />
 
                     {/* محدودیت فروش کشوری — فرم مستقل دیگر */}
-                    <ProductCountries product={product} allCountries={allCountries} />
+                    <ProductCountries
+                        product={product}
+                        allCountries={allCountries}
+                    />
 
                     {/* دکمه‌های ذخیره در پایین‌ترین بخش صفحه، ولی با ویژگی form همچنان به فرم اصلی محصول وصل هستند */}
                     <div className="flex justify-end gap-3">
@@ -394,17 +556,23 @@ export default function Edit({ product, categories, brands, stores, allCountries
                             type="button"
                             variant="outline"
                             nativeButton={false}
-                            render={<Link href={route('admin.products.index')} />}
+                            render={
+                                <Link href={route("admin.products.index")} />
+                            }
                         >
                             Back to list
                         </Button>
-                        <Button type="submit" form="product-form" disabled={processing}>
-                            {processing ? 'Saving...' : 'Save Changes'}
+                        <Button
+                            type="submit"
+                            form="product-form"
+                            disabled={processing}
+                        >
+                            {processing ? "Saving..." : "Save Changes"}
                         </Button>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }
 
@@ -415,15 +583,17 @@ function ProductImages({ product }) {
 
     const submitImage = (e) => {
         e.preventDefault();
-        post(route('admin.products.images.store', product.id), {
+        post(route("admin.products.images.store", product.id), {
             forceFormData: true,
-            onSuccess: () => reset('image'),
+            onSuccess: () => reset("image"),
         });
     };
 
     const deleteImage = (imageId) => {
-        if (!confirm('Remove this image?')) return;
-        router.delete(route('admin.products.images.destroy', [product.id, imageId]));
+        if (!confirm("Remove this image?")) return;
+        router.delete(
+            route("admin.products.images.destroy", [product.id, imageId]),
+        );
     };
 
     return (
@@ -435,7 +605,10 @@ function ProductImages({ product }) {
                 {product.images.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                         {product.images.map((image) => (
-                            <div key={image.id} className="group relative overflow-hidden rounded-lg border border-border">
+                            <div
+                                key={image.id}
+                                className="group relative overflow-hidden rounded-lg border border-border"
+                            >
                                 <img
                                     src={`/storage/${image.url}`}
                                     alt=""
@@ -465,9 +638,15 @@ function ProductImages({ product }) {
                             id="image"
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setData('image', e.target.files[0])}
+                            onChange={(e) =>
+                                setData("image", e.target.files[0])
+                            }
                         />
-                        {errors.image && <p className="text-sm text-destructive">{errors.image}</p>}
+                        {errors.image && (
+                            <p className="text-sm text-destructive">
+                                {errors.image}
+                            </p>
+                        )}
                     </div>
                     <Button type="submit" disabled={processing || !data.image}>
                         <Upload className="mr-1.5 size-4" />
@@ -481,7 +660,7 @@ function ProductImages({ product }) {
 
 function ProductCountries({ product, allCountries }) {
     const [selected, setSelected] = useState(
-        product.allowed_countries?.map((c) => c.id) ?? []
+        product.allowed_countries?.map((c) => c.id) ?? [],
     );
     const [processing, setProcessing] = useState(false);
 
@@ -489,16 +668,16 @@ function ProductCountries({ product, allCountries }) {
         setSelected((prev) =>
             prev.includes(countryId)
                 ? prev.filter((id) => id !== countryId)
-                : [...prev, countryId]
+                : [...prev, countryId],
         );
     };
 
     const save = () => {
         setProcessing(true);
         router.put(
-            route('admin.products.countries.sync', product.id),
+            route("admin.products.countries.sync", product.id),
             { country_ids: selected },
-            { onFinish: () => setProcessing(false) }
+            { onFinish: () => setProcessing(false) },
         );
     };
 
@@ -509,7 +688,8 @@ function ProductCountries({ product, allCountries }) {
             </CardHeader>
             <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                    Leave all unchecked to sell everywhere. Select specific countries to restrict sales.
+                    Leave all unchecked to sell everywhere. Select specific
+                    countries to restrict sales.
                 </p>
 
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -531,7 +711,7 @@ function ProductCountries({ product, allCountries }) {
 
                 <div className="flex justify-end">
                     <Button onClick={save} disabled={processing}>
-                        {processing ? 'Saving...' : 'Save Countries'}
+                        {processing ? "Saving..." : "Save Countries"}
                     </Button>
                 </div>
             </CardContent>

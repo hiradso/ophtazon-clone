@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { toast } from "sonner";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,37 +26,21 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
+import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
 
-// این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
-// خودِ رنگ‌ها در resources/css/app.css قابل تغییرند؛ این‌جا فقط اسم وضعیت‌ها هستند.
-const statusColor = {
-    draft: "bg-status-draft/15 text-status-draft border-status-draft/30",
-    pending_review:
-        "bg-status-pending/15 text-status-pending border-status-pending/30",
-    available:
-        "bg-status-available/15 text-status-available border-status-available/30",
-    reserved:
-        "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
-    sold: "bg-status-sold/15 text-status-sold border-status-sold/30",
-    archived:
-        "bg-status-archived/15 text-status-archived border-status-archived/30",
-};
-
-export default function Index({ products }) {
+export default function Index({ stores }) {
     const { flash } = usePage().props;
-    const [productToDelete, setProductToDelete] = useState(null);
+    const [storeToDelete, setStoreToDelete] = useState(null);
 
     useEffect(() => {
-        if (flash?.success) {
-            toast.success(flash.success);
-        }
+        if (flash?.success) toast.success(flash.success);
+        if (flash?.error) toast.error(flash.error);
     }, [flash]);
 
     const confirmDelete = () => {
-        router.delete(route("admin.products.destroy", productToDelete.id), {
-            onSuccess: () => setProductToDelete(null),
+        router.delete(route("admin.stores.destroy", storeToDelete.id), {
+            onSuccess: () => setStoreToDelete(null),
         });
     };
 
@@ -65,33 +48,32 @@ export default function Index({ products }) {
         <AdminLayout
             breadcrumbs={[
                 { label: "Dashboard", href: route("dashboard") },
-                { label: "Products" },
+                { label: "Stores" },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Products
+                    Stores
                 </h2>
             }
         >
-            <Head title="Products" />
+            <Head title="Stores" />
 
             <div className="py-8">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {products.total}{" "}
-                            {products.total === 1 ? "product" : "products"}{" "}
-                            total
+                            {stores.length}{" "}
+                            {stores.length === 1 ? "store" : "stores"}
                         </p>
 
                         <Button
                             nativeButton={false}
                             render={
-                                <Link href={route("admin.products.create")} />
+                                <Link href={route("admin.stores.create")} />
                             }
                         >
                             <Plus className="mr-1.5 size-4" />
-                            Add product
+                            Add store
                         </Button>
                     </div>
 
@@ -100,60 +82,53 @@ export default function Index({ products }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Reference</TableHead>
-                                        <TableHead>Title</TableHead>
-                                        <TableHead>Category</TableHead>
-                                        <TableHead>Store</TableHead>
-                                        <TableHead>Price</TableHead>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Country</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Products</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {products.data.length === 0 && (
+                                    {stores.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={7}
+                                                colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No products yet. Add the first
-                                                one to get started.
+                                                No stores yet. Add the first one
+                                                to get started.
                                             </TableCell>
                                         </TableRow>
                                     )}
 
-                                    {products.data.map((product) => (
-                                        <TableRow key={product.id}>
-                                            <TableCell className="text-muted-foreground">
-                                                {product.reference}
-                                            </TableCell>
+                                    {stores.map((store) => (
+                                        <TableRow key={store.id}>
                                             <TableCell className="font-medium">
-                                                {product.title.en}
+                                                {store.name}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {product.category?.name?.en ??
-                                                    "—"}
+                                                {store.country?.name ?? "—"}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {product.store?.name ?? "—"}
+                                                {store.email ?? "—"}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {product.price}{" "}
-                                                {product.currency}
+                                                {store.products_count}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant="outline"
                                                     className={
-                                                        statusColor[
-                                                            product.status
-                                                        ] ?? ""
+                                                        store.is_active
+                                                            ? "bg-status-available/15 text-status-available border-status-available/30"
+                                                            : "bg-muted text-muted-foreground border-border"
                                                     }
                                                 >
-                                                    {product.status.replace(
-                                                        "_",
-                                                        " ",
-                                                    )}
+                                                    {store.is_active
+                                                        ? "Active"
+                                                        : "Inactive"}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
@@ -173,21 +148,8 @@ export default function Index({ products }) {
                                                             render={
                                                                 <Link
                                                                     href={route(
-                                                                        "admin.products.show",
-                                                                        product.id,
-                                                                    )}
-                                                                />
-                                                            }
-                                                        >
-                                                            <Eye className="mr-2 size-4" />
-                                                            View
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            render={
-                                                                <Link
-                                                                    href={route(
-                                                                        "admin.products.edit",
-                                                                        product.id,
+                                                                        "admin.stores.edit",
+                                                                        store.id,
                                                                     )}
                                                                 />
                                                             }
@@ -198,8 +160,8 @@ export default function Index({ products }) {
                                                         <DropdownMenuItem
                                                             variant="destructive"
                                                             onClick={() =>
-                                                                setProductToDelete(
-                                                                    product,
+                                                                setStoreToDelete(
+                                                                    store,
                                                                 )
                                                             }
                                                         >
@@ -215,53 +177,21 @@ export default function Index({ products }) {
                             </Table>
                         </CardContent>
                     </Card>
-
-                    {products.links.length > 3 && (
-                        <div className="mt-6 flex flex-wrap gap-1">
-                            {products.links.map((link, index) =>
-                                link.url ? (
-                                    <Button
-                                        key={index}
-                                        nativeButton={false}
-                                        render={<Link href={link.url} />}
-                                        variant={
-                                            link.active ? "default" : "ghost"
-                                        }
-                                        size="sm"
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ) : (
-                                    <Button
-                                        key={index}
-                                        variant="ghost"
-                                        size="sm"
-                                        disabled
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ),
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
 
             <Dialog
-                open={!!productToDelete}
-                onOpenChange={(open) => !open && setProductToDelete(null)}
+                open={!!storeToDelete}
+                onOpenChange={(open) => !open && setStoreToDelete(null)}
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this product?</DialogTitle>
+                        <DialogTitle>Delete this store?</DialogTitle>
                         <DialogDescription>
-                            {productToDelete && (
+                            {storeToDelete && (
                                 <>
-                                    "{productToDelete.title.en}" will be moved
-                                    to trash and can be restored later by an
-                                    admin.
+                                    "{storeToDelete.name}" will be permanently
+                                    deleted. This cannot be undone.
                                 </>
                             )}
                         </DialogDescription>
@@ -269,7 +199,7 @@ export default function Index({ products }) {
                     <DialogFooter>
                         <Button
                             variant="outline"
-                            onClick={() => setProductToDelete(null)}
+                            onClick={() => setStoreToDelete(null)}
                         >
                             Cancel
                         </Button>

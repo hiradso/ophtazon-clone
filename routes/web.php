@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +40,9 @@ Route::middleware(['auth', 'role:admin,staff'])
             ->name('products.images.destroy');
         Route::put('products/{product}/countries', [ProductController::class, 'syncCountries'])
             ->name('products.countries.sync');
+        Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('brands', BrandController::class)->except(['show']);
+        Route::resource('stores', StoreController::class)->except(['show']);
     });
 
 require __DIR__ . '/auth.php';

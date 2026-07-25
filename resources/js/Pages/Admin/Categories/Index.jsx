@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { toast } from "sonner";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,37 +27,20 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
-// این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
-// خودِ رنگ‌ها در resources/css/app.css قابل تغییرند؛ این‌جا فقط اسم وضعیت‌ها هستند.
-const statusColor = {
-    draft: "bg-status-draft/15 text-status-draft border-status-draft/30",
-    pending_review:
-        "bg-status-pending/15 text-status-pending border-status-pending/30",
-    available:
-        "bg-status-available/15 text-status-available border-status-available/30",
-    reserved:
-        "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
-    sold: "bg-status-sold/15 text-status-sold border-status-sold/30",
-    archived:
-        "bg-status-archived/15 text-status-archived border-status-archived/30",
-};
-
-export default function Index({ products }) {
+export default function Index({ categories }) {
     const { flash } = usePage().props;
-    const [productToDelete, setProductToDelete] = useState(null);
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
 
     useEffect(() => {
-        if (flash?.success) {
-            toast.success(flash.success);
-        }
+        if (flash?.success) toast.success(flash.success);
+        if (flash?.error) toast.error(flash.error);
     }, [flash]);
 
     const confirmDelete = () => {
-        router.delete(route("admin.products.destroy", productToDelete.id), {
-            onSuccess: () => setProductToDelete(null),
+        router.delete(route("admin.categories.destroy", categoryToDelete.id), {
+            onSuccess: () => setCategoryToDelete(null),
         });
     };
 
@@ -65,33 +48,34 @@ export default function Index({ products }) {
         <AdminLayout
             breadcrumbs={[
                 { label: "Dashboard", href: route("dashboard") },
-                { label: "Products" },
+                { label: "Categories" },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Products
+                    Categories
                 </h2>
             }
         >
-            <Head title="Products" />
+            <Head title="Categories" />
 
             <div className="py-8">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {products.total}{" "}
-                            {products.total === 1 ? "product" : "products"}{" "}
-                            total
+                            {categories.length}{" "}
+                            {categories.length === 1
+                                ? "category"
+                                : "categories"}
                         </p>
 
                         <Button
                             nativeButton={false}
                             render={
-                                <Link href={route("admin.products.create")} />
+                                <Link href={route("admin.categories.create")} />
                             }
                         >
                             <Plus className="mr-1.5 size-4" />
-                            Add product
+                            Add category
                         </Button>
                     </div>
 
@@ -100,60 +84,57 @@ export default function Index({ products }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Reference</TableHead>
-                                        <TableHead>Title</TableHead>
-                                        <TableHead>Category</TableHead>
-                                        <TableHead>Store</TableHead>
-                                        <TableHead>Price</TableHead>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Slug</TableHead>
+                                        <TableHead>Parent</TableHead>
+                                        <TableHead>Products</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {products.data.length === 0 && (
+                                    {categories.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={7}
+                                                colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No products yet. Add the first
+                                                No categories yet. Add the first
                                                 one to get started.
                                             </TableCell>
                                         </TableRow>
                                     )}
 
-                                    {products.data.map((product) => (
-                                        <TableRow key={product.id}>
-                                            <TableCell className="text-muted-foreground">
-                                                {product.reference}
-                                            </TableCell>
+                                    {categories.map((category) => (
+                                        <TableRow key={category.id}>
                                             <TableCell className="font-medium">
-                                                {product.title.en}
+                                                {category.name.en}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {product.category?.name?.en ??
-                                                    "—"}
+                                                {category.slug}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {product.store?.name ?? "—"}
+                                                {categories.find(
+                                                    (c) =>
+                                                        c.id ===
+                                                        category.parent_id,
+                                                )?.name.en ?? "—"}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {product.price}{" "}
-                                                {product.currency}
+                                                {category.products_count}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant="outline"
                                                     className={
-                                                        statusColor[
-                                                            product.status
-                                                        ] ?? ""
+                                                        category.is_active
+                                                            ? "bg-status-available/15 text-status-available border-status-available/30"
+                                                            : "bg-muted text-muted-foreground border-border"
                                                     }
                                                 >
-                                                    {product.status.replace(
-                                                        "_",
-                                                        " ",
-                                                    )}
+                                                    {category.is_active
+                                                        ? "Active"
+                                                        : "Inactive"}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
@@ -173,21 +154,8 @@ export default function Index({ products }) {
                                                             render={
                                                                 <Link
                                                                     href={route(
-                                                                        "admin.products.show",
-                                                                        product.id,
-                                                                    )}
-                                                                />
-                                                            }
-                                                        >
-                                                            <Eye className="mr-2 size-4" />
-                                                            View
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            render={
-                                                                <Link
-                                                                    href={route(
-                                                                        "admin.products.edit",
-                                                                        product.id,
+                                                                        "admin.categories.edit",
+                                                                        category.id,
                                                                     )}
                                                                 />
                                                             }
@@ -198,8 +166,8 @@ export default function Index({ products }) {
                                                         <DropdownMenuItem
                                                             variant="destructive"
                                                             onClick={() =>
-                                                                setProductToDelete(
-                                                                    product,
+                                                                setCategoryToDelete(
+                                                                    category,
                                                                 )
                                                             }
                                                         >
@@ -215,53 +183,21 @@ export default function Index({ products }) {
                             </Table>
                         </CardContent>
                     </Card>
-
-                    {products.links.length > 3 && (
-                        <div className="mt-6 flex flex-wrap gap-1">
-                            {products.links.map((link, index) =>
-                                link.url ? (
-                                    <Button
-                                        key={index}
-                                        nativeButton={false}
-                                        render={<Link href={link.url} />}
-                                        variant={
-                                            link.active ? "default" : "ghost"
-                                        }
-                                        size="sm"
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ) : (
-                                    <Button
-                                        key={index}
-                                        variant="ghost"
-                                        size="sm"
-                                        disabled
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ),
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
 
             <Dialog
-                open={!!productToDelete}
-                onOpenChange={(open) => !open && setProductToDelete(null)}
+                open={!!categoryToDelete}
+                onOpenChange={(open) => !open && setCategoryToDelete(null)}
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this product?</DialogTitle>
+                        <DialogTitle>Delete this category?</DialogTitle>
                         <DialogDescription>
-                            {productToDelete && (
+                            {categoryToDelete && (
                                 <>
-                                    "{productToDelete.title.en}" will be moved
-                                    to trash and can be restored later by an
-                                    admin.
+                                    "{categoryToDelete.name.en}" will be
+                                    permanently deleted. This cannot be undone.
                                 </>
                             )}
                         </DialogDescription>
@@ -269,7 +205,7 @@ export default function Index({ products }) {
                     <DialogFooter>
                         <Button
                             variant="outline"
-                            onClick={() => setProductToDelete(null)}
+                            onClick={() => setCategoryToDelete(null)}
                         >
                             Cancel
                         </Button>
