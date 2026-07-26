@@ -22,7 +22,7 @@ createInertiaApp({
             <ThemeProvider>
                 <TooltipProvider>
                     <App {...props} />
-                    <Toaster />
+                    <Toaster position="top-right" richColors />
                 </TooltipProvider>
             </ThemeProvider>,
         );

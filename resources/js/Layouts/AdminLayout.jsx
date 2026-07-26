@@ -1,6 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
 import ThemeToggle from "@/Components/ThemeToggle";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
     Sidebar,
     SidebarContent,
@@ -11,6 +11,7 @@ import {
     SidebarHeader,
     SidebarInset,
     SidebarMenu,
+    SidebarMenuBadge,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarProvider,
@@ -40,6 +41,7 @@ import {
     ChevronsUpDown,
     LogOut,
     UserRound,
+    Mail,
 } from "lucide-react";
 import {
     Tooltip,
@@ -78,10 +80,17 @@ const navItems = [
         routeName: "admin.stores.index",
         pattern: "admin.stores.*",
     },
+    {
+        label: "Messages",
+        icon: Mail,
+        routeName: "admin.contact-requests.index",
+        pattern: "admin.contact-requests.*",
+    },
 ];
 
 export default function AdminLayout({ header, breadcrumbs, children }) {
-    const user = usePage().props.auth.user;
+    const { auth, newContactRequestsCount } = usePage().props;
+    const user = auth.user;
 
     return (
         <SidebarProvider>
@@ -130,6 +139,13 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                             <item.icon />
                                             <span>{item.label}</span>
                                         </SidebarMenuButton>
+                                        {item.routeName ===
+                                            "admin.contact-requests.index" &&
+                                            newContactRequestsCount > 0 && (
+                                                <SidebarMenuBadge className="bg-destructive text-destructive-foreground group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:top-0 group-data-[collapsible=icon]:right-0 group-data-[collapsible=icon]:h-3 group-data-[collapsible=icon]:min-w-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:text-[9px] group-data-[collapsible=icon]:leading-none">
+                                                    {newContactRequestsCount}
+                                                </SidebarMenuBadge>
+                                            )}
                                     </SidebarMenuItem>
                                 ))}
                             </SidebarMenu>

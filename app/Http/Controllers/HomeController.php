@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\ProductStatus;
+use App\Models\Category;
+use App\Models\Product;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class HomeController extends Controller
+{
+    public function index(): Response
+    {
+        return Inertia::render('Welcome', [
+            'categories' => Category::where('is_active', true)
+                ->whereNull('parent_id')
+                ->orderBy('sort_order')
+                ->get(['id', 'name', 'slug', 'icon_url']),
+            'latestProducts' => Product::query()
+                ->where('status', ProductStatus::Available)
+                ->with(['images', 'store'])
+                ->latest('published_at')
+                ->limit(8)
+                ->get(),
+        ]);
+    }
+}

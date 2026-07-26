@@ -57,8 +57,18 @@ class ProductController extends Controller
     {
         abort_unless($product->status === ProductStatus::Available, 404);
 
+        $relatedProducts = Product::query()
+            ->where('status', ProductStatus::Available)
+            ->where('id', '!=', $product->id)
+            ->where('category_id', $product->category_id)
+            ->with(['images'])
+            ->latest('published_at')
+            ->limit(8)
+            ->get();
+
         return Inertia::render('Products/Show', [
             'product' => $product->load(['category', 'brand', 'store.country', 'images']),
+            'relatedProducts' => $relatedProducts,
         ]);
     }
 }
