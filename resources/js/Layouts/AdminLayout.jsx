@@ -42,6 +42,8 @@ import {
     LogOut,
     UserRound,
     Mail,
+    ClipboardList,
+    Users,
 } from "lucide-react";
 import {
     Tooltip,
@@ -55,6 +57,12 @@ const navItems = [
         icon: LayoutDashboard,
         routeName: "dashboard",
         pattern: "dashboard",
+    },
+    {
+        label: "Orders",
+        icon: ClipboardList,
+        routeName: "admin.orders.index",
+        pattern: "admin.orders.*",
     },
     {
         label: "Products",
@@ -85,6 +93,12 @@ const navItems = [
         icon: Mail,
         routeName: "admin.contact-requests.index",
         pattern: "admin.contact-requests.*",
+    },
+    {
+        label: "Users",
+        icon: Users,
+        routeName: "admin.users.index",
+        pattern: "admin.users.*",
     },
 ];
 

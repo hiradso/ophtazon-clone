@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { Link, usePage } from "@inertiajs/react";
 import ThemeToggle from "@/Components/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -8,9 +10,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Search, ShoppingCart, UserRound } from "lucide-react";
+import Footer from "@/Components/Footer";
 
 export default function PublicLayout({ children }) {
-    const { auth } = usePage().props;
+    const { auth, cartItemsCount, flash } = usePage().props;
+
+    useEffect(() => {
+        if (flash?.success) toast.success(flash.success);
+        if (flash?.error) toast.error(flash.error);
+    }, [flash]);
 
     return (
         <div className="min-h-screen bg-background">
@@ -54,8 +62,19 @@ export default function PublicLayout({ children }) {
                     <div className="ml-auto flex items-center gap-2 md:ml-0">
                         <ThemeToggle />
 
-                        <Button variant="ghost" size="icon">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            nativeButton={false}
+                            render={<Link href={route("cart.index")} />}
+                            className="relative"
+                        >
                             <ShoppingCart className="size-4" />
+                            {cartItemsCount > 0 && (
+                                <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
+                                    {cartItemsCount}
+                                </span>
+                            )}
                         </Button>
 
                         {auth.user ? (
@@ -90,6 +109,16 @@ export default function PublicLayout({ children }) {
                                         }
                                     >
                                         Profile
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        nativeButton={false}
+                                        render={
+                                            <Link
+                                                href={route("orders.index")}
+                                            />
+                                        }
+                                    >
+                                        My Orders
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         nativeButton={true}
@@ -130,6 +159,7 @@ export default function PublicLayout({ children }) {
             </header>
 
             <main>{children}</main>
+            <Footer />
         </div>
     );
 }

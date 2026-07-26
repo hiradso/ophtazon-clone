@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Enums\ContactRequestStatus;
 use App\Enums\UserRole;
+use App\Models\Cart;
 use App\Models\ContactRequest;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,6 +40,13 @@ class HandleInertiaRequests extends Middleware
                     ->where('status', ContactRequestStatus::New)
                     ->when($user->role === UserRole::Staff, fn($query) => $query->where('store_id', $user->store_id))
                     ->count();
+            },
+            'cartItemsCount' => function () use ($request) {
+                $cart = $request->user()
+                    ? Cart::where('user_id', $request->user()->id)->first()
+                    : Cart::where('session_id', $request->session()->getId())->first();
+
+                return $cart?->items()->count() ?? 0;
             },
         ];
     }

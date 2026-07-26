@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage, useForm } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ImageOff, X } from "lucide-react";
+import { ImageOff, X, Bell } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -35,6 +44,22 @@ export default function Index({
         min_price: filters.min_price ?? "",
         max_price: filters.max_price ?? "",
         q: filters.q ?? "",
+    });
+    const [alertOpen, setAlertOpen] = useState(false);
+    const {
+        data: alertData,
+        setData: setAlertData,
+        post: postAlert,
+        processing: alertProcessing,
+        errors: alertErrors,
+        reset: resetAlert,
+    } = useForm({
+        email: "",
+        category_id: filters.category
+            ? (categories.find((c) => c.slug === filters.category)?.id ?? "")
+            : "",
+        brand_id: filters.brand ?? "",
+        max_price: filters.max_price ?? "",
     });
 
     const applyFilters = (overrides = {}) => {
@@ -61,6 +86,17 @@ export default function Index({
     };
 
     const hasActiveFilters = Object.values(filters).some((value) => value);
+
+    const submitAlert = (e) => {
+        e.preventDefault();
+        postAlert(route("alerts.store"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setAlertOpen(false);
+                resetAlert("email");
+            },
+        });
+    };
 
     return (
         <PublicLayout>
@@ -215,15 +251,26 @@ export default function Index({
                     </div>
 
                     {hasActiveFilters && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={clearFilters}
-                            className="ml-auto"
-                        >
-                            <X className="mr-1.5 size-3.5" />
-                            Clear filters
-                        </Button>
+                        <>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={clearFilters}
+                                className="ml-auto"
+                            >
+                                <X className="mr-1.5 size-3.5" />
+                                Clear filters
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setAlertOpen(true)}
+                                className={hasActiveFilters ? "" : "ml-auto"}
+                            >
+                                <Bell className="mr-1.5 size-3.5" />
+                                Notify me
+                            </Button>
+                        </>
                     )}
                 </div>
 
@@ -316,6 +363,48 @@ export default function Index({
                     </div>
                 )}
             </div>
+            <Dialog open={alertOpen} onOpenChange={setAlertOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Get notified</DialogTitle>
+                        <DialogDescription>
+                            We'll email you when a matching item is listed.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <form onSubmit={submitAlert} className="space-y-4">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="alert_email">Email</Label>
+                            <Input
+                                id="alert_email"
+                                type="email"
+                                value={alertData.email}
+                                onChange={(e) =>
+                                    setAlertData("email", e.target.value)
+                                }
+                            />
+                            {alertErrors.email && (
+                                <p className="text-sm text-destructive">
+                                    {alertErrors.email}
+                                </p>
+                            )}
+                        </div>
+
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setAlertOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button type="submit" disabled={alertProcessing}>
+                                {alertProcessing ? "Saving..." : "Notify me"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </PublicLayout>
     );
 }

@@ -6,13 +6,34 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\ContactRequestController;
 use App\Http\Controllers\Admin\ContactRequestController as AdminContactRequestController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AlertController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
+
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index');
+});
+
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -43,7 +64,11 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('brands', BrandController::class)->except(['show']);
         Route::resource('stores', StoreController::class)->except(['show']);
+        Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
+        Route::resource('users', UserController::class)->except(['show']);
     });
 Route::post('/contact-requests', [ContactRequestController::class, 'store'])->name('contact-requests.store');
+Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
+Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
 
 require __DIR__ . '/auth.php';

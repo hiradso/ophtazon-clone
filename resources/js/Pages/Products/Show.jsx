@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +24,7 @@ import {
     CarouselNext,
 } from "@/components/ui/carousel";
 import { ArrowLeft, ImageOff, MapPin, ShieldCheck } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -33,7 +33,6 @@ const CONDITION_LABELS = {
 };
 
 export default function Show({ product, relatedProducts }) {
-    const { flash } = usePage().props;
     const images = product.images ?? [];
     const [activeImage, setActiveImage] = useState(images[0] ?? null);
     const [contactOpen, setContactOpen] = useState(false);
@@ -47,12 +46,6 @@ export default function Show({ product, relatedProducts }) {
         product_id: product.id,
         store_id: product.store?.id ?? null,
     });
-
-    useEffect(() => {
-        if (flash?.success) {
-            toast.success(flash.success);
-        }
-    }, [flash]);
 
     const submitContact = (e) => {
         e.preventDefault();
@@ -148,12 +141,30 @@ export default function Show({ product, relatedProducts }) {
                             {product.price} {product.currency}
                         </p>
 
-                        <Button
-                            className="mt-6 w-full sm:w-auto"
-                            onClick={() => setContactOpen(true)}
-                        >
-                            Contact seller
-                        </Button>
+                        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                            <Button
+                                variant="default"
+                                onClick={() => {
+                                    router.post(
+                                        route("cart.store"),
+                                        { product_id: product.id },
+                                        {
+                                            preserveScroll: true,
+                                        },
+                                    );
+                                }}
+                            >
+                                <ShoppingCart className="mr-1.5 size-4" />
+                                Add to cart
+                            </Button>
+
+                            <Button
+                                variant="outline"
+                                onClick={() => setContactOpen(true)}
+                            >
+                                Contact seller
+                            </Button>
+                        </div>
 
                         <Separator className="my-6" />
 

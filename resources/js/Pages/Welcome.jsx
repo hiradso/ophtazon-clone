@@ -3,7 +3,15 @@ import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, ImageOff, ArrowRight } from "lucide-react";
+import {
+    Eye,
+    ImageOff,
+    ArrowRight,
+    Search,
+    ShieldCheck,
+    Globe2,
+    Truck,
+} from "lucide-react";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -17,27 +25,66 @@ export default function Welcome({ categories, latestProducts }) {
             <Head title="Ophtazon — Ophthalmic Equipment Marketplace" />
 
             {/* Hero */}
-            <section className="border-b border-border bg-card">
-                <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
+            <section className="relative overflow-hidden bg-primary">
+                <div
+                    className="absolute inset-0 opacity-15"
+                    style={{
+                        backgroundImage:
+                            "radial-gradient(circle at 20% 20%, white 0%, transparent 35%), radial-gradient(circle at 85% 60%, white 0%, transparent 40%)",
+                    }}
+                />
+
+                <div className="relative mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 lg:px-8">
+                    <Badge
+                        variant="outline"
+                        className="mb-5 border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
+                    >
+                        Trusted by clinics in 5 countries
+                    </Badge>
+
+                    <h1 className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl">
                         New &amp; used ophthalmic equipment,
                         <br className="hidden sm:block" />
-                        trusted worldwide.
+                        checked and delivered worldwide.
                     </h1>
-                    <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+                    <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">
                         Buy and sell slit lamps, OCT machines, autorefractors
-                        and more — checked, catalogued and shipped by our
-                        regional teams.
+                        and more — catalogued and shipped by our regional teams.
                     </p>
-                    <div className="mt-8 flex justify-center gap-3">
+
+                    <form
+                        action={route("products.index")}
+                        method="get"
+                        className="relative mx-auto mt-8 max-w-lg"
+                    >
+                        <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                            type="text"
+                            name="q"
+                            placeholder="Search for an OCT, slit lamp, autorefractor..."
+                            className="h-12 w-full rounded-full border-0 bg-background pl-11 pr-32 text-sm text-foreground shadow-lg placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-foreground/40"
+                        />
                         <Button
-                            size="lg"
-                            nativeButton={false}
-                            render={<Link href={route("products.index")} />}
+                            type="submit"
+                            className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded-full bg-foreground text-background hover:bg-foreground/80"
+                            size="sm"
                         >
-                            Browse equipment
-                            <ArrowRight className="ml-1.5 size-4" />
+                            Search
                         </Button>
+                    </form>
+
+                    <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-primary-foreground/80">
+                        <div className="flex items-center gap-1.5">
+                            <ShieldCheck className="size-4" />
+                            Quality checked
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <Globe2 className="size-4" />5 regional showrooms
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <Truck className="size-4" />
+                            International shipping
+                        </div>
                     </div>
                 </div>
             </section>
@@ -57,9 +104,9 @@ export default function Welcome({ categories, latestProducts }) {
                                     category: category.slug,
                                 })}
                             >
-                                <Card className="h-full transition-shadow hover:shadow-md">
+                                <Card className="h-full transition-all hover:-translate-y-0.5 hover:shadow-md">
                                     <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-                                        <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                        <div className="flex size-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
                                             <Eye className="size-6" />
                                         </div>
                                         <span className="text-sm font-medium text-foreground">
