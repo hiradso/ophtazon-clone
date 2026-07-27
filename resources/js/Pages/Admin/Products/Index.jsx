@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { toast } from "sonner";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";

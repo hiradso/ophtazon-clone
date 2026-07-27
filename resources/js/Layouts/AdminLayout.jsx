@@ -44,12 +44,15 @@ import {
     Mail,
     ClipboardList,
     Users,
+    LayoutTemplate,
+    ExternalLink,
 } from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
     {
@@ -99,6 +102,12 @@ const navItems = [
         icon: Users,
         routeName: "admin.users.index",
         pattern: "admin.users.*",
+    },
+    {
+        label: "Homepage",
+        icon: LayoutTemplate,
+        routeName: "admin.page-sections.index",
+        pattern: "admin.page-sections.*",
     },
 ];
 
@@ -266,21 +275,46 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                     )}
 
                     <div className="ml-auto flex items-center gap-1">
+                        <Tooltip>
+                            <TooltipTrigger
+                                render={
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        nativeButton={false}
+                                        render={
+                                            <Link
+                                                href={route("welcome")}
+                                                target="_blank"
+                                            />
+                                        }
+                                    >
+                                        <ExternalLink className="size-4" />
+                                    </Button>
+                                }
+                            />
+                            <TooltipContent side="bottom">
+                                View site
+                            </TooltipContent>
+                        </Tooltip>
+
                         <ThemeToggle />
                         <Tooltip>
                             <TooltipTrigger
                                 render={
-                                    <Link
-                                        href={route("logout")}
-                                        method="post"
-                                        as="button"
-                                        className={buttonVariants({
-                                            variant: "ghost",
-                                            size: "icon",
-                                        })}
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        render={
+                                            <Link
+                                                href={route("logout")}
+                                                method="post"
+                                                as="button"
+                                            />
+                                        }
                                     >
                                         <LogOut className="size-4" />
-                                    </Link>
+                                    </Button>
                                 }
                             />
                             <TooltipContent side="bottom">

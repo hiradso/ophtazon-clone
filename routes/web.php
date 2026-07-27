@@ -11,6 +11,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PageSectionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\NewsletterController;
@@ -66,9 +67,12 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::resource('stores', StoreController::class)->except(['show']);
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::resource('users', UserController::class)->except(['show']);
+        Route::resource('page-sections', PageSectionController::class)->except(['show']);
+        Route::post('page-sections/{page_section}/move', [PageSectionController::class, 'move'])->name('page-sections.move');
     });
 Route::post('/contact-requests', [ContactRequestController::class, 'store'])->name('contact-requests.store');
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
+
 
 require __DIR__ . '/auth.php';
