@@ -24,7 +24,9 @@ Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+Route::post('/cart', [CartController::class, 'store'])
+    ->middleware('throttle:20,1')
+    ->name('cart.store');
 Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::middleware('auth')->group(function () {
@@ -70,9 +72,16 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::resource('page-sections', PageSectionController::class)->except(['show']);
         Route::post('page-sections/{page_section}/move', [PageSectionController::class, 'move'])->name('page-sections.move');
     });
-Route::post('/contact-requests', [ContactRequestController::class, 'store'])->name('contact-requests.store');
-Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
-Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
+
+Route::post('/contact-requests', [ContactRequestController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('contact-requests.store');
+Route::post('/newsletter', [NewsletterController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('newsletter.store');
+Route::post('/alerts', [AlertController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('alerts.store');
 
 
 require __DIR__ . '/auth.php';
