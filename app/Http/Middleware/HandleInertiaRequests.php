@@ -48,6 +48,22 @@ class HandleInertiaRequests extends Middleware
 
                 return $cart?->items()->count() ?? 0;
             },
+            'headerLinks' => function () {
+                return \App\Models\MenuLink::where('location', 'header')
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get(['label', 'url']);
+            },
+            'footerLinkGroups' => function () {
+                return \App\Models\MenuLink::where('location', 'footer')
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get()
+                    ->groupBy('group_label');
+            },
+            'siteSettings' => function () {
+                return \App\Models\Setting::current();
+            },
         ];
     }
 }

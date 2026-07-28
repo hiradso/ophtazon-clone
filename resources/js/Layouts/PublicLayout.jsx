@@ -13,7 +13,8 @@ import { Search, ShoppingCart, UserRound } from "lucide-react";
 import Footer from "@/Components/Footer";
 
 export default function PublicLayout({ children }) {
-    const { auth, cartItemsCount, flash } = usePage().props;
+    const { auth, cartItemsCount, headerLinks, flash, siteSettings } =
+        usePage().props;
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
@@ -21,18 +22,28 @@ export default function PublicLayout({ children }) {
     }, [flash]);
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="flex min-h-screen flex-col bg-background">
             <header className="border-b border-border bg-card">
                 <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
                     <Link
                         href={route("welcome")}
                         className="flex items-center gap-2 shrink-0"
                     >
-                        <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                            <span className="text-sm font-bold">O</span>
-                        </div>
+                        {siteSettings.logo ? (
+                            <img
+                                src={`/storage/${siteSettings.logo}`}
+                                alt={siteSettings.site_name}
+                                className="size-8 rounded-lg object-contain"
+                            />
+                        ) : (
+                            <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                                <span className="text-sm font-bold">
+                                    {siteSettings.site_name?.charAt(0) ?? "O"}
+                                </span>
+                            </div>
+                        )}
                         <span className="text-lg font-semibold tracking-tight text-foreground">
-                            Ophtazon
+                            {siteSettings.site_name}
                         </span>
                     </Link>
 
@@ -43,6 +54,15 @@ export default function PublicLayout({ children }) {
                         >
                             Products
                         </Link>
+                        {headerLinks.map((link) => (
+                            <a
+                                key={link.url}
+                                href={link.url}
+                                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                {link.label}
+                            </a>
+                        ))}
                     </nav>
 
                     <form
@@ -158,7 +178,7 @@ export default function PublicLayout({ children }) {
                 </div>
             </header>
 
-            <main>{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
         </div>
     );

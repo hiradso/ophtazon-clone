@@ -19,6 +19,13 @@ use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\PageController as PublicPageController;
+use App\Http\Controllers\Admin\MenuLinkController;
+use App\Http\Controllers\Admin\SettingController;
+
+
+
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
@@ -71,8 +78,15 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('page-sections', PageSectionController::class)->except(['show']);
         Route::post('page-sections/{page_section}/move', [PageSectionController::class, 'move'])->name('page-sections.move');
+        Route::resource('pages', PageController::class)->except(['show']);
+        Route::resource('menu-links', MenuLinkController::class)->except(['show']);
+        // داخل گروه admin:
+        Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     });
 
+
+Route::get('/pages/{page:slug}', [PublicPageController::class, 'show'])->name('pages.show');
 Route::post('/contact-requests', [ContactRequestController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact-requests.store');

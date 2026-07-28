@@ -27,20 +27,25 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import {
+    Plus,
+    MoreHorizontal,
+    Pencil,
+    Trash2,
+    ExternalLink,
+} from "lucide-react";
 
-export default function Index({ brands }) {
+export default function Index({ pages }) {
     const { flash } = usePage().props;
-    const [brandToDelete, setBrandToDelete] = useState(null);
+    const [pageToDelete, setPageToDelete] = useState(null);
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
     }, [flash]);
 
     const confirmDelete = () => {
-        router.delete(route("admin.brands.destroy", brandToDelete.id), {
-            onSuccess: () => setBrandToDelete(null),
+        router.delete(route("admin.pages.destroy", pageToDelete.id), {
+            onSuccess: () => setPageToDelete(null),
         });
     };
 
@@ -48,32 +53,30 @@ export default function Index({ brands }) {
         <AdminLayout
             breadcrumbs={[
                 { label: "Dashboard", href: route("dashboard") },
-                { label: "Brands" },
+                { label: "Pages" },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Brands
+                    Pages
                 </h2>
             }
         >
-            <Head title="Brands" />
+            <Head title="Pages" />
 
             <div className="py-8">
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {brands.length}{" "}
-                            {brands.length === 1 ? "brand" : "brands"}
+                            {pages.length}{" "}
+                            {pages.length === 1 ? "page" : "pages"}
                         </p>
 
                         <Button
                             nativeButton={false}
-                            render={
-                                <Link href={route("admin.brands.create")} />
-                            }
+                            render={<Link href={route("admin.pages.create")} />}
                         >
                             <Plus className="mr-1.5 size-4" />
-                            Add brand
+                            Add page
                         </Button>
                     </div>
 
@@ -82,45 +85,45 @@ export default function Index({ brands }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Products</TableHead>
+                                        <TableHead>Title</TableHead>
+                                        <TableHead>Slug</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {brands.length === 0 && (
+                                    {pages.length === 0 && (
                                         <TableRow>
                                             <TableCell
                                                 colSpan={4}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No brands yet. Add the first one
+                                                No pages yet. Add the first one
                                                 to get started.
                                             </TableCell>
                                         </TableRow>
                                     )}
 
-                                    {brands.map((brand) => (
-                                        <TableRow key={brand.id}>
-                                            <TableCell className="font-medium">
-                                                {brand.name}
+                                    {pages.map((page) => (
+                                        <TableRow key={page.id}>
+                                            <TableCell className="font-medium text-foreground">
+                                                {page.title}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {brand.products_count}
+                                                /pages/{page.slug}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant="outline"
                                                     className={
-                                                        brand.is_active
+                                                        page.is_published
                                                             ? "bg-status-available/15 text-status-available border-status-available/30"
                                                             : "bg-muted text-muted-foreground border-border"
                                                     }
                                                 >
-                                                    {brand.is_active
-                                                        ? "Active"
-                                                        : "Inactive"}
+                                                    {page.is_published
+                                                        ? "Published"
+                                                        : "Draft"}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
@@ -136,12 +139,32 @@ export default function Index({ brands }) {
                                                         }
                                                     />
                                                     <DropdownMenuContent align="end">
+                                                        {page.is_published && (
+                                                            <DropdownMenuItem
+                                                                nativeButton={
+                                                                    false
+                                                                }
+                                                                render={
+                                                                    <a
+                                                                        href={route(
+                                                                            "pages.show",
+                                                                            page.slug,
+                                                                        )}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                    />
+                                                                }
+                                                            >
+                                                                <ExternalLink className="mr-2 size-4" />
+                                                                View
+                                                            </DropdownMenuItem>
+                                                        )}
                                                         <DropdownMenuItem
                                                             render={
                                                                 <Link
                                                                     href={route(
-                                                                        "admin.brands.edit",
-                                                                        brand.id,
+                                                                        "admin.pages.edit",
+                                                                        page.id,
                                                                     )}
                                                                 />
                                                             }
@@ -152,8 +175,8 @@ export default function Index({ brands }) {
                                                         <DropdownMenuItem
                                                             variant="destructive"
                                                             onClick={() =>
-                                                                setBrandToDelete(
-                                                                    brand,
+                                                                setPageToDelete(
+                                                                    page,
                                                                 )
                                                             }
                                                         >
@@ -173,16 +196,16 @@ export default function Index({ brands }) {
             </div>
 
             <Dialog
-                open={!!brandToDelete}
-                onOpenChange={(open) => !open && setBrandToDelete(null)}
+                open={!!pageToDelete}
+                onOpenChange={(open) => !open && setPageToDelete(null)}
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this brand?</DialogTitle>
+                        <DialogTitle>Delete this page?</DialogTitle>
                         <DialogDescription>
-                            {brandToDelete && (
+                            {pageToDelete && (
                                 <>
-                                    "{brandToDelete.name}" will be permanently
+                                    "{pageToDelete.title}" will be permanently
                                     deleted. This cannot be undone.
                                 </>
                             )}
@@ -191,7 +214,7 @@ export default function Index({ brands }) {
                     <DialogFooter>
                         <Button
                             variant="outline"
-                            onClick={() => setBrandToDelete(null)}
+                            onClick={() => setPageToDelete(null)}
                         >
                             Cancel
                         </Button>

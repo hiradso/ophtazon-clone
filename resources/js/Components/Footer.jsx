@@ -1,9 +1,11 @@
-import { Link, useForm } from "@inertiajs/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
+    const { footerLinkGroups, siteSettings } = usePage().props;
+
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
         source: "footer",
@@ -24,68 +26,80 @@ export default function Footer() {
                     {/* برند */}
                     <div>
                         <div className="mb-3 flex items-center gap-2">
-                            <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                                <span className="text-sm font-bold">O</span>
-                            </div>
+                            {siteSettings.logo ? (
+                                <img
+                                    src={`/storage/${siteSettings.logo}`}
+                                    alt={siteSettings.site_name}
+                                    className="size-8 rounded-lg object-contain"
+                                />
+                            ) : (
+                                <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                                    <span className="text-sm font-bold">
+                                        {siteSettings.site_name?.charAt(0) ??
+                                            "O"}
+                                    </span>
+                                </div>
+                            )}
                             <span className="text-lg font-semibold text-foreground">
-                                Ophtazon
+                                {siteSettings.site_name}
                             </span>
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="mb-3 text-sm text-muted-foreground">
                             New and used ophthalmic equipment, checked and
                             shipped worldwide.
                         </p>
+
+                        {(siteSettings.contact_email ||
+                            siteSettings.contact_phone) && (
+                            <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                {siteSettings.contact_email && (
+                                    <li className="flex items-center gap-1.5">
+                                        <Mail className="size-3.5" />
+                                        <a
+                                            href={`mailto:${siteSettings.contact_email}`}
+                                            className="hover:text-foreground"
+                                        >
+                                            {siteSettings.contact_email}
+                                        </a>
+                                    </li>
+                                )}
+                                {siteSettings.contact_phone && (
+                                    <li className="flex items-center gap-1.5">
+                                        <Phone className="size-3.5" />
+                                        <a
+                                            href={`tel:${siteSettings.contact_phone}`}
+                                            className="hover:text-foreground"
+                                        >
+                                            {siteSettings.contact_phone}
+                                        </a>
+                                    </li>
+                                )}
+                            </ul>
+                        )}
                     </div>
 
-                    {/* لینک‌های سریع */}
-                    <div>
-                        <h3 className="mb-3 text-sm font-semibold text-foreground">
-                            Marketplace
-                        </h3>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link
-                                    href={route("products.index")}
-                                    className="text-muted-foreground hover:text-foreground"
-                                >
-                                    Browse equipment
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={route("welcome")}
-                                    className="text-muted-foreground hover:text-foreground"
-                                >
-                                    Home
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* حساب کاربری */}
-                    <div>
-                        <h3 className="mb-3 text-sm font-semibold text-foreground">
-                            Account
-                        </h3>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link
-                                    href={route("login")}
-                                    className="text-muted-foreground hover:text-foreground"
-                                >
-                                    Log in
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={route("register")}
-                                    className="text-muted-foreground hover:text-foreground"
-                                >
-                                    Create account
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+                    {/* گروه‌های لینک پویا (مدیریت‌شده از پنل ادمین) */}
+                    {Object.entries(footerLinkGroups).map(
+                        ([groupLabel, links]) => (
+                            <div key={groupLabel}>
+                                <h3 className="mb-3 text-sm font-semibold text-foreground">
+                                    {groupLabel}
+                                </h3>
+                                <ul className="space-y-2 text-sm">
+                                    {links.map((link) => (
+                                        <li key={link.label}>
+                                            <a
+                                                href={link.url}
+                                                className="text-muted-foreground hover:text-foreground"
+                                            >
+                                                {link.label}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ),
+                    )}
 
                     {/* خبرنامه */}
                     <div>
@@ -124,8 +138,8 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-10 border-t border-border pt-6 text-center text-xs text-muted-foreground">
-                    &copy; {new Date().getFullYear()} Ophtazon. All rights
-                    reserved.
+                    &copy; {new Date().getFullYear()} {siteSettings.site_name}.
+                    All rights reserved.
                 </div>
             </div>
         </footer>

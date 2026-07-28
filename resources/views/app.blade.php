@@ -3,8 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
+
+        @php
+            $siteSettings = \App\Models\Setting::current();
+        @endphp
+
+        @if ($siteSettings->logo)
+            <link rel="icon" href="{{ asset('storage/' . $siteSettings->logo) }}">
+        @endif
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

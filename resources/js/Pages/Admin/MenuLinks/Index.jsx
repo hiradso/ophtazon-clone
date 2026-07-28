@@ -29,18 +29,17 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
-export default function Index({ brands }) {
+export default function Index({ menuLinks }) {
     const { flash } = usePage().props;
-    const [brandToDelete, setBrandToDelete] = useState(null);
+    const [linkToDelete, setLinkToDelete] = useState(null);
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
     }, [flash]);
 
     const confirmDelete = () => {
-        router.delete(route("admin.brands.destroy", brandToDelete.id), {
-            onSuccess: () => setBrandToDelete(null),
+        router.delete(route("admin.menu-links.destroy", linkToDelete.id), {
+            onSuccess: () => setLinkToDelete(null),
         });
     };
 
@@ -48,32 +47,32 @@ export default function Index({ brands }) {
         <AdminLayout
             breadcrumbs={[
                 { label: "Dashboard", href: route("dashboard") },
-                { label: "Brands" },
+                { label: "Menu Links" },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Brands
+                    Menu Links
                 </h2>
             }
         >
-            <Head title="Brands" />
+            <Head title="Menu Links" />
 
             <div className="py-8">
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {brands.length}{" "}
-                            {brands.length === 1 ? "brand" : "brands"}
+                            {menuLinks.length}{" "}
+                            {menuLinks.length === 1 ? "link" : "links"}
                         </p>
 
                         <Button
                             nativeButton={false}
                             render={
-                                <Link href={route("admin.brands.create")} />
+                                <Link href={route("admin.menu-links.create")} />
                             }
                         >
                             <Plus className="mr-1.5 size-4" />
-                            Add brand
+                            Add link
                         </Button>
                     </div>
 
@@ -82,45 +81,58 @@ export default function Index({ brands }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Products</TableHead>
+                                        <TableHead>Location</TableHead>
+                                        <TableHead>Group</TableHead>
+                                        <TableHead>Label</TableHead>
+                                        <TableHead>URL</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {brands.length === 0 && (
+                                    {menuLinks.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={4}
+                                                colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No brands yet. Add the first one
-                                                to get started.
+                                                No menu links yet. Add the first
+                                                one to get started.
                                             </TableCell>
                                         </TableRow>
                                     )}
 
-                                    {brands.map((brand) => (
-                                        <TableRow key={brand.id}>
-                                            <TableCell className="font-medium">
-                                                {brand.name}
+                                    {menuLinks.map((link) => (
+                                        <TableRow key={link.id}>
+                                            <TableCell>
+                                                <Badge
+                                                    variant="outline"
+                                                    className="capitalize"
+                                                >
+                                                    {link.location}
+                                                </Badge>
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {brand.products_count}
+                                                {link.group_label ?? "—"}
+                                            </TableCell>
+                                            <TableCell className="font-medium text-foreground">
+                                                {link.label}
+                                            </TableCell>
+                                            <TableCell className="max-w-48 truncate text-muted-foreground">
+                                                {link.url}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant="outline"
                                                     className={
-                                                        brand.is_active
+                                                        link.is_active
                                                             ? "bg-status-available/15 text-status-available border-status-available/30"
                                                             : "bg-muted text-muted-foreground border-border"
                                                     }
                                                 >
-                                                    {brand.is_active
+                                                    {link.is_active
                                                         ? "Active"
-                                                        : "Inactive"}
+                                                        : "Hidden"}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
@@ -140,8 +152,8 @@ export default function Index({ brands }) {
                                                             render={
                                                                 <Link
                                                                     href={route(
-                                                                        "admin.brands.edit",
-                                                                        brand.id,
+                                                                        "admin.menu-links.edit",
+                                                                        link.id,
                                                                     )}
                                                                 />
                                                             }
@@ -152,8 +164,8 @@ export default function Index({ brands }) {
                                                         <DropdownMenuItem
                                                             variant="destructive"
                                                             onClick={() =>
-                                                                setBrandToDelete(
-                                                                    brand,
+                                                                setLinkToDelete(
+                                                                    link,
                                                                 )
                                                             }
                                                         >
@@ -173,17 +185,17 @@ export default function Index({ brands }) {
             </div>
 
             <Dialog
-                open={!!brandToDelete}
-                onOpenChange={(open) => !open && setBrandToDelete(null)}
+                open={!!linkToDelete}
+                onOpenChange={(open) => !open && setLinkToDelete(null)}
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this brand?</DialogTitle>
+                        <DialogTitle>Delete this link?</DialogTitle>
                         <DialogDescription>
-                            {brandToDelete && (
+                            {linkToDelete && (
                                 <>
-                                    "{brandToDelete.name}" will be permanently
-                                    deleted. This cannot be undone.
+                                    "{linkToDelete.label}" will be permanently
+                                    deleted.
                                 </>
                             )}
                         </DialogDescription>
@@ -191,7 +203,7 @@ export default function Index({ brands }) {
                     <DialogFooter>
                         <Button
                             variant="outline"
-                            onClick={() => setBrandToDelete(null)}
+                            onClick={() => setLinkToDelete(null)}
                         >
                             Cancel
                         </Button>

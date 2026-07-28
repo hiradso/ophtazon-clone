@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import ThemeToggle from "@/Components/ThemeToggle";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,6 +15,9 @@ import {
     SidebarMenuBadge,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
+    SidebarMenuSubButton,
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
@@ -39,6 +43,7 @@ import {
     Award,
     Building2,
     ChevronsUpDown,
+    ChevronRight,
     LogOut,
     UserRound,
     Mail,
@@ -46,6 +51,9 @@ import {
     Users,
     LayoutTemplate,
     ExternalLink,
+    FileText,
+    Link2,
+    Settings,
 } from "lucide-react";
 import {
     Tooltip,
@@ -104,16 +112,46 @@ const navItems = [
         pattern: "admin.users.*",
     },
     {
-        label: "Homepage",
-        icon: LayoutTemplate,
-        routeName: "admin.page-sections.index",
-        pattern: "admin.page-sections.*",
+        label: "Settings",
+        icon: Settings,
+        routeName: "admin.settings.edit",
+        pattern: "admin.settings.*",
     },
 ];
+
+const siteContentGroup = {
+    label: "Site Content",
+    icon: LayoutTemplate,
+    children: [
+        {
+            label: "Homepage",
+            icon: LayoutTemplate,
+            routeName: "admin.page-sections.index",
+            pattern: "admin.page-sections.*",
+        },
+        {
+            label: "Pages",
+            icon: FileText,
+            routeName: "admin.pages.index",
+            pattern: "admin.pages.*",
+        },
+        {
+            label: "Menu Links",
+            icon: Link2,
+            routeName: "admin.menu-links.index",
+            pattern: "admin.menu-links.*",
+        },
+    ],
+};
 
 export default function AdminLayout({ header, breadcrumbs, children }) {
     const { auth, newContactRequestsCount } = usePage().props;
     const user = auth.user;
+
+    const isSiteContentActive = siteContentGroup.children.some((child) =>
+        route().current(child.pattern),
+    );
+    const [siteContentOpen, setSiteContentOpen] = useState(isSiteContentActive);
 
     return (
         <SidebarProvider>
@@ -171,6 +209,69 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                             )}
                                     </SidebarMenuItem>
                                 ))}
+
+                                {/* منوی والد قابل‌جمع‌شدن: Site Content */}
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton
+                                        tooltip={siteContentGroup.label}
+                                        isActive={isSiteContentActive}
+                                        onClick={() =>
+                                            setSiteContentOpen(!siteContentOpen)
+                                        }
+                                    >
+                                        <siteContentGroup.icon />
+                                        <span>{siteContentGroup.label}</span>
+                                        <ChevronRight
+                                            className={`ml-auto size-4 transition-transform ${
+                                                siteContentOpen
+                                                    ? "rotate-90"
+                                                    : ""
+                                            }`}
+                                        />
+                                    </SidebarMenuButton>
+
+                                    <div
+                                        className={`grid overflow-hidden transition-all duration-200 ease-in-out ${
+                                            siteContentOpen
+                                                ? "grid-rows-[1fr] opacity-100"
+                                                : "grid-rows-[0fr] opacity-0"
+                                        }`}
+                                    >
+                                        <div className="overflow-hidden">
+                                            <SidebarMenuSub>
+                                                {siteContentGroup.children.map(
+                                                    (child) => (
+                                                        <SidebarMenuSubItem
+                                                            key={
+                                                                child.routeName
+                                                            }
+                                                        >
+                                                            <SidebarMenuSubButton
+                                                                isActive={route().current(
+                                                                    child.pattern,
+                                                                )}
+                                                                render={
+                                                                    <Link
+                                                                        href={route(
+                                                                            child.routeName,
+                                                                        )}
+                                                                    />
+                                                                }
+                                                            >
+                                                                <child.icon />
+                                                                <span>
+                                                                    {
+                                                                        child.label
+                                                                    }
+                                                                </span>
+                                                            </SidebarMenuSubButton>
+                                                        </SidebarMenuSubItem>
+                                                    ),
+                                                )}
+                                            </SidebarMenuSub>
+                                        </div>
+                                    </div>
+                                </SidebarMenuItem>
                             </SidebarMenu>
                         </SidebarGroupContent>
                     </SidebarGroup>
