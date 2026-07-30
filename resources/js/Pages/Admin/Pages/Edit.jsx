@@ -15,13 +15,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import RichTextEditor from "@/Components/RichTextEditor";
+import MediaPicker from "@/Components/MediaPicker";
 
 export default function Edit({ page }) {
     const { data, setData, put, processing, errors } = useForm({
         title: page.title ?? "",
         slug: page.slug ?? "",
         content: page.content ?? "",
-        featured_image: null,
+        featured_image: page.featured_image ?? null,
         image_display_style: page.image_display_style ?? "banner",
         meta_description: page.meta_description ?? "",
         is_published: page.is_published ?? true,
@@ -29,7 +30,7 @@ export default function Edit({ page }) {
 
     const submit = (e) => {
         e.preventDefault();
-        put(route("admin.pages.update", page.id), { forceFormData: true });
+        put(route("admin.pages.update", page.id));
     };
 
     return (
@@ -116,33 +117,13 @@ export default function Edit({ page }) {
                                     )}
                                 </div>
 
-                                {page.featured_image && (
-                                    <div className="space-y-1.5">
-                                        <Label>Current image</Label>
-                                        <img
-                                            src={`/storage/${page.featured_image}`}
-                                            alt=""
-                                            className="h-32 w-full rounded-md object-cover"
-                                        />
-                                    </div>
-                                )}
-
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="featured_image">
-                                            {page.featured_image
-                                                ? "Replace image"
-                                                : "Image (optional)"}
-                                        </Label>
-                                        <Input
-                                            id="featured_image"
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) =>
-                                                setData(
-                                                    "featured_image",
-                                                    e.target.files[0],
-                                                )
+                                        <Label>Image (optional)</Label>
+                                        <MediaPicker
+                                            value={data.featured_image}
+                                            onSelect={(path) =>
+                                                setData("featured_image", path)
                                             }
                                         />
                                         {errors.featured_image && (

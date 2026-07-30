@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import RichTextEditor from "@/Components/RichTextEditor";
+import MediaPicker from "@/Components/MediaPicker";
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
@@ -119,18 +120,11 @@ export default function Create() {
                                 </div>
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="featured_image">
-                                            Image (optional)
-                                        </Label>
-                                        <Input
-                                            id="featured_image"
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) =>
-                                                setData(
-                                                    "featured_image",
-                                                    e.target.files[0],
-                                                )
+                                        <Label>Image (optional)</Label>
+                                        <MediaPicker
+                                            value={data.featured_image}
+                                            onSelect={(path) =>
+                                                setData("featured_image", path)
                                             }
                                         />
                                         {errors.featured_image && (

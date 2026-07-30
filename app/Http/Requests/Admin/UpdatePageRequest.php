@@ -20,7 +20,7 @@ class UpdatePageRequest extends FormRequest
             'content' => ['nullable', 'string'],
             'meta_description' => ['nullable', 'string', 'max:255'],
             'is_published' => ['boolean'],
-            'featured_image' => ['nullable', 'image', 'max:4096'],
+            'featured_image' => ['nullable', 'string', 'max:255'],
             'image_display_style' => ['required', 'in:banner,background'],
         ];
     }
