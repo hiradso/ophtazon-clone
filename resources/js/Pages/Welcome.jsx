@@ -187,7 +187,7 @@ function LatestProductsSection({ products }) {
                             href={route("products.show", product.slug)}
                         >
                             <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                <div className="flex aspect-square items-center justify-center bg-muted">
+                                <div className="flex h-48 items-center justify-center bg-muted">
                                     {product.images?.[0] ? (
                                         <img
                                             src={`/storage/${product.images[0].url}`}

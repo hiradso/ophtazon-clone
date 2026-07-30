@@ -25,7 +25,7 @@ class ProductController extends Controller
         $this->authorize('viewAny', Product::class);
 
         $products = Product::query()
-            ->with(['category', 'brand', 'store'])
+            ->with(['category', 'brand', 'store', 'images'])
             ->when(auth()->user()->role === UserRole::Staff, function ($query) {
                 $query->where('store_id', auth()->user()->store_id);
             })
@@ -105,27 +105,24 @@ class ProductController extends Controller
         $this->authorize('update', $product);
 
         $request->validate([
-            'image' => ['required', 'image', 'max:4096'],
+            'path' => ['required', 'string', 'max:255'],
         ]);
-
-        $path = $request->file('image')->store('products/' . $product->id, 'public');
 
         $nextPosition = $product->images()->max('position');
         $nextPosition = is_null($nextPosition) ? 0 : $nextPosition + 1;
 
         $product->images()->create([
-            'url' => $path,
+            'url' => $request->input('path'),
             'position' => $nextPosition,
         ]);
 
-        return back()->with('success', 'Image uploaded.');
+        return back()->with('success', 'Image added.');
     }
 
     public function destroyImage(Product $product, ProductImage $image): RedirectResponse
     {
         $this->authorize('update', $product);
 
-        Storage::disk('public')->delete($image->url);
         $image->delete();
 
         return back()->with('success', 'Image removed.');

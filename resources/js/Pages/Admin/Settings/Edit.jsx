@@ -4,22 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MediaPicker from "@/Components/MediaPicker";
 
 export default function Edit({ settings }) {
-    const { data, setData, post, processing, errors, transform } = useForm({
+    const { data, setData, put, processing, errors } = useForm({
         site_name: settings.site_name ?? "",
-        logo: null,
+        logo: settings.logo ?? null,
         contact_email: settings.contact_email ?? "",
         contact_phone: settings.contact_phone ?? "",
     });
 
     const submit = (e) => {
         e.preventDefault();
-        transform((data) => ({
-            ...data,
-            _method: "put",
-        }));
-        post(route("admin.settings.update"), { forceFormData: true });
+        put(route("admin.settings.update"));
     };
 
     return (
@@ -60,29 +57,12 @@ export default function Edit({ settings }) {
                                     )}
                                 </div>
 
-                                {settings.logo && (
-                                    <div className="space-y-1.5">
-                                        <Label>Current logo</Label>
-                                        <img
-                                            src={`/storage/${settings.logo}`}
-                                            alt=""
-                                            className="h-16 w-16 rounded-md border border-border object-contain bg-card p-2"
-                                        />
-                                    </div>
-                                )}
-
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="logo">
-                                        {settings.logo
-                                            ? "Replace logo"
-                                            : "Logo (optional)"}
-                                    </Label>
-                                    <Input
-                                        id="logo"
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) =>
-                                            setData("logo", e.target.files[0])
+                                    <Label>Logo</Label>
+                                    <MediaPicker
+                                        value={data.logo}
+                                        onSelect={(path) =>
+                                            setData("logo", path)
                                         }
                                     />
                                     {errors.logo && (

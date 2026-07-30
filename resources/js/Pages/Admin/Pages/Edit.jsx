@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import RichTextEditor from "@/Components/RichTextEditor";
 
 export default function Edit({ page }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -101,13 +102,11 @@ export default function Edit({ page }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="content">Content</Label>
-                                    <Textarea
-                                        id="content"
-                                        rows={12}
+                                    <Label>Content</Label>
+                                    <RichTextEditor
                                         value={data.content}
-                                        onChange={(e) =>
-                                            setData("content", e.target.value)
+                                        onChange={(html) =>
+                                            setData("content", html)
                                         }
                                     />
                                     {errors.content && (
@@ -115,10 +114,6 @@ export default function Edit({ page }) {
                                             {errors.content}
                                         </p>
                                     )}
-                                    <p className="text-xs text-muted-foreground">
-                                        Supports basic HTML tags (a WYSIWYG
-                                        editor is planned for later).
-                                    </p>
                                 </div>
 
                                 {page.featured_image && (

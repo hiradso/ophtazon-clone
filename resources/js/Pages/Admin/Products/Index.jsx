@@ -26,7 +26,14 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
+import {
+    Plus,
+    MoreHorizontal,
+    Eye,
+    Pencil,
+    Trash2,
+    ImageOff,
+} from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
 
 // این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
@@ -99,6 +106,7 @@ export default function Index({ products }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-14"></TableHead>
                                         <TableHead>Reference</TableHead>
                                         <TableHead>Title</TableHead>
                                         <TableHead>Category</TableHead>
@@ -123,6 +131,19 @@ export default function Index({ products }) {
 
                                     {products.data.map((product) => (
                                         <TableRow key={product.id}>
+                                            <TableCell>
+                                                {product.images?.[0] ? (
+                                                    <img
+                                                        src={`/storage/${product.images[0].url}`}
+                                                        alt=""
+                                                        className="size-10 rounded-md object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="flex size-10 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                                                        <ImageOff className="size-4" />
+                                                    </div>
+                                                )}
+                                            </TableCell>
                                             <TableCell className="text-muted-foreground">
                                                 {product.reference}
                                             </TableCell>

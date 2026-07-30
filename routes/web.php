@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\ContactRequestController;
 use App\Http\Controllers\Admin\ContactRequestController as AdminContactRequestController;
+use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -83,6 +84,12 @@ Route::middleware(['auth', 'role:admin,staff'])
         // داخل گروه admin:
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::get('media', [MediaController::class, 'index'])->name('media.index');
+        Route::post('media', [MediaController::class, 'store'])->name('media.store');
+        Route::delete('media/{medium}', [MediaController::class, 'destroy'])->name('media.destroy');
+        Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media-picker.list');
+        Route::post('media-picker', [MediaController::class, 'pickerUpload'])->name('media-picker.upload');
+        Route::put('media/{medium}', [MediaController::class, 'update'])->name('media.update');
     });
 
 

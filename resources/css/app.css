@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
@@ -7,23 +6,23 @@
 
 @layer base {
     :root {
-        --background: oklch(1 0 0);
+        --background: oklch(0.97 0.004 240);
         --foreground: oklch(0.2 0.02 240);
-        --card: oklch(1 0 0);
+        --card: oklch(0.995 0.002 240);
         --card-foreground: oklch(0.2 0.02 240);
-        --popover: oklch(1 0 0);
+        --popover: oklch(0.995 0.002 240);
         --popover-foreground: oklch(0.2 0.02 240);
         --primary: oklch(0.48 0.1 195);
         --primary-foreground: oklch(0.98 0.01 195);
-        --secondary: oklch(0.96 0.015 220);
+        --secondary: oklch(0.94 0.012 220);
         --secondary-foreground: oklch(0.28 0.03 220);
-        --muted: oklch(0.96 0.012 220);
+        --muted: oklch(0.94 0.01 220);
         --muted-foreground: oklch(0.5 0.02 235);
-        --accent: oklch(0.93 0.035 195);
+        --accent: oklch(0.91 0.032 195);
         --accent-foreground: oklch(0.28 0.06 195);
         --destructive: oklch(0.577 0.245 27.325);
-        --border: oklch(0.9 0.015 230);
-        --input: oklch(0.9 0.015 230);
+        --border: oklch(0.88 0.014 230);
+        --input: oklch(0.88 0.014 230);
         --ring: oklch(0.55 0.09 195);
         --chart-1: oklch(0.55 0.12 195);
         --chart-2: oklch(0.6 0.13 250);
@@ -31,13 +30,13 @@
         --chart-4: oklch(0.65 0.15 25);
         --chart-5: oklch(0.5 0.1 320);
         --radius: 0.625rem;
-        --sidebar: oklch(0.985 0.005 220);
+        --sidebar: oklch(0.955 0.005 220);
         --sidebar-foreground: oklch(0.2 0.02 240);
         --sidebar-primary: oklch(0.48 0.1 195);
         --sidebar-primary-foreground: oklch(0.98 0.01 195);
-        --sidebar-accent: oklch(0.93 0.035 195);
+        --sidebar-accent: oklch(0.91 0.032 195);
         --sidebar-accent-foreground: oklch(0.28 0.06 195);
-        --sidebar-border: oklch(0.9 0.015 230);
+        --sidebar-border: oklch(0.88 0.014 230);
         --sidebar-ring: oklch(0.55 0.09 195);
         --status-draft: oklch(0.85 0.01 250);
         --status-pending: oklch(0.75 0.15 80);

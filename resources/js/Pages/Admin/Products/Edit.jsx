@@ -18,6 +18,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Trash2, Upload } from "lucide-react";
+import MediaPicker from "@/Components/MediaPicker";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -577,23 +578,16 @@ export default function Edit({
 }
 
 function ProductImages({ product }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        image: null,
-    });
-
-    const submitImage = (e) => {
-        e.preventDefault();
-        post(route("admin.products.images.store", product.id), {
-            forceFormData: true,
-            onSuccess: () => reset("image"),
-        });
-    };
-
     const deleteImage = (imageId) => {
         if (!confirm("Remove this image?")) return;
         router.delete(
             route("admin.products.images.destroy", [product.id, imageId]),
         );
+    };
+
+    const addImage = (path) => {
+        if (!path) return;
+        router.post(route("admin.products.images.store", product.id), { path });
     };
 
     return (
@@ -631,28 +625,10 @@ function ProductImages({ product }) {
                     </div>
                 )}
 
-                <form onSubmit={submitImage} className="flex items-end gap-3">
-                    <div className="flex-1 space-y-1.5">
-                        <Label htmlFor="image">Add image</Label>
-                        <Input
-                            id="image"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setData("image", e.target.files[0])
-                            }
-                        />
-                        {errors.image && (
-                            <p className="text-sm text-destructive">
-                                {errors.image}
-                            </p>
-                        )}
-                    </div>
-                    <Button type="submit" disabled={processing || !data.image}>
-                        <Upload className="mr-1.5 size-4" />
-                        Upload
-                    </Button>
-                </form>
+                <div className="space-y-1.5">
+                    <Label>Add image</Label>
+                    <MediaPicker value={null} onSelect={addImage} />
+                </div>
             </CardContent>
         </Card>
     );

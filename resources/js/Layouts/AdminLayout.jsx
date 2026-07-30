@@ -54,6 +54,7 @@ import {
     FileText,
     Link2,
     Settings,
+    Image,
 } from "lucide-react";
 import {
     Tooltip,
@@ -141,6 +142,12 @@ const siteContentGroup = {
             routeName: "admin.menu-links.index",
             pattern: "admin.menu-links.*",
         },
+        {
+            label: "Media Library",
+            icon: Image,
+            routeName: "admin.media.index",
+            pattern: "admin.media.*",
+        },
     ],
 };
 
@@ -203,7 +210,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                         {item.routeName ===
                                             "admin.contact-requests.index" &&
                                             newContactRequestsCount > 0 && (
-                                                <SidebarMenuBadge className="bg-destructive text-destructive-foreground group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:top-0 group-data-[collapsible=icon]:right-0 group-data-[collapsible=icon]:h-3 group-data-[collapsible=icon]:min-w-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:text-[9px] group-data-[collapsible=icon]:leading-none">
+                                                <SidebarMenuBadge className="bg-destructive text-white peer-hover/menu-button:text-white peer-data-active/menu-button:text-white group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:top-0 group-data-[collapsible=icon]:right-0 group-data-[collapsible=icon]:h-3 group-data-[collapsible=icon]:min-w-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:text-[9px] group-data-[collapsible=icon]:leading-none rounded-full">
                                                     {newContactRequestsCount}
                                                 </SidebarMenuBadge>
                                             )}
