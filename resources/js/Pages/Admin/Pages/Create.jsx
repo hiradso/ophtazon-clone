@@ -14,23 +14,24 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
-        title: "",
+        title: { en: "", fr: "" },
         slug: "",
-        content: "",
+        content: { en: "", fr: "" },
         featured_image: null,
         image_display_style: "banner",
-        meta_description: "",
+        meta_description: { en: "", fr: "" },
         is_published: true,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("admin.pages.store"), { forceFormData: true });
+        post(route("admin.pages.store"));
     };
 
     return (
@@ -66,58 +67,137 @@ export default function Create() {
                                 <CardTitle>Page Details</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="title">Title</Label>
-                                        <Input
-                                            id="title"
-                                            value={data.title}
-                                            onChange={(e) =>
-                                                setData("title", e.target.value)
-                                            }
-                                        />
-                                        {errors.title && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.title}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="slug">Slug</Label>
-                                        <Input
-                                            id="slug"
-                                            value={data.slug}
-                                            onChange={(e) =>
-                                                setData("slug", e.target.value)
-                                            }
-                                            placeholder="about-us"
-                                        />
-                                        {errors.slug && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.slug}
-                                            </p>
-                                        )}
-                                        <p className="text-xs text-muted-foreground">
-                                            Will be available at /pages/
-                                            {data.slug || "..."}
-                                        </p>
-                                    </div>
-                                </div>
+                                <Tabs defaultValue="en">
+                                    <TabsList>
+                                        <TabsTrigger value="en">
+                                            English
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fr">
+                                            Français
+                                        </TabsTrigger>
+                                    </TabsList>
+
+                                    {["en", "fr"].map((locale) => (
+                                        <TabsContent
+                                            key={locale}
+                                            value={locale}
+                                            className="space-y-4"
+                                        >
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`title_${locale}`}
+                                                >
+                                                    Title{" "}
+                                                    {locale === "fr" &&
+                                                        "(optional)"}
+                                                </Label>
+                                                <Input
+                                                    id={`title_${locale}`}
+                                                    value={
+                                                        data.title[locale] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("title", {
+                                                            ...data.title,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                {errors[`title.${locale}`] && (
+                                                    <p className="text-sm text-destructive">
+                                                        {
+                                                            errors[
+                                                                `title.${locale}`
+                                                            ]
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-1.5">
+                                                <Label>
+                                                    Content{" "}
+                                                    {locale === "fr" &&
+                                                        "(optional)"}
+                                                </Label>
+                                                <RichTextEditor
+                                                    value={
+                                                        data.content[locale] ??
+                                                        ""
+                                                    }
+                                                    onChange={(html) =>
+                                                        setData("content", {
+                                                            ...data.content,
+                                                            [locale]: html,
+                                                        })
+                                                    }
+                                                />
+                                                {errors[
+                                                    `content.${locale}`
+                                                ] && (
+                                                    <p className="text-sm text-destructive">
+                                                        {
+                                                            errors[
+                                                                `content.${locale}`
+                                                            ]
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`meta_${locale}`}
+                                                >
+                                                    Meta description (SEO)
+                                                </Label>
+                                                <Textarea
+                                                    id={`meta_${locale}`}
+                                                    rows={2}
+                                                    value={
+                                                        data.meta_description[
+                                                            locale
+                                                        ] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "meta_description",
+                                                            {
+                                                                ...data.meta_description,
+                                                                [locale]:
+                                                                    e.target
+                                                                        .value,
+                                                            },
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
 
                                 <div className="space-y-1.5">
-                                    <Label>Content</Label>
-                                    <RichTextEditor
-                                        value={data.content}
-                                        onChange={(html) =>
-                                            setData("content", html)
+                                    <Label htmlFor="slug">Slug</Label>
+                                    <Input
+                                        id="slug"
+                                        value={data.slug}
+                                        onChange={(e) =>
+                                            setData("slug", e.target.value)
                                         }
+                                        placeholder="about-us"
                                     />
-                                    {errors.content && (
+                                    {errors.slug && (
                                         <p className="text-sm text-destructive">
-                                            {errors.content}
+                                            {errors.slug}
                                         </p>
                                     )}
+                                    <p className="text-xs text-muted-foreground">
+                                        Will be available at /pages/
+                                        {data.slug || "..."}
+                                    </p>
                                 </div>
+
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
                                         <Label>Image (optional)</Label>
@@ -164,22 +244,6 @@ export default function Create() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                </div>
-                                <div className="space-y-1.5">
-                                    <Label htmlFor="meta_description">
-                                        Meta description (SEO)
-                                    </Label>
-                                    <Textarea
-                                        id="meta_description"
-                                        rows={2}
-                                        value={data.meta_description}
-                                        onChange={(e) =>
-                                            setData(
-                                                "meta_description",
-                                                e.target.value,
-                                            )
-                                        }
-                                    />
                                 </div>
 
                                 <div className="flex items-center gap-2">

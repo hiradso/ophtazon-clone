@@ -107,7 +107,7 @@ export default function Index({ pages }) {
                                     {pages.map((page) => (
                                         <TableRow key={page.id}>
                                             <TableCell className="font-medium text-foreground">
-                                                {page.title}
+                                                {page.title.en}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
                                                 /pages/{page.slug}

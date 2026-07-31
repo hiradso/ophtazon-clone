@@ -18,7 +18,7 @@ class PageController extends Controller
         $this->authorize('viewAny', Page::class);
 
         return Inertia::render('Admin/Pages/Index', [
-            'pages' => Page::orderBy('title')->get(),
+            'pages' => Page::orderBy('created_at', 'desc')->get(),
         ]);
     }
 
@@ -29,14 +29,14 @@ class PageController extends Controller
         return Inertia::render('Admin/Pages/Create');
     }
 
- public function store(StorePageRequest $request): RedirectResponse
-{
-    Page::create($request->validated());
+    public function store(StorePageRequest $request): RedirectResponse
+    {
+        Page::create($request->validated());
 
-    return redirect()
-        ->route('admin.pages.index')
-        ->with('success', 'Page created successfully.');
-}
+        return redirect()
+            ->route('admin.pages.index')
+            ->with('success', 'Page created successfully.');
+    }
 
     public function edit(Page $page): Response
     {
@@ -48,13 +48,13 @@ class PageController extends Controller
     }
 
     public function update(UpdatePageRequest $request, Page $page): RedirectResponse
-{
-    $page->update($request->validated());
+    {
+        $page->update($request->validated());
 
-    return redirect()
-        ->route('admin.pages.index')
-        ->with('success', 'Page updated successfully.');
-}
+        return redirect()
+            ->route('admin.pages.index')
+            ->with('success', 'Page updated successfully.');
+    }
 
     public function destroy(Page $page): RedirectResponse
     {
