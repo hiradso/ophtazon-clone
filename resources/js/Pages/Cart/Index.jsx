@@ -1,12 +1,14 @@
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ImageOff, Trash2, ArrowRight } from "lucide-react";
+import { t } from "@/lib/translate";
 
 export default function Index({ cart }) {
+    const { locale } = usePage().props;
     const items = cart?.items ?? [];
 
     const removeItem = (cartItemId) => {
@@ -68,7 +70,7 @@ export default function Index({ cart }) {
                                                 )}
                                                 className="font-medium text-foreground hover:underline"
                                             >
-                                                {item.product.title.en}
+                                                {t(item.product.title, locale)}
                                             </Link>
                                             <p className="text-sm text-muted-foreground">
                                                 {item.product.store?.name}

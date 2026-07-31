@@ -23,6 +23,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { t } from "@/lib/translate";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -37,6 +38,8 @@ export default function Index({
     stores,
     filters,
 }) {
+    const { locale } = usePage().props;
+
     const [localFilters, setLocalFilters] = useState({
         category: filters.category ?? "",
         brand: filters.brand ?? "",
@@ -120,9 +123,12 @@ export default function Index({
                             <SelectValue>
                                 {(value) =>
                                     value
-                                        ? categories.find(
-                                              (c) => c.slug === value,
-                                          )?.name.en
+                                        ? t(
+                                              categories.find(
+                                                  (c) => c.slug === value,
+                                              )?.name,
+                                              locale,
+                                          )
                                         : "Category"
                                 }
                             </SelectValue>
@@ -133,7 +139,7 @@ export default function Index({
                                     key={category.id}
                                     value={category.slug}
                                 >
-                                    {category.name.en}
+                                    {t(category.name, locale)}
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -307,7 +313,7 @@ export default function Index({
                                                 whileHover={{ scale: 1.08 }}
                                                 transition={{ duration: 0.4 }}
                                                 src={`/storage/${product.images[0].url}`}
-                                                alt={product.title.en}
+                                                alt={t(product.title, locale)}
                                                 className="h-full w-full object-cover"
                                             />
                                         ) : (
@@ -333,7 +339,7 @@ export default function Index({
                                             )}
                                         </div>
                                         <h3 className="line-clamp-2 font-medium text-foreground">
-                                            {product.title.en}
+                                            {t(product.title, locale)}
                                         </h3>
                                         <p className="text-lg font-semibold text-foreground">
                                             {product.price} {product.currency}

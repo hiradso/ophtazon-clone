@@ -1,4 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +13,8 @@ import {
     Truck,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { t } from "@/lib/translate";
+import { tt } from "@/lib/i18n";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -64,6 +66,8 @@ export default function Welcome({ sections, categories, latestProducts }) {
 }
 
 function HeroSection({ content }) {
+    const { locale } = usePage().props;
+
     const container = {
         hidden: {},
         show: {
@@ -108,7 +112,7 @@ function HeroSection({ content }) {
                     variants={item}
                     className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl"
                 >
-                    {content?.title || "New & used ophthalmic equipment"}
+                    {content?.title || tt("hero_default_title", locale)}
                 </motion.h1>
 
                 <motion.p
@@ -128,7 +132,7 @@ function HeroSection({ content }) {
                     <input
                         type="text"
                         name="q"
-                        placeholder="Search for an OCT, slit lamp, autorefractor..."
+                        placeholder={tt("hero_search_placeholder", locale)}
                         className="h-12 w-full rounded-full border-0 bg-background pl-11 pr-32 text-sm text-foreground shadow-lg placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-foreground/40"
                     />
                     <Button
@@ -136,7 +140,7 @@ function HeroSection({ content }) {
                         className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded-full bg-foreground text-background hover:bg-foreground/80"
                         size="sm"
                     >
-                        Search
+                        {tt("search", locale)}
                     </Button>
                 </motion.form>
 
@@ -146,14 +150,15 @@ function HeroSection({ content }) {
                 >
                     <div className="flex items-center gap-1.5">
                         <ShieldCheck className="size-4" />
-                        Quality checked
+                        {tt("quality_checked", locale)}
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <Globe2 className="size-4" />5 regional showrooms
+                        <Globe2 className="size-4" />
+                        {tt("regional_showrooms", locale)}
                     </div>
                     <div className="flex items-center gap-1.5">
                         <Truck className="size-4" />
-                        International shipping
+                        {tt("international_shipping", locale)}
                     </div>
                 </motion.div>
             </motion.div>
@@ -162,12 +167,14 @@ function HeroSection({ content }) {
 }
 
 function CategoriesSection({ categories }) {
+    const { locale } = usePage().props;
+
     if (categories.length === 0) return null;
 
     return (
         <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
             <h2 className="mb-6 text-xl font-semibold tracking-tight text-foreground">
-                Shop by category
+                {tt("shop_by_category", locale)}
             </h2>
 
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -197,7 +204,7 @@ function CategoriesSection({ categories }) {
                                         <Eye className="size-6" />
                                     </motion.div>
                                     <span className="text-sm font-medium text-foreground">
-                                        {category.name.en}
+                                        {t(category.name, locale)}
                                     </span>
                                 </CardContent>
                             </Card>
@@ -210,6 +217,8 @@ function CategoriesSection({ categories }) {
 }
 
 function LatestProductsSection({ products }) {
+    const { locale } = usePage().props;
+
     if (products.length === 0) return null;
 
     return (
@@ -217,13 +226,13 @@ function LatestProductsSection({ products }) {
             <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
                 <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Latest listings
+                        {tt("latest_listings", locale)}
                     </h2>
                     <Link
                         href={route("products.index")}
                         className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                     >
-                        View all
+                        {tt("view_all", locale)}
                         <ArrowRight className="size-3.5" />
                     </Link>
                 </div>
@@ -245,7 +254,7 @@ function LatestProductsSection({ products }) {
                                                 whileHover={{ scale: 1.08 }}
                                                 transition={{ duration: 0.4 }}
                                                 src={`/storage/${product.images[0].url}`}
-                                                alt={product.title.en}
+                                                alt={t(product.title, locale)}
                                                 className="h-full w-full object-cover"
                                             />
                                         ) : (
@@ -271,7 +280,7 @@ function LatestProductsSection({ products }) {
                                             )}
                                         </div>
                                         <h3 className="line-clamp-2 font-medium text-foreground">
-                                            {product.title.en}
+                                            {t(product.title, locale)}
                                         </h3>
                                         <p className="text-lg font-semibold text-foreground">
                                             {product.price} {product.currency}

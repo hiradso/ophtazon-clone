@@ -1,20 +1,24 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import { t } from "@/lib/translate";
 
 export default function Show({ page }) {
+    const { locale } = usePage().props;
+
     const hasBackgroundImage =
         page.featured_image && page.image_display_style === "background";
     const hasBannerImage =
         page.featured_image && page.image_display_style === "banner";
 
+    const title = t(page.title, locale);
+    const content = t(page.content, locale);
+    const metaDescription = t(page.meta_description, locale);
+
     return (
         <PublicLayout>
-            <Head title={page.title.en}>
-                {page.meta_description?.en && (
-                    <meta
-                        name="description"
-                        content={page.meta_description.en}
-                    />
+            <Head title={title}>
+                {metaDescription && (
+                    <meta name="description" content={metaDescription} />
                 )}
             </Head>
             {hasBackgroundImage ? (
@@ -27,7 +31,7 @@ export default function Show({ page }) {
                     <div className="absolute inset-0 bg-black/55" />
                     <div className="relative mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
                         <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                            {page.title.en}
+                            {title}
                         </h1>
                     </div>
                 </div>
@@ -35,7 +39,7 @@ export default function Show({ page }) {
             <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
                 {!hasBackgroundImage && (
                     <h1 className="mb-6 text-3xl font-semibold tracking-tight text-foreground">
-                        {page.title.en}
+                        {title}
                     </h1>
                 )}
                 {hasBannerImage && (
@@ -47,7 +51,7 @@ export default function Show({ page }) {
                 )}
                 <div
                     className="prose prose-neutral max-w-none dark:prose-invert"
-                    dangerouslySetInnerHTML={{ __html: page.content?.en ?? "" }}
+                    dangerouslySetInnerHTML={{ __html: content }}
                 />
             </div>
         </PublicLayout>

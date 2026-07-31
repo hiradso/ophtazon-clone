@@ -108,4 +108,8 @@ Route::post('/alerts', [AlertController::class, 'store'])
 // بیرون از هر گروه خاصی، کنار بقیه‌ی روت‌های cart:
 Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
 
+use App\Http\Controllers\LocaleController;
+
+Route::post('/locale/{locale}', [LocaleController::class, 'update'])->name('locale.update');
+
 require __DIR__ . '/auth.php';

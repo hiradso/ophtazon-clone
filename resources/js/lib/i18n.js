@@ -1,0 +1,61 @@
+const translations = {
+    en: {
+        products: "Products",
+        search_placeholder: "Search equipment...",
+        log_in: "Log in",
+        register: "Register",
+        admin_panel: "Admin Panel",
+        profile: "Profile",
+        my_orders: "My Orders",
+        log_out: "Log Out",
+        shop_by_category: "Shop by category",
+        latest_listings: "Latest listings",
+        view_all: "View all",
+        stay_updated: "Stay updated",
+        newsletter_text: "New listings and offers, straight to your inbox.",
+        join: "Join",
+        sending: "Sending...",
+        marketplace: "Marketplace",
+        account: "Account",
+        all_rights_reserved: "All rights reserved.",
+        hero_default_title: "New & used ophthalmic equipment",
+        hero_search_placeholder:
+            "Search for an OCT, slit lamp, autorefractor...",
+        search: "Search",
+        quality_checked: "Quality checked",
+        regional_showrooms: "5 regional showrooms",
+        international_shipping: "International shipping",
+    },
+    fr: {
+        products: "Produits",
+        search_placeholder: "Rechercher du matériel...",
+        log_in: "Connexion",
+        register: "S'inscrire",
+        admin_panel: "Panneau admin",
+        profile: "Profil",
+        my_orders: "Mes commandes",
+        log_out: "Déconnexion",
+        shop_by_category: "Acheter par catégorie",
+        latest_listings: "Dernières annonces",
+        view_all: "Voir tout",
+        stay_updated: "Restez informé",
+        newsletter_text:
+            "Les nouvelles annonces, directement dans votre boîte mail.",
+        join: "Rejoindre",
+        sending: "Envoi...",
+        marketplace: "Marché",
+        account: "Compte",
+        all_rights_reserved: "Tous droits réservés.",
+        hero_default_title: "Matériel ophtalmique neuf et d'occasion",
+        hero_search_placeholder:
+            "Rechercher un OCT, une lampe à fente, un autoréfractomètre...",
+        search: "Rechercher",
+        quality_checked: "Qualité vérifiée",
+        regional_showrooms: "5 salles d'exposition régionales",
+        international_shipping: "Livraison internationale",
+    },
+};
+
+export function tt(key, locale) {
+    return translations[locale]?.[key] ?? translations.en[key] ?? key;
+}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import ThemeToggle from "@/Components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,12 +15,15 @@ import {
     UserRound,
     ImageOff,
     ArrowRight,
+    ArrowUp,
 } from "lucide-react";
 import Footer from "@/Components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
+import { t } from "@/lib/translate";
+import { tt } from "@/lib/i18n";
 
 export default function PublicLayout({ children }) {
-    const { auth, cartItemsCount, headerLinks, flash, siteSettings } =
+    const { auth, cartItemsCount, headerLinks, flash, siteSettings, locale } =
         usePage().props;
 
     useEffect(() => {
@@ -30,7 +33,7 @@ export default function PublicLayout({ children }) {
 
     return (
         <div className="flex min-h-screen flex-col bg-background">
-            <header className="border-b border-border bg-card">
+            <header className="sticky top-0 z-40 border-b border-border/50 bg-card/70 backdrop-blur-lg supports-[backdrop-filter]:bg-card/60">
                 <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
                     <Link
                         href={route("welcome")}
@@ -59,7 +62,7 @@ export default function PublicLayout({ children }) {
                             href={route("products.index")}
                             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                         >
-                            Products
+                            {tt("products", locale)}
                         </Link>
                         {headerLinks.map((link) => (
                             <a
@@ -81,15 +84,47 @@ export default function PublicLayout({ children }) {
                         <input
                             type="text"
                             name="q"
-                            placeholder="Search equipment..."
+                            placeholder={tt("search_placeholder", locale)}
                             className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                         />
                     </form>
 
                     <div className="ml-auto flex items-center gap-2 md:ml-0">
                         <ThemeToggle />
+                        <DropdownMenu>
+                            <DropdownMenuTrigger
+                                render={
+                                    <Button variant="ghost" size="sm">
+                                        {locale === "fr" ? "FR" : "EN"}
+                                    </Button>
+                                }
+                            />
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.post(
+                                            route("locale.update", "en"),
+                                        )
+                                    }
+                                >
+                                    English
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.post(
+                                            route("locale.update", "fr"),
+                                        )
+                                    }
+                                >
+                                    Français
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
-                        <CartHoverPreview cartItemsCount={cartItemsCount} />
+                        <CartHoverPreview
+                            cartItemsCount={cartItemsCount}
+                            locale={locale}
+                        />
 
                         {auth.user ? (
                             <DropdownMenu>
@@ -111,7 +146,7 @@ export default function PublicLayout({ children }) {
                                                 />
                                             }
                                         >
-                                            Admin Panel
+                                            {tt("admin_panel", locale)}
                                         </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem
@@ -122,7 +157,7 @@ export default function PublicLayout({ children }) {
                                             />
                                         }
                                     >
-                                        Profile
+                                        {tt("profile", locale)}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         nativeButton={false}
@@ -132,7 +167,7 @@ export default function PublicLayout({ children }) {
                                             />
                                         }
                                     >
-                                        My Orders
+                                        {tt("my_orders", locale)}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         nativeButton={true}
@@ -145,7 +180,7 @@ export default function PublicLayout({ children }) {
                                         }
                                         variant="destructive"
                                     >
-                                        Log Out
+                                        {tt("log_out", locale)}
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -157,14 +192,14 @@ export default function PublicLayout({ children }) {
                                     nativeButton={false}
                                     render={<Link href={route("login")} />}
                                 >
-                                    Log in
+                                    {tt("log_in", locale)}
                                 </Button>
                                 <Button
                                     size="sm"
                                     nativeButton={false}
                                     render={<Link href={route("register")} />}
                                 >
-                                    Register
+                                    {tt("register", locale)}
                                 </Button>
                             </div>
                         )}
@@ -182,11 +217,50 @@ export default function PublicLayout({ children }) {
                 {children}
             </motion.main>
             <Footer />
+
+            <ScrollToTopButton />
         </div>
     );
 }
 
-function CartHoverPreview({ cartItemsCount }) {
+function ScrollToTopButton() {
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setVisible(window.scrollY > 400);
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    return (
+        <AnimatePresence>
+            {visible && (
+                <motion.button
+                    onClick={scrollToTop}
+                    initial={{ opacity: 0, scale: 0.6, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.6, y: 10 }}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="fixed right-6 bottom-6 z-40 flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"
+                    aria-label="Scroll to top"
+                >
+                    <ArrowUp className="size-5" />
+                </motion.button>
+            )}
+        </AnimatePresence>
+    );
+}
+
+function CartHoverPreview({ cartItemsCount, locale }) {
     const [open, setOpen] = useState(false);
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -235,7 +309,7 @@ function CartHoverPreview({ cartItemsCount }) {
                     <ShoppingCart className="size-4" />
                 </motion.div>
                 {cartItemsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
+                    <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">
                         {cartItemsCount}
                     </span>
                 )}
@@ -260,7 +334,7 @@ function CartHoverPreview({ cartItemsCount }) {
                             </p>
                         ) : (
                             <>
-                                <div className="max-h-72 space-y-3 overflow-y-auto">
+                                <div className="max-h-60 space-y-3 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border">
                                     {preview.items.map((item) => (
                                         <div
                                             key={item.id}
@@ -279,7 +353,10 @@ function CartHoverPreview({ cartItemsCount }) {
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <p className="truncate text-sm font-medium text-foreground">
-                                                    {item.product.title.en}
+                                                    {t(
+                                                        item.product.title,
+                                                        locale,
+                                                    )}
                                                 </p>
                                                 <p className="text-xs text-muted-foreground">
                                                     Qty: {item.quantity}

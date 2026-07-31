@@ -2,9 +2,10 @@ import { Link, useForm, usePage } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Mail, Phone } from "lucide-react";
+import { tt } from "@/lib/i18n";
 
 export default function Footer() {
-    const { footerLinkGroups, siteSettings } = usePage().props;
+    const { footerLinkGroups, siteSettings, locale } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
@@ -104,10 +105,10 @@ export default function Footer() {
                     {/* خبرنامه */}
                     <div>
                         <h3 className="mb-3 text-sm font-semibold text-foreground">
-                            Stay updated
+                            {tt("stay_updated", locale)}
                         </h3>
                         <p className="mb-3 text-sm text-muted-foreground">
-                            New listings and offers, straight to your inbox.
+                            {tt("newsletter_text", locale)}
                         </p>
                         <form onSubmit={subscribe} className="flex gap-2">
                             <Input
@@ -126,7 +127,9 @@ export default function Footer() {
                                 {processing && (
                                     <Loader2 className="size-4 animate-spin" />
                                 )}
-                                {processing ? "Sending..." : "Join"}
+                                {processing
+                                    ? tt("sending", locale)
+                                    : tt("join", locale)}
                             </Button>
                         </form>
                         {errors.email && (
@@ -138,8 +141,8 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-10 border-t border-border pt-6 text-center text-xs text-muted-foreground">
-                    &copy; {new Date().getFullYear()} {siteSettings.site_name}.
-                    All rights reserved.
+                    &copy; {new Date().getFullYear()} {siteSettings.site_name}.{" "}
+                    {tt("all_rights_reserved", locale)}
                 </div>
             </div>
         </footer>

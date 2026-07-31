@@ -1,4 +1,4 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { t } from "@/lib/translate";
 
 export default function Index({ cart, countries }) {
+    const { locale } = usePage().props;
     const items = cart.items;
     const total = items.reduce(
         (sum, item) => sum + Number(item.product.price) * item.quantity,
@@ -240,7 +242,7 @@ export default function Index({ cart, countries }) {
                                             className="flex items-start justify-between gap-3 text-sm"
                                         >
                                             <span className="text-muted-foreground">
-                                                {item.product.title.en}
+                                                {t(item.product.title, locale)}
                                                 <span className="text-muted-foreground/70">
                                                     {" "}
                                                     × {item.quantity}

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/carousel";
 import { ArrowLeft, ImageOff, MapPin, ShieldCheck } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
+import { t } from "@/lib/translate";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -34,9 +35,15 @@ const CONDITION_LABELS = {
 };
 
 export default function Show({ product, relatedProducts }) {
+    const { locale } = usePage().props;
+
     const images = product.images ?? [];
     const [activeImage, setActiveImage] = useState(images[0] ?? null);
     const [contactOpen, setContactOpen] = useState(false);
+
+    const productTitle = t(product.title, locale);
+    const productDescription = t(product.description, locale);
+    const categoryName = t(product.category?.name, locale);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         type: "quote_request",
@@ -61,7 +68,7 @@ export default function Show({ product, relatedProducts }) {
 
     return (
         <PublicLayout>
-            <Head title={product.title?.en ?? product.reference} />
+            <Head title={productTitle || product.reference} />
 
             <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
                 <Button
@@ -82,7 +89,7 @@ export default function Show({ product, relatedProducts }) {
                             {activeImage ? (
                                 <img
                                     src={`/storage/${activeImage.url}`}
-                                    alt={product.title?.en}
+                                    alt={productTitle}
                                     className="h-full w-full object-cover"
                                 />
                             ) : (
@@ -131,7 +138,7 @@ export default function Show({ product, relatedProducts }) {
                         </div>
 
                         <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                            {product.title?.en}
+                            {productTitle}
                         </h1>
 
                         <p className="mt-1 text-sm text-muted-foreground">
@@ -187,7 +194,7 @@ export default function Show({ product, relatedProducts }) {
                                     Category
                                 </p>
                                 <p className="font-medium text-foreground">
-                                    {product.category?.name?.en ?? "—"}
+                                    {categoryName || "—"}
                                 </p>
                             </div>
                             <div>
@@ -236,13 +243,13 @@ export default function Show({ product, relatedProducts }) {
                     </div>
                 </div>
 
-                {product.description?.en && (
+                {productDescription && (
                     <div className="mt-10 max-w-3xl">
                         <h2 className="mb-3 text-lg font-semibold text-foreground">
                             Description
                         </h2>
                         <p className="whitespace-pre-line text-muted-foreground">
-                            {product.description.en}
+                            {productDescription}
                         </p>
                     </div>
                 )}
@@ -278,10 +285,10 @@ export default function Show({ product, relatedProducts }) {
                                                                 duration: 0.4,
                                                             }}
                                                             src={`/storage/${related.images[0].url}`}
-                                                            alt={
-                                                                related.title
-                                                                    ?.en
-                                                            }
+                                                            alt={t(
+                                                                related.title,
+                                                                locale,
+                                                            )}
                                                             className="h-full w-full object-cover"
                                                         />
                                                     ) : (
@@ -290,7 +297,10 @@ export default function Show({ product, relatedProducts }) {
                                                 </div>
                                                 <CardContent className="space-y-1 p-3">
                                                     <h3 className="line-clamp-2 text-sm font-medium text-foreground">
-                                                        {related.title?.en}
+                                                        {t(
+                                                            related.title,
+                                                            locale,
+                                                        )}
                                                     </h3>
                                                     <p className="font-semibold text-foreground">
                                                         {related.price}{" "}
@@ -315,8 +325,8 @@ export default function Show({ product, relatedProducts }) {
                     <DialogHeader>
                         <DialogTitle>Contact seller</DialogTitle>
                         <DialogDescription>
-                            Ask about "{product.title?.en}". We'll pass your
-                            message to {product.store?.name}.
+                            Ask about "{productTitle}". We'll pass your message
+                            to {product.store?.name}.
                         </DialogDescription>
                     </DialogHeader>
 
