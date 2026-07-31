@@ -1,4 +1,5 @@
 import { Head, useForm } from "@inertiajs/react";
+import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -265,16 +266,18 @@ export default function Index({ cart, countries }) {
                                     </span>
                                 </div>
 
-                                <Button
-                                    type="submit"
-                                    className="mt-2 w-full"
-                                    size="lg"
-                                    disabled={processing}
-                                >
-                                    {processing
-                                        ? "Placing order..."
-                                        : "Place order"}
-                                </Button>
+                                <motion.div whileTap={{ scale: 0.97 }}>
+                                    <Button
+                                        type="submit"
+                                        className="mt-2 w-full"
+                                        size="lg"
+                                        disabled={processing}
+                                    >
+                                        {processing
+                                            ? "Placing order..."
+                                            : "Place order"}
+                                    </Button>
+                                </motion.div>
                             </CardContent>
                         </Card>
                     </div>

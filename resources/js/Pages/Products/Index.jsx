@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Head, Link, router, usePage, useForm } from "@inertiajs/react";
+import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -287,50 +288,60 @@ export default function Index({
                 )}
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {products.data.map((product) => (
-                        <Link
+                    {products.data.map((product, index) => (
+                        <motion.div
                             key={product.id}
-                            href={route("products.show", product.slug)}
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-40px" }}
+                            transition={{
+                                duration: 0.4,
+                                delay: (index % 8) * 0.05,
+                            }}
                         >
-                            <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                <div className="flex h-48 items-center justify-center bg-muted">
-                                    {product.images?.[0] ? (
-                                        <img
-                                            src={`/storage/${product.images[0].url}`}
-                                            alt={product.title.en}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    ) : (
-                                        <ImageOff className="size-8 text-muted-foreground" />
-                                    )}
-                                </div>
-                                <CardContent className="space-y-2 p-4">
-                                    <div className="flex items-center gap-2">
-                                        <Badge
-                                            variant="outline"
-                                            className="text-xs"
-                                        >
-                                            {
-                                                CONDITION_LABELS[
-                                                    product.condition
-                                                ]
-                                            }
-                                        </Badge>
-                                        {product.store?.name && (
-                                            <span className="text-xs text-muted-foreground">
-                                                {product.store.name}
-                                            </span>
+                            <Link href={route("products.show", product.slug)}>
+                                <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
+                                    <div className="flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                        {product.images?.[0] ? (
+                                            <motion.img
+                                                whileHover={{ scale: 1.08 }}
+                                                transition={{ duration: 0.4 }}
+                                                src={`/storage/${product.images[0].url}`}
+                                                alt={product.title.en}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <ImageOff className="size-8 text-muted-foreground" />
                                         )}
                                     </div>
-                                    <h3 className="line-clamp-2 font-medium text-foreground">
-                                        {product.title.en}
-                                    </h3>
-                                    <p className="text-lg font-semibold text-foreground">
-                                        {product.price} {product.currency}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </Link>
+                                    <CardContent className="space-y-2 p-4">
+                                        <div className="flex items-center gap-2">
+                                            <Badge
+                                                variant="outline"
+                                                className="text-xs"
+                                            >
+                                                {
+                                                    CONDITION_LABELS[
+                                                        product.condition
+                                                    ]
+                                                }
+                                            </Badge>
+                                            {product.store?.name && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {product.store.name}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h3 className="line-clamp-2 font-medium text-foreground">
+                                            {product.title.en}
+                                        </h3>
+                                        <p className="text-lg font-semibold text-foreground">
+                                            {product.price} {product.currency}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        </motion.div>
                     ))}
                 </div>
 

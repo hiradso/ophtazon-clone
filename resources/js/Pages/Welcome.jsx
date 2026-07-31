@@ -12,6 +12,7 @@ import {
     Globe2,
     Truck,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -63,6 +64,21 @@ export default function Welcome({ sections, categories, latestProducts }) {
 }
 
 function HeroSection({ content }) {
+    const container = {
+        hidden: {},
+        show: {
+            transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+        },
+    };
+    const item = {
+        hidden: { opacity: 0, y: 18 },
+        show: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.5, ease: "easeOut" },
+        },
+    };
+
     return (
         <section className="relative overflow-hidden bg-primary">
             <div
@@ -73,22 +89,37 @@ function HeroSection({ content }) {
                 }}
             />
 
-            <div className="relative mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 lg:px-8">
-                <Badge
-                    variant="outline"
-                    className="mb-5 border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
+            <motion.div
+                variants={container}
+                initial="hidden"
+                animate="show"
+                className="relative mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 lg:px-8"
+            >
+                <motion.div variants={item}>
+                    <Badge
+                        variant="outline"
+                        className="mb-5 border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
+                    >
+                        Trusted by clinics in 5 countries
+                    </Badge>
+                </motion.div>
+
+                <motion.h1
+                    variants={item}
+                    className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl"
                 >
-                    Trusted by clinics in 5 countries
-                </Badge>
-
-                <h1 className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl">
                     {content?.title || "New & used ophthalmic equipment"}
-                </h1>
-                <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">
-                    {content?.subtitle || ""}
-                </p>
+                </motion.h1>
 
-                <form
+                <motion.p
+                    variants={item}
+                    className="mx-auto mt-4 max-w-2xl text-primary-foreground/80"
+                >
+                    {content?.subtitle || ""}
+                </motion.p>
+
+                <motion.form
+                    variants={item}
                     action={route("products.index")}
                     method="get"
                     className="relative mx-auto mt-8 max-w-lg"
@@ -107,9 +138,12 @@ function HeroSection({ content }) {
                     >
                         Search
                     </Button>
-                </form>
+                </motion.form>
 
-                <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-primary-foreground/80">
+                <motion.div
+                    variants={item}
+                    className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-primary-foreground/80"
+                >
                     <div className="flex items-center gap-1.5">
                         <ShieldCheck className="size-4" />
                         Quality checked
@@ -121,8 +155,8 @@ function HeroSection({ content }) {
                         <Truck className="size-4" />
                         International shipping
                     </div>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </section>
     );
 }
@@ -137,24 +171,38 @@ function CategoriesSection({ categories }) {
             </h2>
 
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-                {categories.map((category) => (
-                    <Link
+                {categories.map((category, index) => (
+                    <motion.div
                         key={category.id}
-                        href={route("products.index", {
-                            category: category.slug,
-                        })}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.4, delay: index * 0.05 }}
                     >
-                        <Card className="h-full transition-all hover:-translate-y-0.5 hover:shadow-md">
-                            <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-                                <div className="flex size-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
-                                    <Eye className="size-6" />
-                                </div>
-                                <span className="text-sm font-medium text-foreground">
-                                    {category.name.en}
-                                </span>
-                            </CardContent>
-                        </Card>
-                    </Link>
+                        <Link
+                            href={route("products.index", {
+                                category: category.slug,
+                            })}
+                        >
+                            <Card className="h-full transition-shadow hover:shadow-md">
+                                <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+                                    <motion.div
+                                        whileHover={{ scale: 1.1 }}
+                                        transition={{
+                                            type: "spring",
+                                            stiffness: 300,
+                                        }}
+                                        className="flex size-12 items-center justify-center rounded-full bg-accent text-accent-foreground"
+                                    >
+                                        <Eye className="size-6" />
+                                    </motion.div>
+                                    <span className="text-sm font-medium text-foreground">
+                                        {category.name.en}
+                                    </span>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </motion.div>
                 ))}
             </div>
         </section>
@@ -181,50 +229,57 @@ function LatestProductsSection({ products }) {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {products.map((product) => (
-                        <Link
+                    {products.map((product, index) => (
+                        <motion.div
                             key={product.id}
-                            href={route("products.show", product.slug)}
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-40px" }}
+                            transition={{ duration: 0.4, delay: index * 0.05 }}
                         >
-                            <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                <div className="flex h-48 items-center justify-center bg-muted">
-                                    {product.images?.[0] ? (
-                                        <img
-                                            src={`/storage/${product.images[0].url}`}
-                                            alt={product.title.en}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    ) : (
-                                        <ImageOff className="size-8 text-muted-foreground" />
-                                    )}
-                                </div>
-                                <CardContent className="space-y-2 p-4">
-                                    <div className="flex items-center gap-2">
-                                        <Badge
-                                            variant="outline"
-                                            className="text-xs"
-                                        >
-                                            {
-                                                CONDITION_LABELS[
-                                                    product.condition
-                                                ]
-                                            }
-                                        </Badge>
-                                        {product.store?.name && (
-                                            <span className="text-xs text-muted-foreground">
-                                                {product.store.name}
-                                            </span>
+                            <Link href={route("products.show", product.slug)}>
+                                <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
+                                    <div className="flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                        {product.images?.[0] ? (
+                                            <motion.img
+                                                whileHover={{ scale: 1.08 }}
+                                                transition={{ duration: 0.4 }}
+                                                src={`/storage/${product.images[0].url}`}
+                                                alt={product.title.en}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <ImageOff className="size-8 text-muted-foreground" />
                                         )}
                                     </div>
-                                    <h3 className="line-clamp-2 font-medium text-foreground">
-                                        {product.title.en}
-                                    </h3>
-                                    <p className="text-lg font-semibold text-foreground">
-                                        {product.price} {product.currency}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </Link>
+                                    <CardContent className="space-y-2 p-4">
+                                        <div className="flex items-center gap-2">
+                                            <Badge
+                                                variant="outline"
+                                                className="text-xs"
+                                            >
+                                                {
+                                                    CONDITION_LABELS[
+                                                        product.condition
+                                                    ]
+                                                }
+                                            </Badge>
+                                            {product.store?.name && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {product.store.name}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h3 className="line-clamp-2 font-medium text-foreground">
+                                            {product.title.en}
+                                        </h3>
+                                        <p className="text-lg font-semibold text-foreground">
+                                            {product.price} {product.currency}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        </motion.div>
                     ))}
                 </div>
             </div>

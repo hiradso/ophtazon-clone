@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Head, Link, useForm, usePage, router } from "@inertiajs/react";
+import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -142,28 +143,40 @@ export default function Show({ product, relatedProducts }) {
                         </p>
 
                         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                            <Button
-                                variant="default"
-                                onClick={() => {
-                                    router.post(
-                                        route("cart.store"),
-                                        { product_id: product.id },
-                                        {
-                                            preserveScroll: true,
-                                        },
-                                    );
-                                }}
+                            <motion.div
+                                whileTap={{ scale: 0.96 }}
+                                className="inline-block"
                             >
-                                <ShoppingCart className="mr-1.5 size-4" />
-                                Add to cart
-                            </Button>
+                                <Button
+                                    variant="default"
+                                    className="w-full sm:w-auto"
+                                    onClick={() => {
+                                        router.post(
+                                            route("cart.store"),
+                                            { product_id: product.id },
+                                            {
+                                                preserveScroll: true,
+                                            },
+                                        );
+                                    }}
+                                >
+                                    <ShoppingCart className="mr-1.5 size-4" />
+                                    Add to cart
+                                </Button>
+                            </motion.div>
 
-                            <Button
-                                variant="outline"
-                                onClick={() => setContactOpen(true)}
+                            <motion.div
+                                whileTap={{ scale: 0.96 }}
+                                className="inline-block"
                             >
-                                Contact seller
-                            </Button>
+                                <Button
+                                    variant="outline"
+                                    className="w-full sm:w-auto"
+                                    onClick={() => setContactOpen(true)}
+                                >
+                                    Contact seller
+                                </Button>
+                            </motion.div>
                         </div>
 
                         <Separator className="my-6" />
@@ -255,9 +268,15 @@ export default function Show({ product, relatedProducts }) {
                                             )}
                                         >
                                             <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                                <div className="flex h-48 items-center justify-center bg-muted">
+                                                <div className="flex h-48 items-center justify-center overflow-hidden bg-muted">
                                                     {related.images?.[0] ? (
-                                                        <img
+                                                        <motion.img
+                                                            whileHover={{
+                                                                scale: 1.08,
+                                                            }}
+                                                            transition={{
+                                                                duration: 0.4,
+                                                            }}
                                                             src={`/storage/${related.images[0].url}`}
                                                             alt={
                                                                 related.title

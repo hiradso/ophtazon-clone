@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Search, ShoppingCart, UserRound } from "lucide-react";
 import Footer from "@/Components/Footer";
+import { motion } from "framer-motion";
 
 export default function PublicLayout({ children }) {
     const { auth, cartItemsCount, headerLinks, flash, siteSettings } =
@@ -89,7 +90,14 @@ export default function PublicLayout({ children }) {
                             render={<Link href={route("cart.index")} />}
                             className="relative"
                         >
-                            <ShoppingCart className="size-4" />
+                            <motion.div
+                                key={cartItemsCount}
+                                initial={{ scale: 1 }}
+                                animate={{ scale: [1, 1.3, 1] }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <ShoppingCart className="size-4" />
+                            </motion.div>
                             {cartItemsCount > 0 && (
                                 <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
                                     {cartItemsCount}
@@ -178,7 +186,15 @@ export default function PublicLayout({ children }) {
                 </div>
             </header>
 
-            <main className="flex-1">{children}</main>
+            <motion.main
+                key={usePage().url}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25 }}
+                className="flex-1"
+            >
+                {children}
+            </motion.main>
             <Footer />
         </div>
     );

@@ -1,4 +1,5 @@
 import { Head, Link, router } from "@inertiajs/react";
+import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -104,17 +105,21 @@ export default function Index({ cart }) {
 
                                 <Separator />
 
-                                <Button
-                                    className="w-full"
-                                    size="lg"
-                                    nativeButton={false}
-                                    render={
-                                        <Link href={route("checkout.index")} />
-                                    }
-                                >
-                                    Proceed to checkout
-                                    <ArrowRight className="ml-1.5 size-4" />
-                                </Button>
+                                <motion.div whileTap={{ scale: 0.97 }}>
+                                    <Button
+                                        className="w-full"
+                                        size="lg"
+                                        nativeButton={false}
+                                        render={
+                                            <Link
+                                                href={route("checkout.index")}
+                                            />
+                                        }
+                                    >
+                                        Proceed to checkout
+                                        <ArrowRight className="ml-1.5 size-4" />
+                                    </Button>
+                                </motion.div>
                             </CardContent>
                         </Card>
                     </div>
