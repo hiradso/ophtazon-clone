@@ -105,6 +105,7 @@ Route::post('/newsletter', [NewsletterController::class, 'store'])
 Route::post('/alerts', [AlertController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('alerts.store');
-
+// بیرون از هر گروه خاصی، کنار بقیه‌ی روت‌های cart:
+Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
 
 require __DIR__ . '/auth.php';

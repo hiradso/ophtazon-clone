@@ -50,6 +50,36 @@ class CartController extends Controller
 
         return back()->with('success', 'Added to cart.');
     }
+    public function preview(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $cart = $request->user()
+            ? Cart::where('user_id', $request->user()->id)->first()
+            : Cart::where('session_id', $request->session()->getId())->first();
+
+        if (! $cart) {
+            return response()->json(['items' => [], 'total' => 0, 'currency' => null]);
+        }
+
+        $items = $cart->items()->with('product.images', 'product.store')->get();
+
+        $total = $items->sum(fn($item) => $item->product->price * $item->quantity);
+
+        return response()->json([
+            'items' => $items->map(fn($item) => [
+                'id' => $item->id,
+                'quantity' => $item->quantity,
+                'product' => [
+                    'title' => $item->product->title,
+                    'price' => $item->product->price,
+                    'currency' => $item->product->currency,
+                    'slug' => $item->product->slug,
+                    'image' => $item->product->images->first()?->url,
+                ],
+            ]),
+            'total' => $total,
+            'currency' => $items->first()?->product->currency,
+        ]);
+    }
 
     public function destroy(CartItem $cartItem): RedirectResponse
     {
