@@ -90,6 +90,8 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media-picker.list');
         Route::post('media-picker', [MediaController::class, 'pickerUpload'])->name('media-picker.upload');
         Route::put('media/{medium}', [MediaController::class, 'update'])->name('media.update');
+        // داخل گروه admin، کنار بقیه‌ی روت‌های page-sections:
+        Route::post('page-sections/reorder', [PageSectionController::class, 'reorder'])->name('page-sections.reorder');
     });
 
 

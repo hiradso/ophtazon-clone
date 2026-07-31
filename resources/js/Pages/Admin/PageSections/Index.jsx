@@ -13,7 +13,21 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core";
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+    useSortable,
+    arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const TYPE_LABELS = {
     hero: "Hero Banner",
@@ -22,19 +36,41 @@ const TYPE_LABELS = {
     custom_content: "Custom Content",
 };
 
-export default function Index({ sections }) {
+export default function Index({ sections: initialSections }) {
     const { flash } = usePage().props;
+    const [sections, setSections] = useState(initialSections);
     const [sectionToDelete, setSectionToDelete] = useState(null);
+
+    // اگر داده‌ی سرور (مثلاً بعد از حذف) تغییر کرد، state محلی را هم به‌روز کن
+    useEffect(() => {
+        setSections(initialSections);
+    }, [initialSections]);
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
     }, [flash]);
 
-    const move = (section, direction) => {
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: { distance: 5 },
+        }),
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const oldIndex = sections.findIndex((s) => s.id === active.id);
+        const newIndex = sections.findIndex((s) => s.id === over.id);
+        const reordered = arrayMove(sections, oldIndex, newIndex);
+
+        // به‌روزرسانی فوری و خوش‌بینانه‌ی ظاهر، قبل از پاسخ سرور
+        setSections(reordered);
+
         router.post(
-            route("admin.page-sections.move", section.id),
-            { direction },
-            { preserveScroll: true },
+            route("admin.page-sections.reorder"),
+            { order: reordered.map((s) => s.id) },
+            { preserveScroll: true, preserveState: true },
         );
     };
 
@@ -65,7 +101,8 @@ export default function Index({ sections }) {
                 <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            Sections appear on the homepage in this order.
+                            Drag sections to reorder how they appear on the
+                            homepage.
                         </p>
 
                         <Button
@@ -81,100 +118,35 @@ export default function Index({ sections }) {
                         </Button>
                     </div>
 
-                    <div className="space-y-3">
-                        {sections.length === 0 && (
-                            <div className="rounded-lg border border-dashed border-border py-16 text-center text-sm text-muted-foreground">
-                                No sections yet. Add the first one to build your
-                                homepage.
-                            </div>
-                        )}
-
-                        {sections.map((section, index) => (
-                            <Card key={section.id}>
-                                <CardContent className="flex items-center gap-4 p-4">
-                                    <div className="flex flex-col">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="size-6"
-                                            disabled={index === 0}
-                                            onClick={() => move(section, "up")}
-                                        >
-                                            <ChevronUp className="size-4" />
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="size-6"
-                                            disabled={
-                                                index === sections.length - 1
+                    {sections.length === 0 ? (
+                        <div className="rounded-lg border border-dashed border-border py-16 text-center text-sm text-muted-foreground">
+                            No sections yet. Add the first one to build your
+                            homepage.
+                        </div>
+                    ) : (
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                        >
+                            <SortableContext
+                                items={sections.map((s) => s.id)}
+                                strategy={verticalListSortingStrategy}
+                            >
+                                <div className="space-y-3">
+                                    {sections.map((section) => (
+                                        <SortableSectionCard
+                                            key={section.id}
+                                            section={section}
+                                            onDelete={() =>
+                                                setSectionToDelete(section)
                                             }
-                                            onClick={() =>
-                                                move(section, "down")
-                                            }
-                                        >
-                                            <ChevronDown className="size-4" />
-                                        </Button>
-                                    </div>
-
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-medium text-foreground">
-                                                {TYPE_LABELS[section.type]}
-                                            </p>
-                                            <Badge
-                                                variant="outline"
-                                                className={
-                                                    section.is_active
-                                                        ? "bg-status-available/15 text-status-available border-status-available/30"
-                                                        : "bg-muted text-muted-foreground border-border"
-                                                }
-                                            >
-                                                {section.is_active
-                                                    ? "Visible"
-                                                    : "Hidden"}
-                                            </Badge>
-                                        </div>
-                                        {section.content?.title && (
-                                            <p className="text-sm text-muted-foreground">
-                                                {section.content.title}
-                                            </p>
-                                        )}
-                                        {section.content?.heading && (
-                                            <p className="text-sm text-muted-foreground">
-                                                {section.content.heading}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        nativeButton={false}
-                                        render={
-                                            <Link
-                                                href={route(
-                                                    "admin.page-sections.edit",
-                                                    section.id,
-                                                )}
-                                            />
-                                        }
-                                    >
-                                        <Pencil className="size-4" />
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() =>
-                                            setSectionToDelete(section)
-                                        }
-                                    >
-                                        <Trash2 className="size-4 text-destructive" />
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                                        />
+                                    ))}
+                                </div>
+                            </SortableContext>
+                        </DndContext>
+                    )}
                 </div>
             </div>
 
@@ -209,5 +181,86 @@ export default function Index({ sections }) {
                 </DialogContent>
             </Dialog>
         </AdminLayout>
+    );
+}
+
+function SortableSectionCard({ section, onDelete }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: section.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
+
+    return (
+        <div ref={setNodeRef} style={style}>
+            <Card>
+                <CardContent className="flex items-center gap-3 p-4">
+                    <button
+                        type="button"
+                        {...attributes}
+                        {...listeners}
+                        className="cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
+                    >
+                        <GripVertical className="size-5" />
+                    </button>
+
+                    <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                            <p className="font-medium text-foreground">
+                                {TYPE_LABELS[section.type]}
+                            </p>
+                            <Badge
+                                variant="outline"
+                                className={
+                                    section.is_active
+                                        ? "bg-status-available/15 text-status-available border-status-available/30"
+                                        : "bg-muted text-muted-foreground border-border"
+                                }
+                            >
+                                {section.is_active ? "Visible" : "Hidden"}
+                            </Badge>
+                        </div>
+                        {section.content?.title && (
+                            <p className="text-sm text-muted-foreground">
+                                {section.content.title}
+                            </p>
+                        )}
+                        {section.content?.heading && (
+                            <p className="text-sm text-muted-foreground">
+                                {section.content.heading}
+                            </p>
+                        )}
+                    </div>
+
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        nativeButton={false}
+                        render={
+                            <Link
+                                href={route(
+                                    "admin.page-sections.edit",
+                                    section.id,
+                                )}
+                            />
+                        }
+                    >
+                        <Pencil className="size-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={onDelete}>
+                        <Trash2 className="size-4 text-destructive" />
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

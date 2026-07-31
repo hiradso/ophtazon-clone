@@ -69,6 +69,21 @@ class PageSectionController extends Controller
 
         return redirect()->route('admin.page-sections.index')->with('success', 'Section updated.');
     }
+    public function reorder(Request $request): RedirectResponse
+{
+    $this->authorize('update', PageSection::class);
+
+    $request->validate([
+        'order' => ['required', 'array'],
+        'order.*' => ['integer', 'exists:page_sections,id'],
+    ]);
+
+    foreach ($request->input('order') as $index => $id) {
+        PageSection::where('id', $id)->update(['sort_order' => $index]);
+    }
+
+    return back();
+}
 
     public function destroy(PageSection $pageSection): RedirectResponse
     {
