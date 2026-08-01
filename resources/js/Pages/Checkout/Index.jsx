@@ -15,12 +15,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { t } from "@/lib/translate";
+import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 export default function Index({ cart, countries }) {
     const { locale } = usePage().props;
     const items = cart.items;
     const total = items.reduce(
-        (sum, item) => sum + Number(item.product.price) * item.quantity,
+        (sum, item) =>
+            sum + Number(item.product.effective_price) * item.quantity,
         0,
     );
     const currency = items[0]?.product.currency ?? "EUR";
@@ -236,27 +238,47 @@ export default function Index({ cart, countries }) {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-3">
-                                    {items.map((item) => (
-                                        <div
-                                            key={item.id}
-                                            className="flex items-start justify-between gap-3 text-sm"
-                                        >
-                                            <span className="text-muted-foreground">
-                                                {t(item.product.title, locale)}
-                                                <span className="text-muted-foreground/70">
-                                                    {" "}
-                                                    × {item.quantity}
+                                    {items.map((item) => {
+                                        const discounted = hasDiscount(
+                                            item.product.discount_percentage,
+                                        );
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                className="flex items-start justify-between gap-3 text-sm"
+                                            >
+                                                <span className="text-muted-foreground">
+                                                    {t(
+                                                        item.product.title,
+                                                        locale,
+                                                    )}
+                                                    <span className="text-muted-foreground/70">
+                                                        {" "}
+                                                        × {item.quantity}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                            <span className="shrink-0 whitespace-nowrap text-foreground">
-                                                {(
-                                                    item.product.price *
-                                                    item.quantity
-                                                ).toFixed(2)}{" "}
-                                                {item.product.currency}
-                                            </span>
-                                        </div>
-                                    ))}
+                                                <span className="shrink-0 text-right whitespace-nowrap">
+                                                    {discounted && (
+                                                        <span className="mr-1.5 text-xs text-muted-foreground line-through">
+                                                            {formatPrice(
+                                                                item.product
+                                                                    .price *
+                                                                    item.quantity,
+                                                            )}
+                                                        </span>
+                                                    )}
+                                                    <span className="text-foreground">
+                                                        {formatPrice(
+                                                            item.product
+                                                                .effective_price *
+                                                                item.quantity,
+                                                        )}{" "}
+                                                        {item.product.currency}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
 
                                 <Separator />
@@ -264,7 +286,7 @@ export default function Index({ cart, countries }) {
                                 <div className="flex justify-between text-base font-semibold text-foreground">
                                     <span>Total</span>
                                     <span>
-                                        {total.toFixed(2)} {currency}
+                                        {formatPrice(total)} {currency}
                                     </span>
                                 </div>
 

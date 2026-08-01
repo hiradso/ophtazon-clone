@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Mail, Phone } from "lucide-react";
 import { tt } from "@/lib/i18n";
+import { t } from "@/lib/translate";
 
 export default function Footer() {
     const { footerLinkGroups, siteSettings, locale } = usePage().props;
@@ -78,28 +79,26 @@ export default function Footer() {
                         )}
                     </div>
 
-                    {/* گروه‌های لینک پویا (مدیریت‌شده از پنل ادمین) */}
-                    {Object.entries(footerLinkGroups).map(
-                        ([groupLabel, links]) => (
-                            <div key={groupLabel}>
-                                <h3 className="mb-3 text-sm font-semibold text-foreground">
-                                    {groupLabel}
-                                </h3>
-                                <ul className="space-y-2 text-sm">
-                                    {links.map((link) => (
-                                        <li key={link.label}>
-                                            <a
-                                                href={link.url}
-                                                className="text-muted-foreground hover:text-foreground"
-                                            >
-                                                {link.label}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ),
-                    )}
+                    {/* گروه‌های لینک پویا و چندزبانه (مدیریت‌شده از پنل ادمین) */}
+                    {footerLinkGroups.map((group, index) => (
+                        <div key={index}>
+                            <h3 className="mb-3 text-sm font-semibold text-foreground">
+                                {t(group.group_label, locale)}
+                            </h3>
+                            <ul className="space-y-2 text-sm">
+                                {group.links.map((link) => (
+                                    <li key={link.url}>
+                                        <a
+                                            href={link.url}
+                                            className="text-muted-foreground hover:text-foreground"
+                                        >
+                                            {t(link.label, locale)}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
 
                     {/* خبرنامه */}
                     <div>

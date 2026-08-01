@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ImageOff, Trash2, ArrowRight } from "lucide-react";
 import { t } from "@/lib/translate";
+import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 export default function Index({ cart }) {
     const { locale } = usePage().props;
@@ -18,7 +19,8 @@ export default function Index({ cart }) {
     };
 
     const total = items.reduce(
-        (sum, item) => sum + Number(item.product.price) * item.quantity,
+        (sum, item) =>
+            sum + Number(item.product.effective_price) * item.quantity,
         0,
     );
     const currency = items[0]?.product.currency ?? "EUR";
@@ -47,51 +49,74 @@ export default function Index({ cart }) {
                 ) : (
                     <div className="space-y-6">
                         <div className="space-y-4">
-                            {items.map((item) => (
-                                <Card key={item.id}>
-                                    <CardContent className="flex items-center gap-4 p-4">
-                                        <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted">
-                                            {item.product.images?.[0] ? (
-                                                <img
-                                                    src={`/storage/${item.product.images[0].url}`}
-                                                    alt=""
-                                                    className="h-full w-full object-cover"
-                                                />
-                                            ) : (
-                                                <ImageOff className="size-6 text-muted-foreground" />
-                                            )}
-                                        </div>
-
-                                        <div className="min-w-0 flex-1">
-                                            <Link
-                                                href={route(
-                                                    "products.show",
-                                                    item.product.slug,
+                            {items.map((item) => {
+                                const discounted = hasDiscount(
+                                    item.product.discount_percentage,
+                                );
+                                return (
+                                    <Card key={item.id}>
+                                        <CardContent className="flex items-center gap-4 p-4">
+                                            <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted">
+                                                {item.product.images?.[0] ? (
+                                                    <img
+                                                        src={`/storage/${item.product.images[0].url}`}
+                                                        alt=""
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <ImageOff className="size-6 text-muted-foreground" />
                                                 )}
-                                                className="font-medium text-foreground hover:underline"
+                                            </div>
+
+                                            <div className="min-w-0 flex-1">
+                                                <Link
+                                                    href={route(
+                                                        "products.show",
+                                                        item.product.slug,
+                                                    )}
+                                                    className="font-medium text-foreground hover:underline"
+                                                >
+                                                    {t(
+                                                        item.product.title,
+                                                        locale,
+                                                    )}
+                                                </Link>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {item.product.store?.name}
+                                                </p>
+                                            </div>
+
+                                            <div className="shrink-0 text-right">
+                                                {discounted && (
+                                                    <p className="text-xs text-muted-foreground line-through">
+                                                        {formatPrice(
+                                                            item.product.price,
+                                                        )}{" "}
+                                                        {item.product.currency}
+                                                    </p>
+                                                )}
+                                                <p className="font-semibold text-foreground">
+                                                    {formatPrice(
+                                                        item.product
+                                                            .effective_price,
+                                                    )}{" "}
+                                                    {item.product.currency}
+                                                </p>
+                                            </div>
+
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() =>
+                                                    removeItem(item.id)
+                                                }
                                             >
-                                                {t(item.product.title, locale)}
-                                            </Link>
-                                            <p className="text-sm text-muted-foreground">
-                                                {item.product.store?.name}
-                                            </p>
-                                        </div>
-
-                                        <p className="shrink-0 font-semibold text-foreground">
-                                            {item.product.price}{" "}
-                                            {item.product.currency}
-                                        </p>
-
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem(item.id)}
-                                        >
-                                            <Trash2 className="size-4 text-destructive" />
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                                                <Trash2 className="size-4 text-destructive" />
+                                            </Button>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
                         </div>
 
                         <Card>
@@ -101,7 +126,7 @@ export default function Index({ cart }) {
                                         Subtotal
                                     </span>
                                     <span className="text-xl font-semibold text-foreground">
-                                        {total.toFixed(2)} {currency}
+                                        {formatPrice(total)} {currency}
                                     </span>
                                 </div>
 

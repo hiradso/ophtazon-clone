@@ -61,6 +61,7 @@ export default function Edit({
         manufacture_year: product.manufacture_year ?? "",
         warranty_months: product.warranty_months ?? "0",
         is_checked: product.is_checked ?? false,
+        stock_quantity: product.stock_quantity ?? 1,
     });
 
     useEffect(() => {
@@ -384,6 +385,33 @@ export default function Edit({
                             </CardHeader>
                             <CardContent className="grid gap-4 sm:grid-cols-3">
                                 <div className="space-y-1.5">
+                                    <Label htmlFor="stock_quantity">
+                                        Stock quantity
+                                    </Label>
+                                    <Input
+                                        id="stock_quantity"
+                                        type="number"
+                                        min="1"
+                                        value={data.stock_quantity}
+                                        onChange={(e) =>
+                                            setData(
+                                                "stock_quantity",
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Use 1 for a unique used item. Use a
+                                        higher number only for products you
+                                        stock in multiple units.
+                                    </p>
+                                    {errors.stock_quantity && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.stock_quantity}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="space-y-1.5">
                                     <Label htmlFor="price">Price</Label>
                                     <Input
                                         id="price"
@@ -400,7 +428,6 @@ export default function Edit({
                                         </p>
                                     )}
                                 </div>
-
                                 <div className="space-y-1.5">
                                     <Label htmlFor="currency">Currency</Label>
                                     <Input

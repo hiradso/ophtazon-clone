@@ -53,14 +53,26 @@ class HandleInertiaRequests extends Middleware
                 return \App\Models\MenuLink::where('location', 'header')
                     ->where('is_active', true)
                     ->orderBy('sort_order')
-                    ->get(['label', 'url']);
+                    ->get()
+                    ->map(fn($link) => [
+                        'label' => $link->getTranslations('label'),
+                        'url' => $link->url,
+                    ]);
             },
             'footerLinkGroups' => function () {
                 return \App\Models\MenuLink::where('location', 'footer')
                     ->where('is_active', true)
                     ->orderBy('sort_order')
                     ->get()
-                    ->groupBy('group_label');
+                    ->groupBy(fn($link) => $link->getTranslation('group_label', 'en'))
+                    ->map(fn($links) => [
+                        'group_label' => $links->first()->getTranslations('group_label'),
+                        'links' => $links->map(fn($link) => [
+                            'label' => $link->getTranslations('label'),
+                            'url' => $link->url,
+                        ])->values(),
+                    ])
+                    ->values();
             },
             'siteSettings' => function () {
                 return \App\Models\Setting::current();

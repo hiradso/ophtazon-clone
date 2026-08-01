@@ -12,13 +12,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         location: "footer",
-        group_label: "",
-        label: "",
+        group_label: { en: "", fr: "" },
+        label: { en: "", fr: "" },
         url: "",
         sort_order: "0",
         is_active: true,
@@ -90,67 +91,129 @@ export default function Create() {
                                     </Select>
                                 </div>
 
-                                {data.location === "footer" && (
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="group_label">
-                                            Footer column
-                                        </Label>
-                                        <Input
-                                            id="group_label"
-                                            value={data.group_label}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "group_label",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Legal"
-                                        />
-                                        {errors.group_label && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.group_label}
-                                            </p>
-                                        )}
-                                        <p className="text-xs text-muted-foreground">
-                                            Links with the same column name are
-                                            grouped together in the footer.
-                                        </p>
-                                    </div>
-                                )}
+                                <Tabs defaultValue="en">
+                                    <TabsList>
+                                        <TabsTrigger value="en">
+                                            English
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fr">
+                                            Français
+                                        </TabsTrigger>
+                                    </TabsList>
 
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="label">Label</Label>
-                                        <Input
-                                            id="label"
-                                            value={data.label}
-                                            onChange={(e) =>
-                                                setData("label", e.target.value)
-                                            }
-                                            placeholder="Terms of Service"
-                                        />
-                                        {errors.label && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.label}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="url">URL</Label>
-                                        <Input
-                                            id="url"
-                                            value={data.url}
-                                            onChange={(e) =>
-                                                setData("url", e.target.value)
-                                            }
-                                            placeholder="/pages/terms-of-service"
-                                        />
-                                        {errors.url && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.url}
-                                            </p>
-                                        )}
-                                    </div>
+                                    {["en", "fr"].map((locale) => (
+                                        <TabsContent
+                                            key={locale}
+                                            value={locale}
+                                            className="space-y-4"
+                                        >
+                                            {data.location === "footer" && (
+                                                <div className="space-y-1.5">
+                                                    <Label
+                                                        htmlFor={`group_label_${locale}`}
+                                                    >
+                                                        Footer column{" "}
+                                                        {locale === "fr" &&
+                                                            "(optional)"}
+                                                    </Label>
+                                                    <Input
+                                                        id={`group_label_${locale}`}
+                                                        value={
+                                                            data.group_label[
+                                                                locale
+                                                            ] ?? ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "group_label",
+                                                                {
+                                                                    ...data.group_label,
+                                                                    [locale]:
+                                                                        e.target
+                                                                            .value,
+                                                                },
+                                                            )
+                                                        }
+                                                        placeholder={
+                                                            locale === "en"
+                                                                ? "Legal"
+                                                                : "Mentions légales"
+                                                        }
+                                                    />
+                                                    {errors[
+                                                        `group_label.${locale}`
+                                                    ] && (
+                                                        <p className="text-sm text-destructive">
+                                                            {
+                                                                errors[
+                                                                    `group_label.${locale}`
+                                                                ]
+                                                            }
+                                                        </p>
+                                                    )}
+                                                    <p className="text-xs text-muted-foreground">
+                                                        Links with the same
+                                                        column name are grouped
+                                                        together in the footer.
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`label_${locale}`}
+                                                >
+                                                    Label{" "}
+                                                    {locale === "fr" &&
+                                                        "(optional)"}
+                                                </Label>
+                                                <Input
+                                                    id={`label_${locale}`}
+                                                    value={
+                                                        data.label[locale] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("label", {
+                                                            ...data.label,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                    placeholder={
+                                                        locale === "en"
+                                                            ? "Terms of Service"
+                                                            : "Conditions d'utilisation"
+                                                    }
+                                                />
+                                                {errors[`label.${locale}`] && (
+                                                    <p className="text-sm text-destructive">
+                                                        {
+                                                            errors[
+                                                                `label.${locale}`
+                                                            ]
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
+
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="url">URL</Label>
+                                    <Input
+                                        id="url"
+                                        value={data.url}
+                                        onChange={(e) =>
+                                            setData("url", e.target.value)
+                                        }
+                                        placeholder="/pages/terms-of-service"
+                                    />
+                                    {errors.url && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.url}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="space-y-1.5">

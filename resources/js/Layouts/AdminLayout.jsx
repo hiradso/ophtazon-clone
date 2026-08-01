@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import ThemeToggle from "@/Components/ThemeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -152,7 +152,7 @@ const siteContentGroup = {
 };
 
 export default function AdminLayout({ header, breadcrumbs, children }) {
-    const { auth, newContactRequestsCount } = usePage().props;
+    const { auth, newContactRequestsCount, locale } = usePage().props;
     const user = auth.user;
 
     const isSiteContentActive = siteContentGroup.children.some((child) =>
@@ -405,6 +405,35 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                 View site
                             </TooltipContent>
                         </Tooltip>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger
+                                render={
+                                    <Button variant="ghost" size="sm">
+                                        {locale === "fr" ? "FR" : "EN"}
+                                    </Button>
+                                }
+                            />
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.post(
+                                            route("locale.update", "en"),
+                                        )
+                                    }
+                                >
+                                    English
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.post(
+                                            route("locale.update", "fr"),
+                                        )
+                                    }
+                                >
+                                    Français
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
                         <ThemeToggle />
                         <Tooltip>

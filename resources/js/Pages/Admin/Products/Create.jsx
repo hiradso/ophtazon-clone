@@ -47,6 +47,7 @@ export default function Create({ categories, brands, stores }) {
         manufacture_year: "",
         warranty_months: "0",
         is_checked: false,
+        stock_quantity: 1,
     });
 
     const submit = (e) => {
@@ -354,6 +355,33 @@ export default function Create({ categories, brands, stores }) {
                                 <CardTitle>Pricing & Status</CardTitle>
                             </CardHeader>
                             <CardContent className="grid gap-4 sm:grid-cols-3">
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="stock_quantity">
+                                        Stock quantity
+                                    </Label>
+                                    <Input
+                                        id="stock_quantity"
+                                        type="number"
+                                        min="1"
+                                        value={data.stock_quantity}
+                                        onChange={(e) =>
+                                            setData(
+                                                "stock_quantity",
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Use 1 for a unique used item. Use a
+                                        higher number only for products you
+                                        stock in multiple units.
+                                    </p>
+                                    {errors.stock_quantity && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.stock_quantity}
+                                        </p>
+                                    )}
+                                </div>
                                 <div className="space-y-1.5">
                                     <Label htmlFor="price">Price</Label>
                                     <Input

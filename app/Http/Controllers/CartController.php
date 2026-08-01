@@ -61,24 +61,49 @@ class CartController extends Controller
         }
 
         $items = $cart->items()->with('product.images', 'product.store')->get();
-
-        $total = $items->sum(fn($item) => $item->product->price * $item->quantity);
+        $total = $items->sum(fn($item) => $item->product->effective_price * $item->quantity);
 
         return response()->json([
             'items' => $items->map(fn($item) => [
                 'id' => $item->id,
                 'quantity' => $item->quantity,
                 'product' => [
-                    'title' => $item->product->title,
-                    'price' => $item->product->price,
+                    'title' => $item->product->getTranslations('title'),
+                    'price' => $item->product->effective_price,
+                    'original_price' => $item->product->price,
+                    'discount_percentage' => $item->product->discount_percentage,
                     'currency' => $item->product->currency,
                     'slug' => $item->product->slug,
                     'image' => $item->product->images->first()?->url,
+                    'stock_quantity' => $item->product->stock_quantity,
                 ],
             ]),
             'total' => $total,
             'currency' => $items->first()?->product->currency,
         ]);
+    }
+    public function update(Request $request, CartItem $cartItem): RedirectResponse
+    {
+        $cart = $this->currentCart($request);
+        abort_unless($cart && $cartItem->cart_id === $cart->id, 403);
+
+        $request->validate([
+            'quantity' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $product = $cartItem->product;
+        $requestedQuantity = (int) $request->input('quantity');
+
+        if ($requestedQuantity > $product->stock_quantity) {
+            return back()->with(
+                'error',
+                "Only {$product->stock_quantity} unit(s) of \"{$product->title['en']}\" are available."
+            );
+        }
+
+        $cartItem->update(['quantity' => $requestedQuantity]);
+
+        return back()->with('success', 'Quantity updated.');
     }
 
     public function destroy(CartItem $cartItem): RedirectResponse

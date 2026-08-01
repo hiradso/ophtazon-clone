@@ -113,10 +113,10 @@ export default function Index({ menuLinks }) {
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
-                                                {link.group_label ?? "—"}
+                                                {link.group_label?.en ?? "—"}
                                             </TableCell>
                                             <TableCell className="font-medium text-foreground">
-                                                {link.label}
+                                                {link.label?.en}
                                             </TableCell>
                                             <TableCell className="max-w-48 truncate text-muted-foreground">
                                                 {link.url}
@@ -194,8 +194,8 @@ export default function Index({ menuLinks }) {
                         <DialogDescription>
                             {linkToDelete && (
                                 <>
-                                    "{linkToDelete.label}" will be permanently
-                                    deleted.
+                                    "{linkToDelete.label?.en}" will be
+                                    permanently deleted.
                                 </>
                             )}
                         </DialogDescription>

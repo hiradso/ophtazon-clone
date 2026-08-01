@@ -12,13 +12,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 
 export default function Edit({ menuLink }) {
     const { data, setData, put, processing, errors } = useForm({
         location: menuLink.location ?? "footer",
-        group_label: menuLink.group_label ?? "",
-        label: menuLink.label ?? "",
+        group_label: menuLink.group_label ?? { en: "", fr: "" },
+        label: menuLink.label ?? { en: "", fr: "" },
         url: menuLink.url ?? "",
         sort_order: menuLink.sort_order ?? "0",
         is_active: menuLink.is_active ?? true,
@@ -34,7 +35,7 @@ export default function Edit({ menuLink }) {
             breadcrumbs={[
                 { label: "Dashboard", href: route("dashboard") },
                 { label: "Menu Links", href: route("admin.menu-links.index") },
-                { label: menuLink.label },
+                { label: menuLink.label?.en ?? "" },
             ]}
             header={
                 <div className="flex items-center gap-3">
@@ -52,7 +53,7 @@ export default function Edit({ menuLink }) {
                 </div>
             }
         >
-            <Head title={`Edit — ${menuLink.label}`} />
+            <Head title={`Edit — ${menuLink.label?.en ?? ""}`} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
@@ -90,60 +91,113 @@ export default function Edit({ menuLink }) {
                                     </Select>
                                 </div>
 
-                                {data.location === "footer" && (
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="group_label">
-                                            Footer column
-                                        </Label>
-                                        <Input
-                                            id="group_label"
-                                            value={data.group_label}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "group_label",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                        {errors.group_label && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.group_label}
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
+                                <Tabs defaultValue="en">
+                                    <TabsList>
+                                        <TabsTrigger value="en">
+                                            English
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fr">
+                                            Français
+                                        </TabsTrigger>
+                                    </TabsList>
 
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="label">Label</Label>
-                                        <Input
-                                            id="label"
-                                            value={data.label}
-                                            onChange={(e) =>
-                                                setData("label", e.target.value)
-                                            }
-                                        />
-                                        {errors.label && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.label}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="url">URL</Label>
-                                        <Input
-                                            id="url"
-                                            value={data.url}
-                                            onChange={(e) =>
-                                                setData("url", e.target.value)
-                                            }
-                                        />
-                                        {errors.url && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.url}
-                                            </p>
-                                        )}
-                                    </div>
+                                    {["en", "fr"].map((locale) => (
+                                        <TabsContent
+                                            key={locale}
+                                            value={locale}
+                                            className="space-y-4"
+                                        >
+                                            {data.location === "footer" && (
+                                                <div className="space-y-1.5">
+                                                    <Label
+                                                        htmlFor={`group_label_${locale}`}
+                                                    >
+                                                        Footer column{" "}
+                                                        {locale === "fr" &&
+                                                            "(optional)"}
+                                                    </Label>
+                                                    <Input
+                                                        id={`group_label_${locale}`}
+                                                        value={
+                                                            data.group_label[
+                                                                locale
+                                                            ] ?? ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "group_label",
+                                                                {
+                                                                    ...data.group_label,
+                                                                    [locale]:
+                                                                        e.target
+                                                                            .value,
+                                                                },
+                                                            )
+                                                        }
+                                                    />
+                                                    {errors[
+                                                        `group_label.${locale}`
+                                                    ] && (
+                                                        <p className="text-sm text-destructive">
+                                                            {
+                                                                errors[
+                                                                    `group_label.${locale}`
+                                                                ]
+                                                            }
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`label_${locale}`}
+                                                >
+                                                    Label{" "}
+                                                    {locale === "fr" &&
+                                                        "(optional)"}
+                                                </Label>
+                                                <Input
+                                                    id={`label_${locale}`}
+                                                    value={
+                                                        data.label[locale] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("label", {
+                                                            ...data.label,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                {errors[`label.${locale}`] && (
+                                                    <p className="text-sm text-destructive">
+                                                        {
+                                                            errors[
+                                                                `label.${locale}`
+                                                            ]
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
+
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="url">URL</Label>
+                                    <Input
+                                        id="url"
+                                        value={data.url}
+                                        onChange={(e) =>
+                                            setData("url", e.target.value)
+                                        }
+                                    />
+                                    {errors.url && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.url}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="space-y-1.5">

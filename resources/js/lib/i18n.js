@@ -55,6 +55,9 @@ const translations = {
         back_to_results: "Back to results",
         brand_description:
             "New and used ophthalmic equipment, checked and shipped worldwide.",
+        last_one_available: "Last one available!",
+        low_stock_prefix: "Only",
+        low_stock_suffix: "left in stock",
     },
     fr: {
         products: "Produits",
@@ -114,6 +117,9 @@ const translations = {
         back_to_results: "Retour aux résultats",
         brand_description:
             "Matériel ophtalmique neuf et d'occasion, vérifié et expédié dans le monde entier.",
+        last_one_available: "Dernier exemplaire disponible !",
+        low_stock_prefix: "Il ne reste que",
+        low_stock_suffix: "en stock",
     },
 };
 

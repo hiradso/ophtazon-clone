@@ -36,6 +36,7 @@ class StoreProductRequest extends FormRequest
             'warranty_months' => ['nullable', 'integer', 'min:0'],
             'is_checked' => ['boolean'],
             'attributes' => ['nullable', 'array'],
+            'stock_quantity' => ['required', 'integer', 'min:1'],
         ];
     }
 }

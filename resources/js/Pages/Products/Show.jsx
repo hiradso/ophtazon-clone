@@ -24,16 +24,19 @@ import {
     CarouselPrevious,
     CarouselNext,
 } from "@/components/ui/carousel";
-import { ArrowLeft, ImageOff, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ImageOff, MapPin, ShieldCheck, Flame } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
+import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 const CONDITION_LABELS = {
     new: "New",
     used: "Used",
     refurbished: "Refurbished",
 };
+
+const LOW_STOCK_THRESHOLD = 5;
 
 export default function Show({ product, relatedProducts }) {
     const { locale } = usePage().props;
@@ -45,6 +48,10 @@ export default function Show({ product, relatedProducts }) {
     const productTitle = t(product.title, locale);
     const productDescription = t(product.description, locale);
     const categoryName = t(product.category?.name, locale);
+
+    const stock = product.stock_quantity ?? 1;
+    const isLowStock = stock > 0 && stock <= LOW_STOCK_THRESHOLD;
+    const discounted = hasDiscount(product.discount_percentage);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         type: "quote_request",
@@ -85,7 +92,12 @@ export default function Show({ product, relatedProducts }) {
 
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[28rem_1fr] lg:gap-12">
                     {/* گالری تصاویر */}
-                    <div className="self-start">
+                    <div className="relative self-start">
+                        {discounted && (
+                            <div className="absolute top-3 left-3 z-10 rounded-md bg-destructive px-2.5 py-1 text-sm font-semibold text-white shadow-md">
+                                -{product.discount_percentage}%
+                            </div>
+                        )}
                         <div className="flex h-48 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
                             {activeImage ? (
                                 <img
@@ -146,9 +158,32 @@ export default function Show({ product, relatedProducts }) {
                             Ref: {product.reference}
                         </p>
 
-                        <p className="mt-4 text-3xl font-bold text-foreground">
-                            {product.price} {product.currency}
-                        </p>
+                        <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
+                            {discounted && (
+                                <span className="text-lg text-muted-foreground line-through">
+                                    {formatPrice(product.price)}{" "}
+                                    {product.currency}
+                                </span>
+                            )}
+                            <span className="text-3xl font-bold text-foreground">
+                                {formatPrice(product.effective_price)}{" "}
+                                {product.currency}
+                            </span>
+                            {discounted && (
+                                <Badge className="bg-destructive text-white">
+                                    -{product.discount_percentage}%
+                                </Badge>
+                            )}
+                        </div>
+
+                        {isLowStock && (
+                            <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-status-pending/15 px-2.5 py-1 text-sm font-medium text-status-pending">
+                                <Flame className="size-3.5" />
+                                {stock === 1
+                                    ? tt("last_one_available", locale)
+                                    : `${tt("low_stock_prefix", locale)} ${stock} ${tt("low_stock_suffix", locale)}`}
+                            </div>
+                        )}
 
                         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                             <motion.div
@@ -262,7 +297,7 @@ export default function Show({ product, relatedProducts }) {
                             Related Equipment
                         </h2>
 
-                        <Carousel opts={{ align: "start" }} className="px-1">
+                        <Carousel opts={{ align: "start" }} className="px-10">
                             <CarouselContent>
                                 {relatedProducts.map((related) => (
                                     <CarouselItem
@@ -276,7 +311,18 @@ export default function Show({ product, relatedProducts }) {
                                             )}
                                         >
                                             <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                                <div className="flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                                <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                                    {hasDiscount(
+                                                        related.discount_percentage,
+                                                    ) && (
+                                                        <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                            -
+                                                            {
+                                                                related.discount_percentage
+                                                            }
+                                                            %
+                                                        </div>
+                                                    )}
                                                     {related.images?.[0] ? (
                                                         <motion.img
                                                             whileHover={{
@@ -304,7 +350,9 @@ export default function Show({ product, relatedProducts }) {
                                                         )}
                                                     </h3>
                                                     <p className="font-semibold text-foreground">
-                                                        {related.price}{" "}
+                                                        {formatPrice(
+                                                            related.effective_price,
+                                                        )}{" "}
                                                         {related.currency}
                                                     </p>
                                                 </CardContent>
@@ -313,8 +361,8 @@ export default function Show({ product, relatedProducts }) {
                                     </CarouselItem>
                                 ))}
                             </CarouselContent>
-                            <CarouselPrevious className="left-2" />
-                            <CarouselNext className="right-2" />
+                            <CarouselPrevious className="left-0" />
+                            <CarouselNext className="right-0" />
                         </Carousel>
                     </div>
                 )}

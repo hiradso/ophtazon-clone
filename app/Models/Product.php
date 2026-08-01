@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ProductCondition;
 use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
@@ -27,12 +28,22 @@ use Spatie\Translatable\HasTranslations;
     'is_checked',
     'attributes',
     'published_at',
+    'stock_quantity',
+    'discount_percentage',
 ])]
 class Product extends Model
 {
     use HasTranslations, SoftDeletes;
 
     public $translatable = ['title', 'description'];
+
+    /**
+     * effective_price همیشه به همراه هر سریالایز مدل فرستاده می‌شود —
+     * این تنها منبع حقیقت برای «قیمتی که واقعاً باید پرداخت شود» است،
+     * چه در نمایش (کارت محصول، صفحه‌ی جزئیات) چه در محاسبات واقعی
+     * (سبد خرید، چک‌اوت، ثبت سفارش).
+     */
+    protected $appends = ['effective_price'];
 
     protected function casts(): array
     {
@@ -44,9 +55,20 @@ class Product extends Model
             'manufacture_year' => 'integer',
             'warranty_months' => 'integer',
             'views_count' => 'integer',
+            'stock_quantity' => 'integer',
+            'discount_percentage' => 'integer',
             'status' => ProductStatus::class,
             'condition' => ProductCondition::class,
         ];
+    }
+
+    protected function effectivePrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->discount_percentage
+                ? round($this->price * (1 - $this->discount_percentage / 100), 2)
+                : (float) $this->price,
+        );
     }
 
     public function category()

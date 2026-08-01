@@ -67,9 +67,13 @@ class OrderController extends Controller
                 if ($item->product->status !== ProductStatus::Available) {
                     throw new \RuntimeException("\"{$item->product->title['en']}\" is no longer available.");
                 }
+
+                if ($item->product->stock_quantity < $item->quantity) {
+                    throw new \RuntimeException("\"{$item->product->title['en']}\" only has {$item->product->stock_quantity} unit(s) left.");
+                }
             }
 
-            $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+            $subtotal = $cartItems->sum(fn($item) => $item->product->effective_price * $item->quantity);
 
             $order = Order::create([
                 'order_number' => 'ORD-' . now()->format('Y') . '-' . Str::upper(Str::random(8)),
@@ -97,11 +101,16 @@ class OrderController extends Controller
                     'product_description_snapshot' => $product->description,
                     'product_image_snapshot' => $product->images->first()?->url,
                     'product_condition_snapshot' => $product->condition->value,
-                    'unit_price' => $product->price,
+                    'unit_price' => $product->effective_price,
                     'quantity' => $item->quantity,
                 ]);
 
-                $product->update(['status' => ProductStatus::Reserved]);
+                $remainingStock = $product->stock_quantity - $item->quantity;
+
+                $product->update([
+                    'stock_quantity' => $remainingStock,
+                    'status' => $remainingStock === 0 ? ProductStatus::Reserved : $product->status,
+                ]);
             }
 
             $cart->items()->delete();
