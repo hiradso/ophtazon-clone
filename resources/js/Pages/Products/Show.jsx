@@ -27,6 +27,7 @@ import {
 import { ArrowLeft, ImageOff, MapPin, ShieldCheck } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
+import { tt } from "@/lib/i18n";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -79,7 +80,7 @@ export default function Show({ product, relatedProducts }) {
                     className="mb-6"
                 >
                     <ArrowLeft className="mr-1.5 size-4" />
-                    Back to results
+                    {tt("back_to_results", locale)}
                 </Button>
 
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[28rem_1fr] lg:gap-12">
@@ -168,7 +169,7 @@ export default function Show({ product, relatedProducts }) {
                                     }}
                                 >
                                     <ShoppingCart className="mr-1.5 size-4" />
-                                    Add to cart
+                                    {tt("add_to_cart", locale)}
                                 </Button>
                             </motion.div>
 
@@ -181,7 +182,7 @@ export default function Show({ product, relatedProducts }) {
                                     className="w-full sm:w-auto"
                                     onClick={() => setContactOpen(true)}
                                 >
-                                    Contact seller
+                                    {tt("contact_seller", locale)}
                                 </Button>
                             </motion.div>
                         </div>
@@ -323,16 +324,21 @@ export default function Show({ product, relatedProducts }) {
             <Dialog open={contactOpen} onOpenChange={setContactOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Contact seller</DialogTitle>
+                        <DialogTitle>
+                            {tt("contact_seller", locale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            Ask about "{productTitle}". We'll pass your message
-                            to {product.store?.name}.
+                            {tt("ask_about", locale)} "{productTitle}".{" "}
+                            {tt("contact_seller_desc", locale)}{" "}
+                            {product.store?.name}.
                         </DialogDescription>
                     </DialogHeader>
 
                     <form onSubmit={submitContact} className="space-y-4">
                         <div className="space-y-1.5">
-                            <Label htmlFor="contact_name">Your name</Label>
+                            <Label htmlFor="contact_name">
+                                {tt("your_name", locale)}
+                            </Label>
                             <Input
                                 id="contact_name"
                                 value={data.name}
@@ -348,7 +354,9 @@ export default function Show({ product, relatedProducts }) {
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="contact_email">Email</Label>
+                            <Label htmlFor="contact_email">
+                                {tt("email", locale)}
+                            </Label>
                             <Input
                                 id="contact_email"
                                 type="email"
@@ -366,7 +374,7 @@ export default function Show({ product, relatedProducts }) {
 
                         <div className="space-y-1.5">
                             <Label htmlFor="contact_phone">
-                                Phone (optional)
+                                {tt("phone_optional", locale)}
                             </Label>
                             <Input
                                 id="contact_phone"
@@ -379,7 +387,7 @@ export default function Show({ product, relatedProducts }) {
 
                         <div className="space-y-1.5">
                             <Label htmlFor="contact_message">
-                                Message (optional)
+                                {tt("message_optional", locale)}
                             </Label>
                             <Textarea
                                 id="contact_message"
@@ -397,10 +405,12 @@ export default function Show({ product, relatedProducts }) {
                                 variant="outline"
                                 onClick={() => setContactOpen(false)}
                             >
-                                Cancel
+                                {tt("cancel", locale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Sending..." : "Send message"}
+                                {processing
+                                    ? tt("sending_message", locale)
+                                    : tt("send_message", locale)}
                             </Button>
                         </DialogFooter>
                     </form>

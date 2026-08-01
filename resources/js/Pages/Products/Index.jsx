@@ -24,12 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { t } from "@/lib/translate";
-
-const CONDITION_LABELS = {
-    new: "New",
-    used: "Used",
-    refurbished: "Refurbished",
-};
+import { tt } from "@/lib/i18n";
 
 export default function Index({
     products,
@@ -39,6 +34,12 @@ export default function Index({
     filters,
 }) {
     const { locale } = usePage().props;
+
+    const CONDITION_LABELS = {
+        new: tt("condition_new", locale),
+        used: tt("condition_used", locale),
+        refurbished: tt("condition_refurbished", locale),
+    };
 
     const [localFilters, setLocalFilters] = useState({
         category: filters.category ?? "",
@@ -129,7 +130,7 @@ export default function Index({
                                               )?.name,
                                               locale,
                                           )
-                                        : "Category"
+                                        : tt("category", locale)
                                 }
                             </SelectValue>
                         </SelectTrigger>
@@ -158,7 +159,7 @@ export default function Index({
                                         ? brands.find(
                                               (b) => String(b.id) === value,
                                           )?.name
-                                        : "Brand"
+                                        : tt("brand", locale)
                                 }
                             </SelectValue>
                         </SelectTrigger>
@@ -187,7 +188,7 @@ export default function Index({
                                         ? stores.find(
                                               (s) => String(s.id) === value,
                                           )?.name
-                                        : "Store"
+                                        : tt("store", locale)
                                 }
                             </SelectValue>
                         </SelectTrigger>
@@ -214,15 +215,19 @@ export default function Index({
                                 {(value) =>
                                     value
                                         ? CONDITION_LABELS[value]
-                                        : "Condition"
+                                        : tt("condition", locale)
                                 }
                             </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="new">New</SelectItem>
-                            <SelectItem value="used">Used</SelectItem>
+                            <SelectItem value="new">
+                                {tt("condition_new", locale)}
+                            </SelectItem>
+                            <SelectItem value="used">
+                                {tt("condition_used", locale)}
+                            </SelectItem>
                             <SelectItem value="refurbished">
-                                Refurbished
+                                {tt("condition_refurbished", locale)}
                             </SelectItem>
                         </SelectContent>
                     </Select>
@@ -230,7 +235,7 @@ export default function Index({
                     <div className="flex items-center gap-1.5">
                         <Input
                             type="number"
-                            placeholder="Min €"
+                            placeholder={tt("min_price_short", locale)}
                             className="w-24"
                             value={localFilters.min_price}
                             onChange={(e) =>
@@ -244,7 +249,7 @@ export default function Index({
                         <span className="text-muted-foreground">–</span>
                         <Input
                             type="number"
-                            placeholder="Max €"
+                            placeholder={tt("max_price_short", locale)}
                             className="w-24"
                             value={localFilters.max_price}
                             onChange={(e) =>
@@ -266,7 +271,7 @@ export default function Index({
                                 className="ml-auto"
                             >
                                 <X className="mr-1.5 size-3.5" />
-                                Clear filters
+                                {tt("clear_filters", locale)}
                             </Button>
                             <Button
                                 variant="outline"
@@ -275,7 +280,7 @@ export default function Index({
                                 className={hasActiveFilters ? "" : "ml-auto"}
                             >
                                 <Bell className="mr-1.5 size-3.5" />
-                                Notify me
+                                {tt("notify_me", locale)}
                             </Button>
                         </>
                     )}
@@ -284,7 +289,9 @@ export default function Index({
                 {/* نتایج */}
                 <p className="mb-4 text-sm text-muted-foreground">
                     {products.total}{" "}
-                    {products.total === 1 ? "result" : "results"}
+                    {products.total === 1
+                        ? tt("result", locale)
+                        : tt("results", locale)}
                 </p>
 
                 {products.data.length === 0 && (
@@ -383,15 +390,17 @@ export default function Index({
             <Dialog open={alertOpen} onOpenChange={setAlertOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Get notified</DialogTitle>
+                        <DialogTitle>{tt("get_notified", locale)}</DialogTitle>
                         <DialogDescription>
-                            We'll email you when a matching item is listed.
+                            {tt("notify_desc", locale)}
                         </DialogDescription>
                     </DialogHeader>
 
                     <form onSubmit={submitAlert} className="space-y-4">
                         <div className="space-y-1.5">
-                            <Label htmlFor="alert_email">Email</Label>
+                            <Label htmlFor="alert_email">
+                                {tt("email", locale)}
+                            </Label>
                             <Input
                                 id="alert_email"
                                 type="email"
@@ -413,10 +422,12 @@ export default function Index({
                                 variant="outline"
                                 onClick={() => setAlertOpen(false)}
                             >
-                                Cancel
+                                {tt("cancel", locale)}
                             </Button>
                             <Button type="submit" disabled={alertProcessing}>
-                                {alertProcessing ? "Saving..." : "Notify me"}
+                                {alertProcessing
+                                    ? tt("saving", locale)
+                                    : tt("notify_me", locale)}
                             </Button>
                         </DialogFooter>
                     </form>

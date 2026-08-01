@@ -46,8 +46,7 @@ export default function Footer() {
                             </span>
                         </div>
                         <p className="mb-3 text-sm text-muted-foreground">
-                            New and used ophthalmic equipment, checked and
-                            shipped worldwide.
+                            {tt("brand_description", locale)}
                         </p>
 
                         {(siteSettings.contact_email ||

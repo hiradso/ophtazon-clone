@@ -83,6 +83,9 @@ function HeroSection({ content }) {
         },
     };
 
+    const title = t(content?.title, locale);
+    const subtitle = t(content?.subtitle, locale);
+
     return (
         <section className="relative overflow-hidden bg-primary">
             <div
@@ -112,14 +115,14 @@ function HeroSection({ content }) {
                     variants={item}
                     className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl"
                 >
-                    {content?.title || tt("hero_default_title", locale)}
+                    {title || tt("hero_default_title", locale)}
                 </motion.h1>
 
                 <motion.p
                     variants={item}
                     className="mx-auto mt-4 max-w-2xl text-primary-foreground/80"
                 >
-                    {content?.subtitle || ""}
+                    {subtitle}
                 </motion.p>
 
                 <motion.form
@@ -297,16 +300,21 @@ function LatestProductsSection({ products }) {
 }
 
 function CustomContentSection({ content }) {
+    const { locale } = usePage().props;
+
+    const heading = t(content?.heading, locale);
+    const body = t(content?.body, locale);
+
     return (
         <section className="mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:px-8">
-            {content?.heading && (
+            {heading && (
                 <h2 className="mb-3 text-xl font-semibold tracking-tight text-foreground">
-                    {content.heading}
+                    {heading}
                 </h2>
             )}
-            {content?.body && (
+            {body && (
                 <p className="whitespace-pre-line text-muted-foreground">
-                    {content.body}
+                    {body}
                 </p>
             )}
         </section>

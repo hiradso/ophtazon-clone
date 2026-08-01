@@ -3,10 +3,10 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 
 const TYPE_LABELS = {
@@ -17,10 +17,17 @@ const TYPE_LABELS = {
 };
 
 export default function Edit({ section }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, put, processing } = useForm({
         content: section.content ?? {},
         is_active: section.is_active ?? true,
     });
+
+    const setField = (field, locale, value) => {
+        setData("content", {
+            ...data.content,
+            [field]: { ...data.content[field], [locale]: value },
+        });
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -69,79 +76,145 @@ export default function Edit({ section }) {
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {section.type === "hero" && (
-                                    <>
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="title">Title</Label>
-                                            <Input
-                                                id="title"
-                                                value={data.content.title ?? ""}
-                                                onChange={(e) =>
-                                                    setData("content", {
-                                                        ...data.content,
-                                                        title: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="subtitle">
-                                                Subtitle
-                                            </Label>
-                                            <Textarea
-                                                id="subtitle"
-                                                rows={2}
-                                                value={
-                                                    data.content.subtitle ?? ""
-                                                }
-                                                onChange={(e) =>
-                                                    setData("content", {
-                                                        ...data.content,
-                                                        subtitle:
-                                                            e.target.value,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </>
-                                )}
+                                {(section.type === "hero" ||
+                                    section.type === "custom_content") && (
+                                    <Tabs defaultValue="en">
+                                        <TabsList>
+                                            <TabsTrigger value="en">
+                                                English
+                                            </TabsTrigger>
+                                            <TabsTrigger value="fr">
+                                                Français
+                                            </TabsTrigger>
+                                        </TabsList>
 
-                                {section.type === "custom_content" && (
-                                    <>
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="heading">
-                                                Heading
-                                            </Label>
-                                            <Input
-                                                id="heading"
-                                                value={
-                                                    data.content.heading ?? ""
-                                                }
-                                                onChange={(e) =>
-                                                    setData("content", {
-                                                        ...data.content,
-                                                        heading: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="body">
-                                                Body text
-                                            </Label>
-                                            <Textarea
-                                                id="body"
-                                                rows={4}
-                                                value={data.content.body ?? ""}
-                                                onChange={(e) =>
-                                                    setData("content", {
-                                                        ...data.content,
-                                                        body: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </>
+                                        {["en", "fr"].map((locale) => (
+                                            <TabsContent
+                                                key={locale}
+                                                value={locale}
+                                                className="space-y-4"
+                                            >
+                                                {section.type === "hero" && (
+                                                    <>
+                                                        <div className="space-y-1.5">
+                                                            <Label
+                                                                htmlFor={`title_${locale}`}
+                                                            >
+                                                                Title{" "}
+                                                                {locale ===
+                                                                    "fr" &&
+                                                                    "(optional)"}
+                                                            </Label>
+                                                            <Input
+                                                                id={`title_${locale}`}
+                                                                value={
+                                                                    data.content
+                                                                        .title?.[
+                                                                        locale
+                                                                    ] ?? ""
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setField(
+                                                                        "title",
+                                                                        locale,
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <Label
+                                                                htmlFor={`subtitle_${locale}`}
+                                                            >
+                                                                Subtitle{" "}
+                                                                {locale ===
+                                                                    "fr" &&
+                                                                    "(optional)"}
+                                                            </Label>
+                                                            <Input
+                                                                id={`subtitle_${locale}`}
+                                                                value={
+                                                                    data.content
+                                                                        .subtitle?.[
+                                                                        locale
+                                                                    ] ?? ""
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setField(
+                                                                        "subtitle",
+                                                                        locale,
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )}
+
+                                                {section.type ===
+                                                    "custom_content" && (
+                                                    <>
+                                                        <div className="space-y-1.5">
+                                                            <Label
+                                                                htmlFor={`heading_${locale}`}
+                                                            >
+                                                                Heading{" "}
+                                                                {locale ===
+                                                                    "fr" &&
+                                                                    "(optional)"}
+                                                            </Label>
+                                                            <Input
+                                                                id={`heading_${locale}`}
+                                                                value={
+                                                                    data.content
+                                                                        .heading?.[
+                                                                        locale
+                                                                    ] ?? ""
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setField(
+                                                                        "heading",
+                                                                        locale,
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <Label
+                                                                htmlFor={`body_${locale}`}
+                                                            >
+                                                                Body text{" "}
+                                                                {locale ===
+                                                                    "fr" &&
+                                                                    "(optional)"}
+                                                            </Label>
+                                                            <Input
+                                                                id={`body_${locale}`}
+                                                                value={
+                                                                    data.content
+                                                                        .body?.[
+                                                                        locale
+                                                                    ] ?? ""
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setField(
+                                                                        "body",
+                                                                        locale,
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </TabsContent>
+                                        ))}
+                                    </Tabs>
                                 )}
 
                                 {(section.type === "categories" ||
