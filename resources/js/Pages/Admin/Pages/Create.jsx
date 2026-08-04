@@ -18,14 +18,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
 
+const LOCALE_LABELS = {
+    en: "English",
+    fr: "Français",
+    fa: "فارسی",
+};
+
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
-        title: { en: "", fr: "" },
+        title: { en: "", fr: "", fa: "" },
         slug: "",
-        content: { en: "", fr: "" },
+        content: { en: "", fr: "", fa: "" },
         featured_image: null,
         image_display_style: "banner",
-        meta_description: { en: "", fr: "" },
+        meta_description: { en: "", fr: "", fa: "" },
         is_published: true,
     });
 
@@ -75,24 +81,35 @@ export default function Create() {
                                         <TabsTrigger value="fr">
                                             Français
                                         </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    {["en", "fr"].map((locale) => (
+                                    {["en", "fr", "fa"].map((locale) => (
                                         <TabsContent
                                             key={locale}
                                             value={locale}
                                             className="space-y-4"
+                                            dir={
+                                                locale === "fa" ? "rtl" : "ltr"
+                                            }
                                         >
                                             <div className="space-y-1.5">
                                                 <Label
                                                     htmlFor={`title_${locale}`}
                                                 >
                                                     Title{" "}
-                                                    {locale === "fr" &&
+                                                    {locale !== "en" &&
                                                         "(optional)"}
                                                 </Label>
                                                 <Input
                                                     id={`title_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
                                                     value={
                                                         data.title[locale] ?? ""
                                                     }
@@ -118,7 +135,7 @@ export default function Create() {
                                             <div className="space-y-1.5">
                                                 <Label>
                                                     Content{" "}
-                                                    {locale === "fr" &&
+                                                    {locale !== "en" &&
                                                         "(optional)"}
                                                 </Label>
                                                 <RichTextEditor
@@ -154,6 +171,11 @@ export default function Create() {
                                                 </Label>
                                                 <Textarea
                                                     id={`meta_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
                                                     rows={2}
                                                     value={
                                                         data.meta_description[

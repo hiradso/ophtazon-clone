@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/vazirmatn";
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
@@ -84,6 +85,14 @@
         --status-sold: oklch(0.4 0.01 250);
         --status-archived: oklch(0.5 0.01 250);
     }
+
+    /* اعمال خودکار فونت وزیرمتن وقتی زبان صفحه فارسی است.
+   چون app.blade.php از قبل lang="fa" را روی <html> می‌گذارد،
+   این قانون بدون نیاز به هیچ تغییر جاوااسکریپتی کار می‌کند. */
+    html[lang="fa"] {
+        --font-sans: "Vazirmatn Variable", "Geist Variable", sans-serif;
+    }
+
     * {
         @apply border-border outline-ring/50;
     }

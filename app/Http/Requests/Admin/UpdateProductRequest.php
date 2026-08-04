@@ -47,6 +47,10 @@ class UpdateProductRequest extends FormRequest
             'meta_description.en' => ['nullable', 'string', 'max:160'],
             'meta_description.fr' => ['nullable', 'string', 'max:160'],
             'og_image' => ['nullable', 'string', 'max:255'],
+            'title.fa' => ['nullable', 'string', 'max:255'],
+            'description.fa' => ['nullable', 'string'],
+            'meta_title.fa' => ['nullable', 'string', 'max:60'],
+            'meta_description.fa' => ['nullable', 'string', 'max:160'],
         ];
     }
 }

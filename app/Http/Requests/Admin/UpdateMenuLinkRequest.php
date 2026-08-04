@@ -33,6 +33,8 @@ class UpdateMenuLinkRequest extends FormRequest
             'url' => ['required', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer'],
             'is_active' => ['boolean'],
+            'group_label.fa' => ['nullable', 'string', 'max:255'],
+            'label.fa' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

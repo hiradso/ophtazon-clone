@@ -92,13 +92,21 @@ export default function Edit({ section }) {
                                             <TabsTrigger value="fr">
                                                 Français
                                             </TabsTrigger>
+                                            <TabsTrigger value="fa">
+                                                فارسی
+                                            </TabsTrigger>
                                         </TabsList>
 
-                                        {["en", "fr"].map((locale) => (
+                                        {["en", "fr", "fa"].map((locale) => (
                                             <TabsContent
                                                 key={locale}
                                                 value={locale}
                                                 className="space-y-4"
+                                                dir={
+                                                    locale === "fa"
+                                                        ? "rtl"
+                                                        : "ltr"
+                                                }
                                             >
                                                 {section.type === "hero" && (
                                                     <>
@@ -107,12 +115,18 @@ export default function Edit({ section }) {
                                                                 htmlFor={`title_${locale}`}
                                                             >
                                                                 Title{" "}
-                                                                {locale ===
-                                                                    "fr" &&
+                                                                {locale !==
+                                                                    "en" &&
                                                                     "(optional)"}
                                                             </Label>
                                                             <Input
                                                                 id={`title_${locale}`}
+                                                                dir={
+                                                                    locale ===
+                                                                    "fa"
+                                                                        ? "rtl"
+                                                                        : "ltr"
+                                                                }
                                                                 value={
                                                                     data.content
                                                                         .title?.[
@@ -134,12 +148,18 @@ export default function Edit({ section }) {
                                                                 htmlFor={`subtitle_${locale}`}
                                                             >
                                                                 Subtitle{" "}
-                                                                {locale ===
-                                                                    "fr" &&
+                                                                {locale !==
+                                                                    "en" &&
                                                                     "(optional)"}
                                                             </Label>
                                                             <Input
                                                                 id={`subtitle_${locale}`}
+                                                                dir={
+                                                                    locale ===
+                                                                    "fa"
+                                                                        ? "rtl"
+                                                                        : "ltr"
+                                                                }
                                                                 value={
                                                                     data.content
                                                                         .subtitle?.[
@@ -167,12 +187,18 @@ export default function Edit({ section }) {
                                                                 htmlFor={`heading_${locale}`}
                                                             >
                                                                 Heading{" "}
-                                                                {locale ===
-                                                                    "fr" &&
+                                                                {locale !==
+                                                                    "en" &&
                                                                     "(optional)"}
                                                             </Label>
                                                             <Input
                                                                 id={`heading_${locale}`}
+                                                                dir={
+                                                                    locale ===
+                                                                    "fa"
+                                                                        ? "rtl"
+                                                                        : "ltr"
+                                                                }
                                                                 value={
                                                                     data.content
                                                                         .heading?.[
@@ -194,12 +220,18 @@ export default function Edit({ section }) {
                                                                 htmlFor={`body_${locale}`}
                                                             >
                                                                 Body text{" "}
-                                                                {locale ===
-                                                                    "fr" &&
+                                                                {locale !==
+                                                                    "en" &&
                                                                     "(optional)"}
                                                             </Label>
                                                             <Input
                                                                 id={`body_${locale}`}
+                                                                dir={
+                                                                    locale ===
+                                                                    "fa"
+                                                                        ? "rtl"
+                                                                        : "ltr"
+                                                                }
                                                                 value={
                                                                     data.content
                                                                         .body?.[

@@ -18,8 +18,16 @@ import { ArrowLeft } from "lucide-react";
 export default function Edit({ menuLink }) {
     const { data, setData, put, processing, errors } = useForm({
         location: menuLink.location ?? "footer",
-        group_label: menuLink.group_label ?? { en: "", fr: "" },
-        label: menuLink.label ?? { en: "", fr: "" },
+        group_label: {
+            en: menuLink.group_label?.en ?? "",
+            fr: menuLink.group_label?.fr ?? "",
+            fa: menuLink.group_label?.fa ?? "",
+        },
+        label: {
+            en: menuLink.label?.en ?? "",
+            fr: menuLink.label?.fr ?? "",
+            fa: menuLink.label?.fa ?? "",
+        },
         url: menuLink.url ?? "",
         sort_order: menuLink.sort_order ?? "0",
         is_active: menuLink.is_active ?? true,
@@ -99,13 +107,19 @@ export default function Edit({ menuLink }) {
                                         <TabsTrigger value="fr">
                                             Français
                                         </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    {["en", "fr"].map((locale) => (
+                                    {["en", "fr", "fa"].map((locale) => (
                                         <TabsContent
                                             key={locale}
                                             value={locale}
                                             className="space-y-4"
+                                            dir={
+                                                locale === "fa" ? "rtl" : "ltr"
+                                            }
                                         >
                                             {data.location === "footer" && (
                                                 <div className="space-y-1.5">
@@ -113,11 +127,16 @@ export default function Edit({ menuLink }) {
                                                         htmlFor={`group_label_${locale}`}
                                                     >
                                                         Footer column{" "}
-                                                        {locale === "fr" &&
+                                                        {locale !== "en" &&
                                                             "(optional)"}
                                                     </Label>
                                                     <Input
                                                         id={`group_label_${locale}`}
+                                                        dir={
+                                                            locale === "fa"
+                                                                ? "rtl"
+                                                                : "ltr"
+                                                        }
                                                         value={
                                                             data.group_label[
                                                                 locale
@@ -154,11 +173,16 @@ export default function Edit({ menuLink }) {
                                                     htmlFor={`label_${locale}`}
                                                 >
                                                     Label{" "}
-                                                    {locale === "fr" &&
+                                                    {locale !== "en" &&
                                                         "(optional)"}
                                                 </Label>
                                                 <Input
                                                     id={`label_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
                                                     value={
                                                         data.label[locale] ?? ""
                                                     }

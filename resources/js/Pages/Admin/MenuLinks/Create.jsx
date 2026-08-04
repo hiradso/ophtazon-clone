@@ -18,8 +18,8 @@ import { ArrowLeft } from "lucide-react";
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         location: "footer",
-        group_label: { en: "", fr: "" },
-        label: { en: "", fr: "" },
+        group_label: { en: "", fr: "", fa: "" },
+        label: { en: "", fr: "", fa: "" },
         url: "",
         sort_order: "0",
         is_active: true,
@@ -99,13 +99,19 @@ export default function Create() {
                                         <TabsTrigger value="fr">
                                             Français
                                         </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    {["en", "fr"].map((locale) => (
+                                    {["en", "fr", "fa"].map((locale) => (
                                         <TabsContent
                                             key={locale}
                                             value={locale}
                                             className="space-y-4"
+                                            dir={
+                                                locale === "fa" ? "rtl" : "ltr"
+                                            }
                                         >
                                             {data.location === "footer" && (
                                                 <div className="space-y-1.5">
@@ -113,11 +119,16 @@ export default function Create() {
                                                         htmlFor={`group_label_${locale}`}
                                                     >
                                                         Footer column{" "}
-                                                        {locale === "fr" &&
+                                                        {locale !== "en" &&
                                                             "(optional)"}
                                                     </Label>
                                                     <Input
                                                         id={`group_label_${locale}`}
+                                                        dir={
+                                                            locale === "fa"
+                                                                ? "rtl"
+                                                                : "ltr"
+                                                        }
                                                         value={
                                                             data.group_label[
                                                                 locale
@@ -137,7 +148,10 @@ export default function Create() {
                                                         placeholder={
                                                             locale === "en"
                                                                 ? "Legal"
-                                                                : "Mentions légales"
+                                                                : locale ===
+                                                                    "fr"
+                                                                  ? "Mentions légales"
+                                                                  : "حقوقی"
                                                         }
                                                     />
                                                     {errors[
@@ -164,11 +178,16 @@ export default function Create() {
                                                     htmlFor={`label_${locale}`}
                                                 >
                                                     Label{" "}
-                                                    {locale === "fr" &&
+                                                    {locale !== "en" &&
                                                         "(optional)"}
                                                 </Label>
                                                 <Input
                                                     id={`label_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
                                                     value={
                                                         data.label[locale] ?? ""
                                                     }
@@ -182,7 +201,9 @@ export default function Create() {
                                                     placeholder={
                                                         locale === "en"
                                                             ? "Terms of Service"
-                                                            : "Conditions d'utilisation"
+                                                            : locale === "fr"
+                                                              ? "Conditions d'utilisation"
+                                                              : "قوانین و مقررات"
                                                     }
                                                 />
                                                 {errors[`label.${locale}`] && (

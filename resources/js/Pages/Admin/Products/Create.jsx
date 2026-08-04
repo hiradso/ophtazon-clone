@@ -33,11 +33,17 @@ const STATUS_LABELS = {
     archived: "Archived",
 };
 
+const LOCALE_LABELS = {
+    en: "English",
+    fr: "Français",
+    fa: "فارسی",
+};
+
 export default function Create({ categories, brands, stores }) {
     const { data, setData, post, processing, errors } = useForm({
         reference: "",
-        title: { en: "", fr: "" },
-        description: { en: "", fr: "" },
+        title: { en: "", fr: "", fa: "" },
+        description: { en: "", fr: "", fa: "" },
         slug: "",
         category_id: "",
         brand_id: "",
@@ -51,8 +57,9 @@ export default function Create({ categories, brands, stores }) {
         is_checked: false,
         stock_quantity: 1,
         discount_percentage: "",
-        meta_title: { en: "", fr: "" },
-        meta_description: { en: "", fr: "" },
+        meta_title: { en: "", fr: "", fa: "" },
+        meta_description: { en: "", fr: "", fa: "" },
+        og_image: null,
     });
 
     const submit = (e) => {
@@ -107,91 +114,86 @@ export default function Create({ categories, brands, stores }) {
                                         <TabsTrigger value="fr">
                                             Français
                                         </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    <TabsContent
-                                        value="en"
-                                        className="space-y-4"
-                                    >
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="title_en">
-                                                Title (EN)
-                                            </Label>
-                                            <Input
-                                                id="title_en"
-                                                value={data.title.en}
-                                                onChange={(e) =>
-                                                    setData("title", {
-                                                        ...data.title,
-                                                        en: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                            {errors["title.en"] && (
-                                                <p className="text-sm text-destructive">
-                                                    {errors["title.en"]}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="description_en">
-                                                Description (EN)
-                                            </Label>
-                                            <Textarea
-                                                id="description_en"
-                                                rows={4}
-                                                value={data.description.en}
-                                                onChange={(e) =>
-                                                    setData("description", {
-                                                        ...data.description,
-                                                        en: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </TabsContent>
-
-                                    <TabsContent
-                                        value="fr"
-                                        className="space-y-4"
-                                    >
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="title_fr">
-                                                Title (FR)
-                                            </Label>
-                                            <Input
-                                                id="title_fr"
-                                                value={data.title.fr}
-                                                onChange={(e) =>
-                                                    setData("title", {
-                                                        ...data.title,
-                                                        fr: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                            {errors["title.fr"] && (
-                                                <p className="text-sm text-destructive">
-                                                    {errors["title.fr"]}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="description_fr">
-                                                Description (FR)
-                                            </Label>
-                                            <Textarea
-                                                id="description_fr"
-                                                rows={4}
-                                                value={data.description.fr}
-                                                onChange={(e) =>
-                                                    setData("description", {
-                                                        ...data.description,
-                                                        fr: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </TabsContent>
+                                    {["en", "fr", "fa"].map((locale) => (
+                                        <TabsContent
+                                            key={locale}
+                                            value={locale}
+                                            className="space-y-4"
+                                            dir={
+                                                locale === "fa" ? "rtl" : "ltr"
+                                            }
+                                        >
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`title_${locale}`}
+                                                >
+                                                    Title (
+                                                    {LOCALE_LABELS[locale]})
+                                                </Label>
+                                                <Input
+                                                    id={`title_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
+                                                    value={
+                                                        data.title[locale] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("title", {
+                                                            ...data.title,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                {errors[`title.${locale}`] && (
+                                                    <p className="text-sm text-destructive">
+                                                        {
+                                                            errors[
+                                                                `title.${locale}`
+                                                            ]
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`description_${locale}`}
+                                                >
+                                                    Description (
+                                                    {LOCALE_LABELS[locale]})
+                                                </Label>
+                                                <Textarea
+                                                    id={`description_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
+                                                    rows={4}
+                                                    value={
+                                                        data.description[
+                                                            locale
+                                                        ] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("description", {
+                                                            ...data.description,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                            </div>
+                                        </TabsContent>
+                                    ))}
                                 </Tabs>
 
                                 <Separator />
@@ -612,13 +614,19 @@ export default function Create({ categories, brands, stores }) {
                                         <TabsTrigger value="fr">
                                             Français
                                         </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    {["en", "fr"].map((locale) => (
+                                    {["en", "fr", "fa"].map((locale) => (
                                         <TabsContent
                                             key={locale}
                                             value={locale}
                                             className="space-y-4"
+                                            dir={
+                                                locale === "fa" ? "rtl" : "ltr"
+                                            }
                                         >
                                             <div className="space-y-1.5">
                                                 <div className="flex items-center justify-between">
@@ -643,6 +651,11 @@ export default function Create({ categories, brands, stores }) {
                                                 </div>
                                                 <Input
                                                     id={`meta_title_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
                                                     value={
                                                         data.meta_title[
                                                             locale
@@ -685,6 +698,11 @@ export default function Create({ categories, brands, stores }) {
                                                 </div>
                                                 <Textarea
                                                     id={`meta_description_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
                                                     rows={2}
                                                     value={
                                                         data.meta_description[
@@ -707,6 +725,7 @@ export default function Create({ categories, brands, stores }) {
                                         </TabsContent>
                                     ))}
                                 </Tabs>
+
                                 <div className="space-y-1.5">
                                     <Label>Social share image (optional)</Label>
                                     <MediaPicker

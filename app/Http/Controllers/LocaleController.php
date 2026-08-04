@@ -9,7 +9,7 @@ class LocaleController extends Controller
 {
     public function update(Request $request, string $locale): RedirectResponse
     {
-        if (in_array($locale, ['en', 'fr'], true)) {
+        if (in_array($locale, ['en', 'fr', 'fa'], true)) {
             $request->session()->put('locale', $locale);
         }
 

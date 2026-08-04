@@ -103,7 +103,11 @@ export default function PublicLayout({ children }) {
                             <DropdownMenuTrigger
                                 render={
                                     <Button variant="ghost" size="sm">
-                                        {locale === "fr" ? "FR" : "EN"}
+                                        {locale === "fr"
+                                            ? "FR"
+                                            : locale === "fa"
+                                              ? "FA"
+                                              : "EN"}
                                     </Button>
                                 }
                             />
@@ -125,6 +129,15 @@ export default function PublicLayout({ children }) {
                                     }
                                 >
                                     Français
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.post(
+                                            route("locale.update", "fa"),
+                                        )
+                                    }
+                                >
+                                    فارسی
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

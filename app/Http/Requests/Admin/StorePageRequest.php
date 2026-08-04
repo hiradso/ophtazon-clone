@@ -28,6 +28,9 @@ class StorePageRequest extends FormRequest
             'meta_description.en' => ['nullable', 'string', 'max:255'],
             'meta_description.fr' => ['nullable', 'string', 'max:255'],
             'is_published' => ['boolean'],
+            'title.fa' => ['nullable', 'string', 'max:255'],
+            'content.fa' => ['nullable', 'string'],
+            'meta_description.fa' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

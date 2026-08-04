@@ -409,7 +409,11 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                             <DropdownMenuTrigger
                                 render={
                                     <Button variant="ghost" size="sm">
-                                        {locale === "fr" ? "FR" : "EN"}
+                                        {locale === "fr"
+                                            ? "FR"
+                                            : locale === "fa"
+                                              ? "FA"
+                                              : "EN"}
                                     </Button>
                                 }
                             />
@@ -431,6 +435,15 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                     }
                                 >
                                     Français
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.post(
+                                            route("locale.update", "fa"),
+                                        )
+                                    }
+                                >
+                                    فارسی
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
