@@ -37,6 +37,14 @@ class StoreProductRequest extends FormRequest
             'is_checked' => ['boolean'],
             'attributes' => ['nullable', 'array'],
             'stock_quantity' => ['required', 'integer', 'min:1'],
+            'discount_percentage' => ['nullable', 'integer', 'min:1', 'max:99'],
+            'meta_title' => ['nullable', 'array'],
+            'meta_title.en' => ['nullable', 'string', 'max:60'],
+            'meta_title.fr' => ['nullable', 'string', 'max:60'],
+            'meta_description' => ['nullable', 'array'],
+            'meta_description.en' => ['nullable', 'string', 'max:160'],
+            'meta_description.fr' => ['nullable', 'string', 'max:160'],
+            'og_image' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

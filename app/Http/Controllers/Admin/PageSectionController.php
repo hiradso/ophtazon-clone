@@ -32,7 +32,7 @@ class PageSectionController extends Controller
         $this->authorize('create', PageSection::class);
 
         $request->validate([
-            'type' => ['required', 'in:hero,categories,latest_products,custom_content'],
+            'type' => ['required', 'in:hero,categories,latest_products,discounted_products,custom_content'],
             'content' => ['nullable', 'array'],
             'is_active' => ['boolean'],
         ]);
@@ -70,20 +70,20 @@ class PageSectionController extends Controller
         return redirect()->route('admin.page-sections.index')->with('success', 'Section updated.');
     }
     public function reorder(Request $request): RedirectResponse
-{
-    $this->authorize('update', PageSection::class);
+    {
+        $this->authorize('update', PageSection::class);
 
-    $request->validate([
-        'order' => ['required', 'array'],
-        'order.*' => ['integer', 'exists:page_sections,id'],
-    ]);
+        $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['integer', 'exists:page_sections,id'],
+        ]);
 
-    foreach ($request->input('order') as $index => $id) {
-        PageSection::where('id', $id)->update(['sort_order' => $index]);
+        foreach ($request->input('order') as $index => $id) {
+            PageSection::where('id', $id)->update(['sort_order' => $index]);
+        }
+
+        return back();
     }
-
-    return back();
-}
 
     public function destroy(PageSection $pageSection): RedirectResponse
     {

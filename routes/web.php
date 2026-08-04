@@ -18,19 +18,20 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RobotsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\PageController as PublicPageController;
 use App\Http\Controllers\Admin\MenuLinkController;
 use App\Http\Controllers\Admin\SettingController;
-
-
-
+use App\Http\Controllers\SitemapController;
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
+Route::get('/robots.txt', [RobotsController::class, 'index'])->name('robots');
 
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])
     ->middleware('throttle:20,1')
@@ -49,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'role:admin,staff'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

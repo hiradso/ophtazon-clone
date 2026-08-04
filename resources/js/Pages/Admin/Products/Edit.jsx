@@ -17,8 +17,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Trash2, Upload } from "lucide-react";
+import { ArrowLeft, Trash2, Tag } from "lucide-react";
 import MediaPicker from "@/Components/MediaPicker";
+import { getDiscountedPrice, hasDiscount, formatPrice } from "@/lib/pricing";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -62,6 +63,15 @@ export default function Edit({
         warranty_months: product.warranty_months ?? "0",
         is_checked: product.is_checked ?? false,
         stock_quantity: product.stock_quantity ?? 1,
+        discount_percentage: product.discount_percentage ?? "",
+        meta_title: {
+            en: product.meta_title?.en ?? "",
+            fr: product.meta_title?.fr ?? "",
+        },
+        meta_description: {
+            en: product.meta_description?.en ?? "",
+            fr: product.meta_description?.fr ?? "",
+        },
     });
 
     useEffect(() => {
@@ -74,6 +84,11 @@ export default function Edit({
         e.preventDefault();
         put(route("admin.products.update", product.id));
     };
+
+    const discountPreviewActive = hasDiscount(Number(data.discount_percentage));
+    const previewFinalPrice = discountPreviewActive
+        ? getDiscountedPrice(data.price || 0, Number(data.discount_percentage))
+        : null;
 
     return (
         <AdminLayout
@@ -443,6 +458,54 @@ export default function Edit({
                                     />
                                 </div>
 
+                                <div className="space-y-1.5 sm:col-span-2">
+                                    <Label htmlFor="discount_percentage">
+                                        Discount percentage (optional)
+                                    </Label>
+                                    <Input
+                                        id="discount_percentage"
+                                        type="number"
+                                        min="1"
+                                        max="99"
+                                        placeholder="e.g. 20"
+                                        value={data.discount_percentage}
+                                        onChange={(e) =>
+                                            setData(
+                                                "discount_percentage",
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Leave empty for no discount. When set, a
+                                        "Discounted" badge appears automatically
+                                        on this product.
+                                    </p>
+                                    {errors.discount_percentage && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.discount_percentage}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label>Final price</Label>
+                                    <div className="flex h-9 items-center rounded-md border border-dashed border-border bg-muted/40 px-3 text-sm">
+                                        {discountPreviewActive ? (
+                                            <span className="flex items-center gap-1.5 font-semibold text-foreground">
+                                                <Tag className="size-3.5 text-destructive" />
+                                                {formatPrice(previewFinalPrice)}{" "}
+                                                {data.currency}
+                                            </span>
+                                        ) : (
+                                            <span className="text-muted-foreground">
+                                                {formatPrice(data.price || 0)}{" "}
+                                                {data.currency}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
                                 <div className="space-y-1.5">
                                     <Label>Condition</Label>
                                     <Select
@@ -564,6 +627,137 @@ export default function Edit({
                                     <Label htmlFor="is_checked">
                                         Checked by Ophtazon
                                     </Label>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        {/* SEO */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>SEO</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <Tabs defaultValue="en">
+                                    <TabsList>
+                                        <TabsTrigger value="en">
+                                            English
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fr">
+                                            Français
+                                        </TabsTrigger>
+                                    </TabsList>
+
+                                    {["en", "fr"].map((locale) => (
+                                        <TabsContent
+                                            key={locale}
+                                            value={locale}
+                                            className="space-y-4"
+                                        >
+                                            <div className="space-y-1.5">
+                                                <div className="flex items-center justify-between">
+                                                    <Label
+                                                        htmlFor={`meta_title_${locale}`}
+                                                    >
+                                                        Meta title
+                                                    </Label>
+                                                    <span
+                                                        className={`text-xs ${
+                                                            (data.meta_title[
+                                                                locale
+                                                            ]?.length ?? 0) > 60
+                                                                ? "text-destructive"
+                                                                : "text-muted-foreground"
+                                                        }`}
+                                                    >
+                                                        {data.meta_title[locale]
+                                                            ?.length ?? 0}
+                                                        /60
+                                                    </span>
+                                                </div>
+                                                <Input
+                                                    id={`meta_title_${locale}`}
+                                                    value={
+                                                        data.meta_title[
+                                                            locale
+                                                        ] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("meta_title", {
+                                                            ...data.meta_title,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                    placeholder="Leave empty to use the product title"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-1.5">
+                                                <div className="flex items-center justify-between">
+                                                    <Label
+                                                        htmlFor={`meta_description_${locale}`}
+                                                    >
+                                                        Meta description
+                                                    </Label>
+                                                    <span
+                                                        className={`text-xs ${
+                                                            (data
+                                                                .meta_description[
+                                                                locale
+                                                            ]?.length ?? 0) >
+                                                            160
+                                                                ? "text-destructive"
+                                                                : "text-muted-foreground"
+                                                        }`}
+                                                    >
+                                                        {data.meta_description[
+                                                            locale
+                                                        ]?.length ?? 0}
+                                                        /160
+                                                    </span>
+                                                </div>
+                                                <Textarea
+                                                    id={`meta_description_${locale}`}
+                                                    rows={2}
+                                                    value={
+                                                        data.meta_description[
+                                                            locale
+                                                        ] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "meta_description",
+                                                            {
+                                                                ...data.meta_description,
+                                                                [locale]:
+                                                                    e.target
+                                                                        .value,
+                                                            },
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
+                                <div className="space-y-1.5">
+                                    <Label>Social share image (optional)</Label>
+                                    <MediaPicker
+                                        value={data.og_image}
+                                        onSelect={(path) =>
+                                            setData("og_image", path)
+                                        }
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Shown when this product is shared on
+                                        social media. If left empty, the first
+                                        product photo will be used
+                                        automatically.
+                                    </p>
+                                    {errors.og_image && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.og_image}
+                                        </p>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>

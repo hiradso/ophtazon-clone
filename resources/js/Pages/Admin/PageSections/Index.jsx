@@ -33,6 +33,7 @@ const TYPE_LABELS = {
     hero: "Hero Banner",
     categories: "Category Grid",
     latest_products: "Latest Listings",
+    discounted_products: "On Sale (Discounted Products)",
     custom_content: "Custom Content",
 };
 
@@ -229,14 +230,14 @@ function SortableSectionCard({ section, onDelete }) {
                                 {section.is_active ? "Visible" : "Hidden"}
                             </Badge>
                         </div>
-                        {section.content?.title && (
+                        {section.content?.title?.en && (
                             <p className="text-sm text-muted-foreground">
-                                {section.content.title}
+                                {section.content.title.en}
                             </p>
                         )}
-                        {section.content?.heading && (
+                        {section.content?.heading?.en && (
                             <p className="text-sm text-muted-foreground">
-                                {section.content.heading}
+                                {section.content.heading.en}
                             </p>
                         )}
                     </div>

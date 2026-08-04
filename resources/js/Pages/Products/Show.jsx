@@ -76,7 +76,81 @@ export default function Show({ product, relatedProducts }) {
 
     return (
         <PublicLayout>
-            <Head title={productTitle || product.reference} />
+            <Head
+                title={
+                    t(product.meta_title, locale) ||
+                    productTitle ||
+                    product.reference
+                }
+            >
+                <meta
+                    name="description"
+                    content={
+                        t(product.meta_description, locale) ||
+                        productDescription?.slice(0, 160) ||
+                        ""
+                    }
+                />
+
+                {/* Canonical — همیشه به آدرس اصلی و بدون پارامتر اضافه اشاره می‌کند */}
+                <link
+                    rel="canonical"
+                    href={`${window.location.origin}/products/${product.slug}`}
+                />
+
+                {/* Open Graph — برای اشتراک‌گذاری در شبکه‌های اجتماعی */}
+                <meta property="og:type" content="product" />
+                <meta
+                    property="og:title"
+                    content={t(product.meta_title, locale) || productTitle}
+                />
+                <meta
+                    property="og:description"
+                    content={
+                        t(product.meta_description, locale) ||
+                        productDescription?.slice(0, 160) ||
+                        ""
+                    }
+                />
+                <meta
+                    property="og:url"
+                    content={`${window.location.origin}/products/${product.slug}`}
+                />
+                {(product.og_image || product.images?.[0]?.url) && (
+                    <meta
+                        property="og:image"
+                        content={`${window.location.origin}/storage/${product.og_image || product.images[0].url}`}
+                    />
+                )}
+
+                {/* داده‌ی ساختاریافته — برای نمایش قیمت/موجودی مستقیم در نتایج گوگل */}
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Product",
+                        name: productTitle,
+                        description: productDescription || "",
+                        image: product.images?.[0]
+                            ? `${window.location.origin}/storage/${product.images[0].url}`
+                            : undefined,
+                        sku: product.reference,
+                        offers: {
+                            "@type": "Offer",
+                            url: `${window.location.origin}/products/${product.slug}`,
+                            priceCurrency: product.currency,
+                            price: product.effective_price,
+                            availability:
+                                product.stock_quantity > 0
+                                    ? "https://schema.org/InStock"
+                                    : "https://schema.org/OutOfStock",
+                            itemCondition:
+                                product.condition === "new"
+                                    ? "https://schema.org/NewCondition"
+                                    : "https://schema.org/UsedCondition",
+                        },
+                    })}
+                </script>
+            </Head>
 
             <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
                 <Button

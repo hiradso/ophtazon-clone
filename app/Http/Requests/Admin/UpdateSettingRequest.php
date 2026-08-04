@@ -19,6 +19,7 @@ class UpdateSettingRequest extends FormRequest
             'logo' => ['nullable', 'string', 'max:255'],
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:255'],
+            'robots_txt' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }

@@ -19,6 +19,7 @@ const TYPE_LABELS = {
     hero: "Hero Banner",
     categories: "Category Grid",
     latest_products: "Latest Listings",
+    discounted_products: "On Sale (Discounted Products)",
     custom_content: "Custom Content",
 };
 
@@ -26,6 +27,7 @@ const DEFAULT_CONTENT = {
     hero: { title: { en: "", fr: "" }, subtitle: { en: "", fr: "" } },
     categories: {},
     latest_products: {},
+    discounted_products: {},
     custom_content: {
         heading: { en: "", fr: "" },
         body: { en: "", fr: "" },
@@ -54,6 +56,11 @@ export default function Create() {
         e.preventDefault();
         post(route("admin.page-sections.store"));
     };
+
+    const needsNoExtraFields =
+        data.type === "categories" ||
+        data.type === "latest_products" ||
+        data.type === "discounted_products";
 
     return (
         <AdminLayout
@@ -108,6 +115,9 @@ export default function Create() {
                                         </SelectItem>
                                         <SelectItem value="latest_products">
                                             Latest Listings
+                                        </SelectItem>
+                                        <SelectItem value="discounted_products">
+                                            On Sale (Discounted Products)
                                         </SelectItem>
                                         <SelectItem value="custom_content">
                                             Custom Content
@@ -256,8 +266,7 @@ export default function Create() {
                                     </Tabs>
                                 )}
 
-                                {(data.type === "categories" ||
-                                    data.type === "latest_products") && (
+                                {needsNoExtraFields && (
                                     <p className="rounded-md border border-dashed border-border p-3 text-sm text-muted-foreground">
                                         This section pulls data automatically —
                                         no extra fields needed.

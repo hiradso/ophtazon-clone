@@ -13,6 +13,7 @@ const TYPE_LABELS = {
     hero: "Hero Banner",
     categories: "Category Grid",
     latest_products: "Latest Listings",
+    discounted_products: "On Sale (Discounted Products)",
     custom_content: "Custom Content",
 };
 
@@ -33,6 +34,11 @@ export default function Edit({ section }) {
         e.preventDefault();
         put(route("admin.page-sections.update", section.id));
     };
+
+    const needsNoExtraFields =
+        section.type === "categories" ||
+        section.type === "latest_products" ||
+        section.type === "discounted_products";
 
     return (
         <AdminLayout
@@ -217,8 +223,7 @@ export default function Edit({ section }) {
                                     </Tabs>
                                 )}
 
-                                {(section.type === "categories" ||
-                                    section.type === "latest_products") && (
+                                {needsNoExtraFields && (
                                     <p className="rounded-md border border-dashed border-border p-3 text-sm text-muted-foreground">
                                         This section pulls data automatically —
                                         no extra fields needed.

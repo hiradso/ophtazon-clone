@@ -25,6 +25,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
+import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 export default function Index({
     products,
@@ -301,61 +302,97 @@ export default function Index({
                 )}
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {products.data.map((product, index) => (
-                        <motion.div
-                            key={product.id}
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{
-                                duration: 0.4,
-                                delay: (index % 8) * 0.05,
-                            }}
-                        >
-                            <Link href={route("products.show", product.slug)}>
-                                <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                    <div className="flex h-48 items-center justify-center overflow-hidden bg-muted">
-                                        {product.images?.[0] ? (
-                                            <motion.img
-                                                whileHover={{ scale: 1.08 }}
-                                                transition={{ duration: 0.4 }}
-                                                src={`/storage/${product.images[0].url}`}
-                                                alt={t(product.title, locale)}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <ImageOff className="size-8 text-muted-foreground" />
-                                        )}
-                                    </div>
-                                    <CardContent className="space-y-2 p-4">
-                                        <div className="flex items-center gap-2">
-                                            <Badge
-                                                variant="outline"
-                                                className="text-xs"
-                                            >
-                                                {
-                                                    CONDITION_LABELS[
-                                                        product.condition
-                                                    ]
-                                                }
-                                            </Badge>
-                                            {product.store?.name && (
-                                                <span className="text-xs text-muted-foreground">
-                                                    {product.store.name}
-                                                </span>
+                    {products.data.map((product, index) => {
+                        const discounted = hasDiscount(
+                            product.discount_percentage,
+                        );
+
+                        return (
+                            <motion.div
+                                key={product.id}
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{
+                                    duration: 0.4,
+                                    delay: (index % 8) * 0.05,
+                                }}
+                            >
+                                <Link
+                                    href={route("products.show", product.slug)}
+                                >
+                                    <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
+                                        <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                            {discounted && (
+                                                <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                    -
+                                                    {
+                                                        product.discount_percentage
+                                                    }
+                                                    %
+                                                </div>
+                                            )}
+                                            {product.images?.[0] ? (
+                                                <motion.img
+                                                    whileHover={{
+                                                        scale: 1.08,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.4,
+                                                    }}
+                                                    src={`/storage/${product.images[0].url}`}
+                                                    alt={t(
+                                                        product.title,
+                                                        locale,
+                                                    )}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                <ImageOff className="size-8 text-muted-foreground" />
                                             )}
                                         </div>
-                                        <h3 className="line-clamp-2 font-medium text-foreground">
-                                            {t(product.title, locale)}
-                                        </h3>
-                                        <p className="text-lg font-semibold text-foreground">
-                                            {product.price} {product.currency}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        </motion.div>
-                    ))}
+                                        <CardContent className="space-y-2 p-4">
+                                            <div className="flex items-center gap-2">
+                                                <Badge
+                                                    variant="outline"
+                                                    className="text-xs"
+                                                >
+                                                    {
+                                                        CONDITION_LABELS[
+                                                            product.condition
+                                                        ]
+                                                    }
+                                                </Badge>
+                                                {product.store?.name && (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {product.store.name}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="line-clamp-2 font-medium text-foreground">
+                                                {t(product.title, locale)}
+                                            </h3>
+                                            <div className="flex items-baseline gap-2">
+                                                {discounted && (
+                                                    <span className="text-sm text-muted-foreground line-through">
+                                                        {formatPrice(
+                                                            product.price,
+                                                        )}
+                                                    </span>
+                                                )}
+                                                <p className="text-lg font-semibold text-foreground">
+                                                    {formatPrice(
+                                                        product.effective_price,
+                                                    )}{" "}
+                                                    {product.currency}
+                                                </p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            </motion.div>
+                        );
+                    })}
                 </div>
 
                 {products.links.length > 3 && (

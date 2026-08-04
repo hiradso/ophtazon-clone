@@ -23,8 +23,8 @@ export default function Footer() {
 
     return (
         <footer className="border-t border-border bg-card">
-            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     {/* برند */}
                     <div>
                         <div className="mb-3 flex items-center gap-2">
@@ -138,7 +138,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-10 border-t border-border pt-6 text-center text-xs text-muted-foreground">
+                <div className="mt-6 border-t border-border pt-4 text-center text-xs text-muted-foreground">
                     &copy; {new Date().getFullYear()} {siteSettings.site_name}.{" "}
                     {tt("all_rights_reserved", locale)}
                 </div>

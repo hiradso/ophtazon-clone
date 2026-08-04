@@ -30,12 +30,15 @@ use Spatie\Translatable\HasTranslations;
     'published_at',
     'stock_quantity',
     'discount_percentage',
+    'meta_title',
+    'meta_description',
+    'og_image',
 ])]
 class Product extends Model
 {
     use HasTranslations, SoftDeletes;
 
-    public $translatable = ['title', 'description'];
+    public $translatable = ['title', 'description', 'meta_title', 'meta_description'];
 
     /**
      * effective_price همیشه به همراه هر سریالایز مدل فرستاده می‌شود —

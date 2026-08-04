@@ -33,8 +33,10 @@ import {
     Pencil,
     Trash2,
     ImageOff,
+    Tag,
 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 // این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
 // خودِ رنگ‌ها در resources/css/app.css قابل تغییرند؛ این‌جا فقط اسم وضعیت‌ها هستند.
@@ -120,7 +122,7 @@ export default function Index({ products }) {
                                     {products.data.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={7}
+                                                colSpan={8}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
                                                 No products yet. Add the first
@@ -129,108 +131,148 @@ export default function Index({ products }) {
                                         </TableRow>
                                     )}
 
-                                    {products.data.map((product) => (
-                                        <TableRow key={product.id}>
-                                            <TableCell>
-                                                {product.images?.[0] ? (
-                                                    <img
-                                                        src={`/storage/${product.images[0].url}`}
-                                                        alt=""
-                                                        className="size-10 rounded-md object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="flex size-10 items-center justify-center rounded-md bg-muted text-muted-foreground">
-                                                        <ImageOff className="size-4" />
-                                                    </div>
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-muted-foreground">
-                                                {product.reference}
-                                            </TableCell>
-                                            <TableCell className="font-medium">
-                                                {product.title.en}
-                                            </TableCell>
-                                            <TableCell className="text-muted-foreground">
-                                                {product.category?.name?.en ??
-                                                    "—"}
-                                            </TableCell>
-                                            <TableCell className="text-muted-foreground">
-                                                {product.store?.name ?? "—"}
-                                            </TableCell>
-                                            <TableCell className="text-muted-foreground">
-                                                {product.price}{" "}
-                                                {product.currency}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge
-                                                    variant="outline"
-                                                    className={
-                                                        statusColor[
-                                                            product.status
-                                                        ] ?? ""
-                                                    }
-                                                >
-                                                    {product.status.replace(
-                                                        "_",
-                                                        " ",
+                                    {products.data.map((product) => {
+                                        const discounted = hasDiscount(
+                                            product.discount_percentage,
+                                        );
+
+                                        return (
+                                            <TableRow key={product.id}>
+                                                <TableCell>
+                                                    {product.images?.[0] ? (
+                                                        <img
+                                                            src={`/storage/${product.images[0].url}`}
+                                                            alt=""
+                                                            className="size-10 rounded-md object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex size-10 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                                                            <ImageOff className="size-4" />
+                                                        </div>
                                                     )}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger
-                                                        render={
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
+                                                </TableCell>
+                                                <TableCell className="text-muted-foreground">
+                                                    {product.reference}
+                                                </TableCell>
+                                                <TableCell className="font-medium">
+                                                    {product.title.en}
+                                                </TableCell>
+                                                <TableCell className="text-muted-foreground">
+                                                    {product.category?.name
+                                                        ?.en ?? "—"}
+                                                </TableCell>
+                                                <TableCell className="text-muted-foreground">
+                                                    {product.store?.name ?? "—"}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {discounted ? (
+                                                        <div className="flex flex-col text-sm">
+                                                            <span className="text-xs text-muted-foreground line-through">
+                                                                {formatPrice(
+                                                                    product.price,
+                                                                )}{" "}
+                                                                {
+                                                                    product.currency
+                                                                }
+                                                            </span>
+                                                            <span className="font-medium text-foreground">
+                                                                {formatPrice(
+                                                                    product.effective_price,
+                                                                )}{" "}
+                                                                {
+                                                                    product.currency
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">
+                                                            {formatPrice(
+                                                                product.price,
+                                                            )}{" "}
+                                                            {product.currency}
+                                                        </span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        <Badge
+                                                            variant="outline"
+                                                            className={
+                                                                statusColor[
+                                                                    product
+                                                                        .status
+                                                                ] ?? ""
+                                                            }
+                                                        >
+                                                            {product.status.replace(
+                                                                "_",
+                                                                " ",
+                                                            )}
+                                                        </Badge>
+                                                        {discounted && (
+                                                            <Badge className="bg-destructive text-white">
+                                                                <Tag className="mr-1 size-3" />
+                                                                Discounted
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger
+                                                            render={
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                >
+                                                                    <MoreHorizontal className="size-4" />
+                                                                </Button>
+                                                            }
+                                                        />
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuItem
+                                                                render={
+                                                                    <Link
+                                                                        href={route(
+                                                                            "admin.products.show",
+                                                                            product.id,
+                                                                        )}
+                                                                    />
+                                                                }
                                                             >
-                                                                <MoreHorizontal className="size-4" />
-                                                            </Button>
-                                                        }
-                                                    />
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            render={
-                                                                <Link
-                                                                    href={route(
-                                                                        "admin.products.show",
-                                                                        product.id,
-                                                                    )}
-                                                                />
-                                                            }
-                                                        >
-                                                            <Eye className="mr-2 size-4" />
-                                                            View
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            render={
-                                                                <Link
-                                                                    href={route(
-                                                                        "admin.products.edit",
-                                                                        product.id,
-                                                                    )}
-                                                                />
-                                                            }
-                                                        >
-                                                            <Pencil className="mr-2 size-4" />
-                                                            Edit
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            variant="destructive"
-                                                            onClick={() =>
-                                                                setProductToDelete(
-                                                                    product,
-                                                                )
-                                                            }
-                                                        >
-                                                            <Trash2 className="mr-2 size-4" />
-                                                            Delete
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                                                <Eye className="mr-2 size-4" />
+                                                                View
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                render={
+                                                                    <Link
+                                                                        href={route(
+                                                                            "admin.products.edit",
+                                                                            product.id,
+                                                                        )}
+                                                                    />
+                                                                }
+                                                            >
+                                                                <Pencil className="mr-2 size-4" />
+                                                                Edit
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                variant="destructive"
+                                                                onClick={() =>
+                                                                    setProductToDelete(
+                                                                        product,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Trash2 className="mr-2 size-4" />
+                                                                Delete
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
                                 </TableBody>
                             </Table>
                         </CardContent>

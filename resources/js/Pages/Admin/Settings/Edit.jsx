@@ -3,8 +3,22 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MediaPicker from "@/Components/MediaPicker";
+
+const DEFAULT_ROBOTS_TXT = [
+    "User-agent: *",
+    "Disallow: /admin",
+    "Disallow: /checkout",
+    "Disallow: /cart",
+    "Disallow: /profile",
+    "Disallow: /my-orders",
+    "",
+    "Sitemap: " +
+        (typeof window !== "undefined" ? window.location.origin : "") +
+        "/sitemap.xml",
+].join("\n");
 
 export default function Edit({ settings }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -12,6 +26,7 @@ export default function Edit({ settings }) {
         logo: settings.logo ?? null,
         contact_email: settings.contact_email ?? "",
         contact_phone: settings.contact_phone ?? "",
+        robots_txt: settings.robots_txt ?? "",
     });
 
     const submit = (e) => {
@@ -32,7 +47,6 @@ export default function Edit({ settings }) {
             }
         >
             <Head title="Site Settings" />
-
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
@@ -104,7 +118,6 @@ export default function Edit({ settings }) {
                                         </p>
                                     )}
                                 </div>
-
                                 <div className="space-y-1.5">
                                     <Label htmlFor="contact_phone">
                                         Contact phone
@@ -119,6 +132,57 @@ export default function Edit({ settings }) {
                                             )
                                         }
                                     />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>SEO — robots.txt</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                <div className="space-y-1.5">
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor="robots_txt">
+                                            Content
+                                        </Label>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setData(
+                                                    "robots_txt",
+                                                    DEFAULT_ROBOTS_TXT,
+                                                )
+                                            }
+                                            className="text-xs font-medium text-primary hover:underline"
+                                        >
+                                            Reset to default
+                                        </button>
+                                    </div>
+                                    <Textarea
+                                        id="robots_txt"
+                                        rows={8}
+                                        className="font-mono text-sm"
+                                        placeholder={DEFAULT_ROBOTS_TXT}
+                                        value={data.robots_txt}
+                                        onChange={(e) =>
+                                            setData(
+                                                "robots_txt",
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    {errors.robots_txt && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.robots_txt}
+                                        </p>
+                                    )}
+                                    <p className="text-xs text-muted-foreground">
+                                        Controls which parts of the site search
+                                        engines are allowed to crawl. Leave
+                                        empty to use the safe default shown
+                                        above.
+                                    </p>
                                 </div>
                             </CardContent>
                         </Card>

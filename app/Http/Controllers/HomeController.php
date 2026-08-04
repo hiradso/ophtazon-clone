@@ -27,6 +27,14 @@ class HomeController extends Controller
                 ->latest('published_at')
                 ->limit(8)
                 ->get(),
+            'discountedProducts' => Product::query()
+                ->where('status', ProductStatus::Available)
+                ->whereNotNull('discount_percentage')
+                ->where('discount_percentage', '>', 0)
+                ->with(['images', 'store'])
+                ->orderByDesc('discount_percentage')
+                ->limit(10)
+                ->get(),
         ]);
     }
 }

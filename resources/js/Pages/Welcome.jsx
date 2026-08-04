@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselPrevious,
+    CarouselNext,
+} from "@/components/ui/carousel";
+import {
     Eye,
     ImageOff,
     ArrowRight,
@@ -11,10 +18,12 @@ import {
     ShieldCheck,
     Globe2,
     Truck,
+    Flame,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
+import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -22,7 +31,12 @@ const CONDITION_LABELS = {
     refurbished: "Refurbished",
 };
 
-export default function Welcome({ sections, categories, latestProducts }) {
+export default function Welcome({
+    sections,
+    categories,
+    latestProducts,
+    discountedProducts,
+}) {
     return (
         <PublicLayout>
             <Head title="Ophtazon — Ophthalmic Equipment Marketplace" />
@@ -48,6 +62,13 @@ export default function Welcome({ sections, categories, latestProducts }) {
                             <LatestProductsSection
                                 key={section.id}
                                 products={latestProducts}
+                            />
+                        );
+                    case "discounted_products":
+                        return (
+                            <DiscountedProductsSection
+                                key={section.id}
+                                products={discountedProducts}
                             />
                         );
                     case "custom_content":
@@ -241,59 +262,178 @@ function LatestProductsSection({ products }) {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {products.map((product, index) => (
-                        <motion.div
-                            key={product.id}
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{ duration: 0.4, delay: index * 0.05 }}
-                        >
-                            <Link href={route("products.show", product.slug)}>
-                                <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
-                                    <div className="flex h-48 items-center justify-center overflow-hidden bg-muted">
-                                        {product.images?.[0] ? (
-                                            <motion.img
-                                                whileHover={{ scale: 1.08 }}
-                                                transition={{ duration: 0.4 }}
-                                                src={`/storage/${product.images[0].url}`}
-                                                alt={t(product.title, locale)}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <ImageOff className="size-8 text-muted-foreground" />
-                                        )}
-                                    </div>
-                                    <CardContent className="space-y-2 p-4">
-                                        <div className="flex items-center gap-2">
-                                            <Badge
-                                                variant="outline"
-                                                className="text-xs"
-                                            >
-                                                {
-                                                    CONDITION_LABELS[
-                                                        product.condition
-                                                    ]
-                                                }
-                                            </Badge>
-                                            {product.store?.name && (
-                                                <span className="text-xs text-muted-foreground">
-                                                    {product.store.name}
-                                                </span>
+                    {products.map((product, index) => {
+                        const discounted = hasDiscount(
+                            product.discount_percentage,
+                        );
+
+                        return (
+                            <motion.div
+                                key={product.id}
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{
+                                    duration: 0.4,
+                                    delay: index * 0.05,
+                                }}
+                            >
+                                <Link
+                                    href={route("products.show", product.slug)}
+                                >
+                                    <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
+                                        <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                            {discounted && (
+                                                <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                    -
+                                                    {
+                                                        product.discount_percentage
+                                                    }
+                                                    %
+                                                </div>
+                                            )}
+                                            {product.images?.[0] ? (
+                                                <motion.img
+                                                    whileHover={{
+                                                        scale: 1.08,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.4,
+                                                    }}
+                                                    src={`/storage/${product.images[0].url}`}
+                                                    alt={t(
+                                                        product.title,
+                                                        locale,
+                                                    )}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                <ImageOff className="size-8 text-muted-foreground" />
                                             )}
                                         </div>
-                                        <h3 className="line-clamp-2 font-medium text-foreground">
-                                            {t(product.title, locale)}
-                                        </h3>
-                                        <p className="text-lg font-semibold text-foreground">
-                                            {product.price} {product.currency}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        </motion.div>
-                    ))}
+                                        <CardContent className="space-y-2 p-4">
+                                            <div className="flex items-center gap-2">
+                                                <Badge
+                                                    variant="outline"
+                                                    className="text-xs"
+                                                >
+                                                    {
+                                                        CONDITION_LABELS[
+                                                            product.condition
+                                                        ]
+                                                    }
+                                                </Badge>
+                                                {product.store?.name && (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {product.store.name}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="line-clamp-2 font-medium text-foreground">
+                                                {t(product.title, locale)}
+                                            </h3>
+                                            <div className="flex items-baseline gap-2">
+                                                {discounted && (
+                                                    <span className="text-sm text-muted-foreground line-through">
+                                                        {formatPrice(
+                                                            product.price,
+                                                        )}
+                                                    </span>
+                                                )}
+                                                <p className="text-lg font-semibold text-foreground">
+                                                    {formatPrice(
+                                                        product.effective_price,
+                                                    )}{" "}
+                                                    {product.currency}
+                                                </p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            </motion.div>
+                        );
+                    })}
                 </div>
+            </div>
+        </section>
+    );
+}
+
+function DiscountedProductsSection({ products }) {
+    const { locale } = usePage().props;
+
+    if (!products || products.length === 0) return null;
+
+    return (
+        <section className="border-t border-border bg-gradient-to-b from-destructive/5 to-transparent">
+            <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+                <div className="mb-6 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Flame className="size-5 text-destructive" />
+                        <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                            On Sale
+                        </h2>
+                    </div>
+                </div>
+
+                <Carousel opts={{ align: "start" }} className="px-10">
+                    <CarouselContent>
+                        {products.map((product) => (
+                            <CarouselItem
+                                key={product.id}
+                                className="basis-1/2 sm:basis-1/3 lg:basis-1/4"
+                            >
+                                <Link
+                                    href={route("products.show", product.slug)}
+                                >
+                                    <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
+                                        <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
+                                            <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                -{product.discount_percentage}%
+                                            </div>
+                                            {product.images?.[0] ? (
+                                                <motion.img
+                                                    whileHover={{
+                                                        scale: 1.08,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.4,
+                                                    }}
+                                                    src={`/storage/${product.images[0].url}`}
+                                                    alt={t(
+                                                        product.title,
+                                                        locale,
+                                                    )}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                <ImageOff className="size-8 text-muted-foreground" />
+                                            )}
+                                        </div>
+                                        <CardContent className="space-y-1 p-3">
+                                            <h3 className="line-clamp-2 text-sm font-medium text-foreground">
+                                                {t(product.title, locale)}
+                                            </h3>
+                                            <div className="flex items-baseline gap-1.5">
+                                                <span className="text-xs text-muted-foreground line-through">
+                                                    {formatPrice(product.price)}
+                                                </span>
+                                                <span className="font-semibold text-foreground">
+                                                    {formatPrice(
+                                                        product.effective_price,
+                                                    )}{" "}
+                                                    {product.currency}
+                                                </span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-0" />
+                    <CarouselNext className="right-0" />
+                </Carousel>
             </div>
         </section>
     );
