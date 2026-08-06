@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
 import { toast } from "sonner";
 import AdminLayout from "@/Layouts/AdminLayout";
@@ -14,14 +14,16 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Upload, Trash2, Loader2, Copy, Pencil, Check, X } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ media }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [itemToDelete, setItemToDelete] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [editingName, setEditingName] = useState("");
     const [fileInputKey, setFileInputKey] = useState(0);
     const [uploadProgress, setUploadProgress] = useState(null);
+    const fileInputRef = useRef(null);
 
     const { data, setData, post, processing, reset } = useForm({
         files: [],
@@ -65,7 +67,7 @@ export default function Index({ media }) {
     const copyUrl = (path) => {
         const url = `${window.location.origin}/storage/${path}`;
         navigator.clipboard.writeText(url);
-        toast.success("URL copied to clipboard.");
+        toast.success(at("url_copied", uiLocale));
     };
 
     const startEditing = (item) => {
@@ -97,16 +99,16 @@ export default function Index({ media }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Media Library" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("media_library", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Media Library
+                    {at("media_library", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Media Library" />
+            <Head title={at("media_library", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -116,15 +118,33 @@ export default function Index({ media }) {
                                 onSubmit={submitUpload}
                                 className="flex flex-wrap items-center gap-3"
                             >
-                                <Input
+                                <input
                                     key={fileInputKey}
+                                    ref={fileInputRef}
                                     type="file"
                                     accept="image/*"
                                     multiple
                                     onChange={handleFilesChange}
-                                    className="max-w-sm"
                                     disabled={processing}
+                                    className="hidden"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        fileInputRef.current?.click()
+                                    }
+                                    disabled={processing}
+                                    className="flex max-w-sm flex-1 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm disabled:opacity-50"
+                                >
+                                    <span className="truncate text-muted-foreground">
+                                        {data.files.length > 0
+                                            ? `${data.files.length} ${at("files_selected", uiLocale)}`
+                                            : at("no_file_chosen", uiLocale)}
+                                    </span>
+                                    <span className="shrink-0 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
+                                        {at("choose_file", uiLocale)}
+                                    </span>
+                                </button>
                                 <Button
                                     type="submit"
                                     disabled={
@@ -136,13 +156,10 @@ export default function Index({ media }) {
                                     ) : (
                                         <Upload className="me-1.5 size-4" />
                                     )}
-                                    {processing ? "Uploading..." : "Upload"}
+                                    {processing
+                                        ? at("uploading", uiLocale)
+                                        : at("upload_new", uiLocale)}
                                 </Button>
-                                {data.files.length > 0 && !processing && (
-                                    <span className="text-sm text-muted-foreground">
-                                        {data.files.length} file(s) selected
-                                    </span>
-                                )}
                             </form>
 
                             {uploadProgress !== null && (
@@ -156,7 +173,8 @@ export default function Index({ media }) {
                                         />
                                     </div>
                                     <p className="mt-1 text-xs text-muted-foreground">
-                                        {uploadProgress}% uploaded
+                                        {uploadProgress}%{" "}
+                                        {at("uploaded_suffix", uiLocale)}
                                     </p>
                                 </div>
                             )}
@@ -164,12 +182,15 @@ export default function Index({ media }) {
                     </Card>
 
                     <p className="mb-4 text-sm text-muted-foreground">
-                        {media.total} {media.total === 1 ? "file" : "files"}
+                        {media.total}{" "}
+                        {media.total === 1
+                            ? at("file_singular", uiLocale)
+                            : at("files_count", uiLocale)}
                     </p>
 
                     {media.data.length === 0 ? (
                         <div className="rounded-lg border border-dashed border-border py-16 text-center text-sm text-muted-foreground">
-                            No images uploaded yet.
+                            {at("no_media_yet", uiLocale)}
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
@@ -308,16 +329,12 @@ export default function Index({ media }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this file?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_file_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            {itemToDelete && (
-                                <>
-                                    "{itemToDelete.filename}" will be
-                                    permanently deleted. If this image is used
-                                    elsewhere on the site (a product, a page,
-                                    the site logo), that reference will break.
-                                </>
-                            )}
+                            {itemToDelete && `"${itemToDelete.filename}"`}{" "}
+                            {at("delete_file_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -325,10 +342,10 @@ export default function Index({ media }) {
                             variant="outline"
                             onClick={() => setItemToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -30,18 +30,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
-const TYPE_LABELS = {
-    contact: "General",
-    callback_request: "Callback",
-    quote_request: "Quote",
-};
-
-const STATUS_LABELS = {
-    new: "New",
-    in_progress: "In Progress",
-    closed: "Closed",
-};
+import { at } from "@/lib/admin-i18n";
 
 const statusColor = {
     new: "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
@@ -51,8 +40,20 @@ const statusColor = {
 };
 
 export default function Index({ contactRequests }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [selected, setSelected] = useState(null);
+
+    const TYPE_LABELS = {
+        contact: at("request_type_contact", uiLocale),
+        callback_request: at("request_type_callback", uiLocale),
+        quote_request: at("request_type_quote", uiLocale),
+    };
+
+    const STATUS_LABELS = {
+        new: at("request_status_new", uiLocale),
+        in_progress: at("request_status_in_progress", uiLocale),
+        closed: at("request_status_closed", uiLocale),
+    };
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
@@ -82,22 +83,24 @@ export default function Index({ contactRequests }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Messages" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("messages", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Contact Requests
+                    {at("contact_requests", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Contact Requests" />
+            <Head title={at("contact_requests", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                     <p className="mb-6 text-sm text-muted-foreground">
                         {contactRequests.total}{" "}
-                        {contactRequests.total === 1 ? "request" : "requests"}
+                        {contactRequests.total === 1
+                            ? at("request_singular", uiLocale)
+                            : at("requests_count", uiLocale)}
                     </p>
 
                     <Card className="overflow-hidden py-0">
@@ -105,12 +108,24 @@ export default function Index({ contactRequests }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Type</TableHead>
-                                        <TableHead>From</TableHead>
-                                        <TableHead>About</TableHead>
-                                        <TableHead>Store</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Date</TableHead>
+                                        <TableHead>
+                                            {at("type_col", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("from_col", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("about_col", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("store", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("date_col", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-24"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -121,19 +136,22 @@ export default function Index({ contactRequests }) {
                                                 colSpan={7}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No messages yet.
+                                                {at(
+                                                    "no_messages_yet",
+                                                    uiLocale,
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {contactRequests.data.map((request) => (
                                         <TableRow key={request.id}>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge variant="outline">
                                                     {TYPE_LABELS[request.type]}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <p className="font-medium text-foreground">
                                                     {request.name}
                                                 </p>
@@ -141,14 +159,14 @@ export default function Index({ contactRequests }) {
                                                     {request.email}
                                                 </p>
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {request.product?.title?.en ??
                                                     "—"}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {request.store?.name ?? "—"}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -164,12 +182,16 @@ export default function Index({ contactRequests }) {
                                                     }
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {new Date(
                                                     request.created_at,
-                                                ).toLocaleDateString()}
+                                                ).toLocaleDateString(
+                                                    uiLocale === "fa"
+                                                        ? "fa-IR"
+                                                        : "en-US",
+                                                )}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
@@ -177,7 +199,7 @@ export default function Index({ contactRequests }) {
                                                         openReply(request)
                                                     }
                                                 >
-                                                    Reply
+                                                    {at("reply", uiLocale)}
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
@@ -226,7 +248,9 @@ export default function Index({ contactRequests }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Message from {selected?.name}</DialogTitle>
+                        <DialogTitle>
+                            {at("message_from", uiLocale)} {selected?.name}
+                        </DialogTitle>
                         <DialogDescription>{selected?.email}</DialogDescription>
                     </DialogHeader>
 
@@ -235,14 +259,14 @@ export default function Index({ contactRequests }) {
                             <div className="rounded-md border border-border bg-muted/30 p-3 text-sm text-foreground">
                                 {selected.message || (
                                     <span className="text-muted-foreground">
-                                        No message provided.
+                                        {at("no_message_provided", uiLocale)}
                                     </span>
                                 )}
                             </div>
 
                             <form onSubmit={submitReply} className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <Label>Status</Label>
+                                    <Label>{at("status", uiLocale)}</Label>
                                     <Select
                                         value={data.status}
                                         onValueChange={(value) =>
@@ -258,20 +282,31 @@ export default function Index({ contactRequests }) {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="new">
-                                                New
+                                                {at(
+                                                    "request_status_new",
+                                                    uiLocale,
+                                                )}
                                             </SelectItem>
                                             <SelectItem value="in_progress">
-                                                In Progress
+                                                {at(
+                                                    "request_status_in_progress",
+                                                    uiLocale,
+                                                )}
                                             </SelectItem>
                                             <SelectItem value="closed">
-                                                Closed
+                                                {at(
+                                                    "request_status_closed",
+                                                    uiLocale,
+                                                )}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="reply_message">Reply</Label>
+                                    <Label htmlFor="reply_message">
+                                        {at("reply", uiLocale)}
+                                    </Label>
                                     <Textarea
                                         id="reply_message"
                                         rows={4}
@@ -291,10 +326,12 @@ export default function Index({ contactRequests }) {
                                         variant="outline"
                                         onClick={() => setSelected(null)}
                                     >
-                                        Cancel
+                                        {at("cancel", uiLocale)}
                                     </Button>
                                     <Button type="submit" disabled={processing}>
-                                        {processing ? "Saving..." : "Save"}
+                                        {processing
+                                            ? at("saving", uiLocale)
+                                            : at("save", uiLocale)}
                                     </Button>
                                 </DialogFooter>
                             </form>
