@@ -28,12 +28,17 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-
-const ROLE_LABELS = { admin: "Admin", staff: "Staff", customer: "Customer" };
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ users }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [userToDelete, setUserToDelete] = useState(null);
+
+    const ROLE_LABELS = {
+        admin: at("role_admin", uiLocale),
+        staff: at("role_staff", uiLocale),
+        customer: at("role_customer", uiLocale),
+    };
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
@@ -49,30 +54,33 @@ export default function Index({ users }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Users" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("users", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Users
+                    {at("users", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Users" />
+            <Head title={at("users", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {users.total} {users.total === 1 ? "user" : "users"}
+                            {users.total}{" "}
+                            {users.total === 1
+                                ? at("user_singular", uiLocale)
+                                : at("users_count", uiLocale)}
                         </p>
 
                         <Button
                             nativeButton={false}
                             render={<Link href={route("admin.users.create")} />}
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add user
+                            <Plus className="me-1.5 size-4" />
+                            {at("add_user", uiLocale)}
                         </Button>
                     </div>
 
@@ -81,11 +89,21 @@ export default function Index({ users }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Email</TableHead>
-                                        <TableHead>Role</TableHead>
-                                        <TableHead>Store</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>
+                                            {at("name_field", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("email_field", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("role", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("store", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -96,28 +114,28 @@ export default function Index({ users }) {
                                                 colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No users yet.
+                                                {at("no_users_yet", uiLocale)}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {users.data.map((user) => (
                                         <TableRow key={user.id}>
-                                            <TableCell className="font-medium text-foreground">
+                                            <TableCell className="align-middle font-medium text-foreground">
                                                 {user.name}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {user.email}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge variant="outline">
                                                     {ROLE_LABELS[user.role]}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {user.store?.name ?? "—"}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -127,11 +145,14 @@ export default function Index({ users }) {
                                                     }
                                                 >
                                                     {user.is_active
-                                                        ? "Active"
-                                                        : "Inactive"}
+                                                        ? at("active", uiLocale)
+                                                        : at(
+                                                              "hidden",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger
                                                         render={
@@ -154,8 +175,11 @@ export default function Index({ users }) {
                                                                 />
                                                             }
                                                         >
-                                                            <Pencil className="mr-2 size-4" />
-                                                            Edit
+                                                            <Pencil className="me-2 size-4" />
+                                                            {at(
+                                                                "edit",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
@@ -165,8 +189,11 @@ export default function Index({ users }) {
                                                                 )
                                                             }
                                                         >
-                                                            <Trash2 className="mr-2 size-4" />
-                                                            Delete
+                                                            <Trash2 className="me-2 size-4" />
+                                                            {at(
+                                                                "delete",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -177,37 +204,6 @@ export default function Index({ users }) {
                             </Table>
                         </CardContent>
                     </Card>
-
-                    {users.links.length > 3 && (
-                        <div className="mt-6 flex flex-wrap gap-1">
-                            {users.links.map((link, index) =>
-                                link.url ? (
-                                    <Button
-                                        key={index}
-                                        nativeButton={false}
-                                        render={<Link href={link.url} />}
-                                        variant={
-                                            link.active ? "default" : "ghost"
-                                        }
-                                        size="sm"
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ) : (
-                                    <Button
-                                        key={index}
-                                        variant="ghost"
-                                        size="sm"
-                                        disabled
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ),
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -217,14 +213,12 @@ export default function Index({ users }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this user?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_user_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            {userToDelete && (
-                                <>
-                                    "{userToDelete.name}" will be permanently
-                                    deleted. This cannot be undone.
-                                </>
-                            )}
+                            {userToDelete && `"${userToDelete.name}"`}{" "}
+                            {at("delete_user_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -232,10 +226,10 @@ export default function Index({ users }) {
                             variant="outline"
                             onClick={() => setUserToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

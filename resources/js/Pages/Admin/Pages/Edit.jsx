@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -19,6 +19,7 @@ import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
 
 export default function Edit({ page }) {
+    const { locale: uiLocale } = usePage().props;
     const { data, setData, put, processing, errors } = useForm({
         title: {
             en: page.title?.en ?? "",
@@ -61,7 +62,11 @@ export default function Edit({ page }) {
                         nativeButton={false}
                         render={<Link href={route("admin.pages.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
                         Edit Page

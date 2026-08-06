@@ -4,7 +4,7 @@ import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ImageOff, Trash2, ArrowRight } from "lucide-react";
+import { ImageOff, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
 import { t } from "@/lib/translate";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 
@@ -144,7 +144,11 @@ export default function Index({ cart }) {
                                         }
                                     >
                                         Proceed to checkout
-                                        <ArrowRight className="ml-1.5 size-4" />
+                                        {locale === "fa" ? (
+                                            <ArrowLeft className="me-1.5 size-4" />
+                                        ) : (
+                                            <ArrowRight className="ms-1.5 size-4" />
+                                        )}
                                     </Button>
                                 </motion.div>
                             </CardContent>

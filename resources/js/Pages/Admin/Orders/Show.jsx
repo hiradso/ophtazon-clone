@@ -13,19 +13,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
-
-const STATUS_LABELS = {
-    pending: "Pending",
-    paid: "Paid",
-    processing: "Processing",
-    shipped: "Shipped",
-    delivered: "Delivered",
-    cancelled: "Cancelled",
-};
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Show({ order }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
+
+    const STATUS_LABELS = {
+        pending: at("order_status_pending", uiLocale),
+        paid: at("order_status_paid", uiLocale),
+        processing: at("order_status_processing", uiLocale),
+        shipped: at("order_status_shipped", uiLocale),
+        delivered: at("order_status_delivered", uiLocale),
+        cancelled: at("order_status_cancelled", uiLocale),
+    };
 
     const { data, setData, put, processing } = useForm({
         status: order.status,
@@ -43,8 +44,11 @@ export default function Show({ order }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Orders", href: route("admin.orders.index") },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("orders", uiLocale),
+                    href: route("admin.orders.index"),
+                },
                 { label: order.order_number },
             ]}
             header={
@@ -55,7 +59,11 @@ export default function Show({ order }) {
                         nativeButton={false}
                         render={<Link href={route("admin.orders.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
                         {order.order_number}
@@ -71,7 +79,9 @@ export default function Show({ order }) {
                         <div className="space-y-6 lg:col-span-2">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Items</CardTitle>
+                                    <CardTitle>
+                                        {at("items", uiLocale)}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
                                     {order.items.map((item) => (
@@ -88,11 +98,13 @@ export default function Show({ order }) {
                                                     }
                                                 </p>
                                                 <p className="text-xs text-muted-foreground">
-                                                    Ref:{" "}
+                                                    {at("reference", uiLocale)}:{" "}
                                                     {
                                                         item.product_reference_snapshot
                                                     }{" "}
-                                                    · Qty: {item.quantity}
+                                                    ·{" "}
+                                                    {at("qty_short", uiLocale)}:{" "}
+                                                    {item.quantity}
                                                 </p>
                                             </div>
                                             <p className="text-foreground">
@@ -108,7 +120,9 @@ export default function Show({ order }) {
                                     <Separator />
 
                                     <div className="flex justify-between font-semibold text-foreground">
-                                        <span>Total</span>
+                                        <span>
+                                            {at("order_total", uiLocale)}
+                                        </span>
                                         <span>
                                             {order.total} {order.currency}
                                         </span>
@@ -118,7 +132,9 @@ export default function Show({ order }) {
 
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Shipping address</CardTitle>
+                                    <CardTitle>
+                                        {at("shipping_address_title", uiLocale)}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent className="text-sm">
                                     <p className="font-medium text-foreground">
@@ -141,7 +157,9 @@ export default function Show({ order }) {
                         <div className="space-y-6">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Customer</CardTitle>
+                                    <CardTitle>
+                                        {at("customer", uiLocale)}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent className="text-sm">
                                     <p className="font-medium text-foreground">
@@ -155,7 +173,9 @@ export default function Show({ order }) {
 
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Status</CardTitle>
+                                    <CardTitle>
+                                        {at("status", uiLocale)}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <form
@@ -163,7 +183,9 @@ export default function Show({ order }) {
                                         className="space-y-4"
                                     >
                                         <div className="space-y-1.5">
-                                            <Label>Order status</Label>
+                                            <Label>
+                                                {at("order_status", uiLocale)}
+                                            </Label>
                                             <Select
                                                 value={data.status}
                                                 onValueChange={(value) =>
@@ -179,22 +201,40 @@ export default function Show({ order }) {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="pending">
-                                                        Pending
+                                                        {at(
+                                                            "order_status_pending",
+                                                            uiLocale,
+                                                        )}
                                                     </SelectItem>
                                                     <SelectItem value="paid">
-                                                        Paid
+                                                        {at(
+                                                            "order_status_paid",
+                                                            uiLocale,
+                                                        )}
                                                     </SelectItem>
                                                     <SelectItem value="processing">
-                                                        Processing
+                                                        {at(
+                                                            "order_status_processing",
+                                                            uiLocale,
+                                                        )}
                                                     </SelectItem>
                                                     <SelectItem value="shipped">
-                                                        Shipped
+                                                        {at(
+                                                            "order_status_shipped",
+                                                            uiLocale,
+                                                        )}
                                                     </SelectItem>
                                                     <SelectItem value="delivered">
-                                                        Delivered
+                                                        {at(
+                                                            "order_status_delivered",
+                                                            uiLocale,
+                                                        )}
                                                     </SelectItem>
                                                     <SelectItem value="cancelled">
-                                                        Cancelled
+                                                        {at(
+                                                            "order_status_cancelled",
+                                                            uiLocale,
+                                                        )}
                                                     </SelectItem>
                                                 </SelectContent>
                                             </Select>
@@ -202,12 +242,12 @@ export default function Show({ order }) {
 
                                         <Button
                                             type="submit"
-                                            className="w-full"
                                             disabled={processing}
+                                            className="w-full"
                                         >
                                             {processing
-                                                ? "Saving..."
-                                                : "Update status"}
+                                                ? at("saving", uiLocale)
+                                                : at("save_changes", uiLocale)}
                                         </Button>
                                     </form>
                                 </CardContent>

@@ -28,9 +28,10 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ categories }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [categoryToDelete, setCategoryToDelete] = useState(null);
 
     useEffect(() => {
@@ -47,16 +48,16 @@ export default function Index({ categories }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Categories" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("categories", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Categories
+                    {at("categories", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Categories" />
+            <Head title={at("categories", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -64,8 +65,8 @@ export default function Index({ categories }) {
                         <p className="text-sm text-muted-foreground">
                             {categories.length}{" "}
                             {categories.length === 1
-                                ? "category"
-                                : "categories"}
+                                ? at("category_singular", uiLocale)
+                                : at("categories_count", uiLocale)}
                         </p>
 
                         <Button
@@ -74,8 +75,8 @@ export default function Index({ categories }) {
                                 <Link href={route("admin.categories.create")} />
                             }
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add category
+                            <Plus className="me-1.5 size-4" />
+                            {at("add_category", uiLocale)}
                         </Button>
                     </div>
 
@@ -84,11 +85,21 @@ export default function Index({ categories }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Slug</TableHead>
-                                        <TableHead>Parent</TableHead>
-                                        <TableHead>Products</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>
+                                            {at("name_field", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("slug", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("parent", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("products_count_col", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -99,31 +110,33 @@ export default function Index({ categories }) {
                                                 colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No categories yet. Add the first
-                                                one to get started.
+                                                {at(
+                                                    "no_categories_yet",
+                                                    uiLocale,
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {categories.map((category) => (
                                         <TableRow key={category.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell className="align-middle font-medium">
                                                 {category.name.en}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {category.slug}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {categories.find(
                                                     (c) =>
                                                         c.id ===
                                                         category.parent_id,
                                                 )?.name.en ?? "—"}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
-                                                {category.products_count}
+                                            <TableCell className="align-middle text-muted-foreground">
+                                                {category.products_count ?? 0}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -133,11 +146,14 @@ export default function Index({ categories }) {
                                                     }
                                                 >
                                                     {category.is_active
-                                                        ? "Active"
-                                                        : "Inactive"}
+                                                        ? at("active", uiLocale)
+                                                        : at(
+                                                              "hidden",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger
                                                         render={
@@ -160,8 +176,11 @@ export default function Index({ categories }) {
                                                                 />
                                                             }
                                                         >
-                                                            <Pencil className="mr-2 size-4" />
-                                                            Edit
+                                                            <Pencil className="me-2 size-4" />
+                                                            {at(
+                                                                "edit",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
@@ -171,8 +190,11 @@ export default function Index({ categories }) {
                                                                 )
                                                             }
                                                         >
-                                                            <Trash2 className="mr-2 size-4" />
-                                                            Delete
+                                                            <Trash2 className="me-2 size-4" />
+                                                            {at(
+                                                                "delete",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -192,14 +214,13 @@ export default function Index({ categories }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this category?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_category_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            {categoryToDelete && (
-                                <>
-                                    "{categoryToDelete.name.en}" will be
-                                    permanently deleted. This cannot be undone.
-                                </>
-                            )}
+                            {categoryToDelete &&
+                                `"${categoryToDelete.name.en}"`}{" "}
+                            {at("delete_category_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -207,10 +228,10 @@ export default function Index({ categories }) {
                             variant="outline"
                             onClick={() => setCategoryToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

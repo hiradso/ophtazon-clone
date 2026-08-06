@@ -259,7 +259,7 @@ export default function Index({ cart, countries }) {
                                                 </span>
                                                 <span className="shrink-0 text-right whitespace-nowrap">
                                                     {discounted && (
-                                                        <span className="mr-1.5 text-xs text-muted-foreground line-through">
+                                                        <span className="me-1.5 text-xs text-muted-foreground line-through">
                                                             {formatPrice(
                                                                 item.product
                                                                     .price *

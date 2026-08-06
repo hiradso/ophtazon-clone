@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,13 +13,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import { at } from "@/lib/admin-i18n";
 
 export default function Create({ parentOptions }) {
+    const { locale: uiLocale } = usePage().props;
+
     const { data, setData, post, processing, errors } = useForm({
         parent_id: "",
-        name: { en: "", fr: "" },
+        name: { en: "", fr: "", fa: "" },
         slug: "",
         icon_url: "",
         sort_order: "0",
@@ -34,9 +37,12 @@ export default function Create({ parentOptions }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Products", href: route("admin.products.index") },
-                { label: "Add Product" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("categories", uiLocale),
+                    href: route("admin.categories.index"),
+                },
+                { label: at("add_category_title", uiLocale) },
             ]}
             header={
                 <div className="flex items-center gap-3">
@@ -46,22 +52,28 @@ export default function Create({ parentOptions }) {
                         nativeButton={false}
                         render={<Link href={route("admin.categories.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Add Category
+                        {at("add_category_title", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title="Add Category" />
+            <Head title={at("add_category_title", uiLocale)} />
 
             <div className="py-8">
-                <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Category Details</CardTitle>
+                                <CardTitle>
+                                    {at("basic_information", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <Tabs defaultValue="en">
@@ -72,59 +84,69 @@ export default function Create({ parentOptions }) {
                                         <TabsTrigger value="fr">
                                             Français
                                         </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
                                     </TabsList>
 
-                                    <TabsContent value="en">
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="name_en">
-                                                Name (EN)
-                                            </Label>
-                                            <Input
-                                                id="name_en"
-                                                value={data.name.en}
-                                                onChange={(e) =>
-                                                    setData("name", {
-                                                        ...data.name,
-                                                        en: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                            {errors["name.en"] && (
-                                                <p className="text-sm text-destructive">
-                                                    {errors["name.en"]}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </TabsContent>
-
-                                    <TabsContent value="fr">
-                                        <div className="space-y-1.5">
-                                            <Label htmlFor="name_fr">
-                                                Name (FR)
-                                            </Label>
-                                            <Input
-                                                id="name_fr"
-                                                value={data.name.fr}
-                                                onChange={(e) =>
-                                                    setData("name", {
-                                                        ...data.name,
-                                                        fr: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                            {errors["name.fr"] && (
-                                                <p className="text-sm text-destructive">
-                                                    {errors["name.fr"]}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </TabsContent>
+                                    {["en", "fr", "fa"].map((locale) => (
+                                        <TabsContent
+                                            key={locale}
+                                            value={locale}
+                                            className="space-y-4"
+                                            dir={
+                                                locale === "fa" ? "rtl" : "ltr"
+                                            }
+                                        >
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`name_${locale}`}
+                                                >
+                                                    {at("name_field", uiLocale)}{" "}
+                                                    {locale !== "en" &&
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
+                                                </Label>
+                                                <Input
+                                                    id={`name_${locale}`}
+                                                    dir={
+                                                        locale === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
+                                                    value={
+                                                        data.name[locale] ?? ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData("name", {
+                                                            ...data.name,
+                                                            [locale]:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                {errors[`name.${locale}`] && (
+                                                    <p className="text-sm text-destructive">
+                                                        {
+                                                            errors[
+                                                                `name.${locale}`
+                                                            ]
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </TabsContent>
+                                    ))}
                                 </Tabs>
 
                                 <Separator />
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="slug">Slug</Label>
+                                    <Label htmlFor="slug">
+                                        {at("slug", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="slug"
                                         value={data.slug}
@@ -140,7 +162,7 @@ export default function Create({ parentOptions }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label>Parent Category</Label>
+                                    <Label>{at("parent", uiLocale)}</Label>
                                     <Select
                                         value={data.parent_id}
                                         onValueChange={(value) =>
@@ -157,7 +179,10 @@ export default function Create({ parentOptions }) {
                                                                       p.id,
                                                                   ) === value,
                                                           )?.name.en
-                                                        : "None (top-level category)"
+                                                        : at(
+                                                              "select_parent",
+                                                              uiLocale,
+                                                          )
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
@@ -174,39 +199,34 @@ export default function Create({ parentOptions }) {
                                     </Select>
                                 </div>
 
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="icon_url">
-                                            Icon URL
-                                        </Label>
-                                        <Input
-                                            id="icon_url"
-                                            value={data.icon_url}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "icon_url",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="/icons/slit-lamp.svg"
-                                        />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="sort_order">
-                                            Sort Order
-                                        </Label>
-                                        <Input
-                                            id="sort_order"
-                                            type="number"
-                                            value={data.sort_order}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "sort_order",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                    </div>
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="icon_url">
+                                        {at("icon_url", uiLocale)}
+                                    </Label>
+                                    <Input
+                                        id="icon_url"
+                                        value={data.icon_url}
+                                        onChange={(e) =>
+                                            setData("icon_url", e.target.value)
+                                        }
+                                    />
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="sort_order">
+                                        {at("sort_order", uiLocale)}
+                                    </Label>
+                                    <Input
+                                        id="sort_order"
+                                        type="number"
+                                        value={data.sort_order}
+                                        onChange={(e) =>
+                                            setData(
+                                                "sort_order",
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -217,7 +237,9 @@ export default function Create({ parentOptions }) {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -233,10 +255,12 @@ export default function Create({ parentOptions }) {
                                     />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Category"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

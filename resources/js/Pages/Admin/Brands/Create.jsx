@@ -1,13 +1,16 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Create() {
+    const { locale: uiLocale } = usePage().props;
+
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         logo_url: "",
@@ -22,9 +25,12 @@ export default function Create() {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Brands", href: route("admin.brands.index") },
-                { label: "Add Brand" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("brands", uiLocale),
+                    href: route("admin.brands.index"),
+                },
+                { label: at("add_brand", uiLocale) },
             ]}
             header={
                 <div className="flex items-center gap-3">
@@ -34,26 +40,34 @@ export default function Create() {
                         nativeButton={false}
                         render={<Link href={route("admin.brands.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Add Brand
+                        {at("add_brand", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title="Add Brand" />
+            <Head title={at("add_brand", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Brand Details</CardTitle>
+                                <CardTitle>
+                                    {at("brand_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="name">
+                                        {at("name_field", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="name"
                                         value={data.name}
@@ -69,14 +83,15 @@ export default function Create() {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="logo_url">Logo URL</Label>
+                                    <Label htmlFor="logo_url">
+                                        {at("logo_url", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="logo_url"
                                         value={data.logo_url}
                                         onChange={(e) =>
                                             setData("logo_url", e.target.value)
                                         }
-                                        placeholder="/logos/topcon.svg"
                                     />
                                 </div>
 
@@ -88,7 +103,9 @@ export default function Create() {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -102,10 +119,12 @@ export default function Create() {
                                     <Link href={route("admin.brands.index")} />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Brand"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

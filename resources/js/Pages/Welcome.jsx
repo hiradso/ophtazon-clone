@@ -152,16 +152,16 @@ function HeroSection({ content }) {
                     method="get"
                     className="relative mx-auto mt-8 max-w-lg"
                 >
-                    <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="absolute top-1/2 start-4 size-4 -translate-y-1/2 text-muted-foreground" />
                     <input
                         type="text"
                         name="q"
                         placeholder={tt("hero_search_placeholder", locale)}
-                        className="h-12 w-full rounded-full border-0 bg-background pl-11 pr-32 text-sm text-foreground shadow-lg placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-foreground/40"
+                        className="h-12 w-full rounded-full border-0 bg-background ps-11 pe-32 text-sm text-foreground shadow-lg placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary-foreground/40"
                     />
                     <Button
                         type="submit"
-                        className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded-full bg-foreground text-background hover:bg-foreground/80"
+                        className="absolute top-1/2 end-1.5 -translate-y-1/2 rounded-full bg-foreground text-background hover:bg-foreground/80"
                         size="sm"
                     >
                         {tt("search", locale)}
@@ -284,7 +284,10 @@ function LatestProductsSection({ products }) {
                                     <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
                                         <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
                                             {discounted && (
-                                                <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                <div
+                                                    dir="ltr"
+                                                    className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
+                                                >
                                                     -
                                                     {
                                                         product.discount_percentage
@@ -376,7 +379,14 @@ function DiscountedProductsSection({ products }) {
                     </div>
                 </div>
 
-                <Carousel opts={{ align: "start" }} className="px-10">
+                <Carousel
+                    dir={locale === "fa" ? "rtl" : "ltr"}
+                    opts={{
+                        align: "start",
+                        direction: locale === "fa" ? "rtl" : "ltr",
+                    }}
+                    className="px-10"
+                >
                     <CarouselContent>
                         {products.map((product) => (
                             <CarouselItem
@@ -388,7 +398,10 @@ function DiscountedProductsSection({ products }) {
                                 >
                                     <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
                                         <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
-                                            <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                            <div
+                                                dir="ltr"
+                                                className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
+                                            >
                                                 -{product.discount_percentage}%
                                             </div>
                                             {product.images?.[0] ? (
@@ -431,8 +444,8 @@ function DiscountedProductsSection({ products }) {
                             </CarouselItem>
                         ))}
                     </CarouselContent>
-                    <CarouselPrevious className="left-0" />
-                    <CarouselNext className="right-0" />
+                    <CarouselPrevious className="start-0" />
+                    <CarouselNext className="end-0" />
                 </Carousel>
             </div>
         </section>

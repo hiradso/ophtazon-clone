@@ -28,9 +28,10 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ brands }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [brandToDelete, setBrandToDelete] = useState(null);
 
     useEffect(() => {
@@ -47,23 +48,25 @@ export default function Index({ brands }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Brands" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("brands", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Brands
+                    {at("brands", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Brands" />
+            <Head title={at("brands", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
                             {brands.length}{" "}
-                            {brands.length === 1 ? "brand" : "brands"}
+                            {brands.length === 1
+                                ? at("brand_singular", uiLocale)
+                                : at("brands_count", uiLocale)}
                         </p>
 
                         <Button
@@ -72,8 +75,8 @@ export default function Index({ brands }) {
                                 <Link href={route("admin.brands.create")} />
                             }
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add brand
+                            <Plus className="me-1.5 size-4" />
+                            {at("add_brand", uiLocale)}
                         </Button>
                     </div>
 
@@ -82,9 +85,15 @@ export default function Index({ brands }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Products</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>
+                                            {at("name_field", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("products_count_col", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -95,21 +104,20 @@ export default function Index({ brands }) {
                                                 colSpan={4}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No brands yet. Add the first one
-                                                to get started.
+                                                {at("no_brands_yet", uiLocale)}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {brands.map((brand) => (
                                         <TableRow key={brand.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell className="align-middle font-medium">
                                                 {brand.name}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {brand.products_count}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -119,11 +127,14 @@ export default function Index({ brands }) {
                                                     }
                                                 >
                                                     {brand.is_active
-                                                        ? "Active"
-                                                        : "Inactive"}
+                                                        ? at("active", uiLocale)
+                                                        : at(
+                                                              "hidden",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger
                                                         render={
@@ -146,8 +157,11 @@ export default function Index({ brands }) {
                                                                 />
                                                             }
                                                         >
-                                                            <Pencil className="mr-2 size-4" />
-                                                            Edit
+                                                            <Pencil className="me-2 size-4" />
+                                                            {at(
+                                                                "edit",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
@@ -157,8 +171,11 @@ export default function Index({ brands }) {
                                                                 )
                                                             }
                                                         >
-                                                            <Trash2 className="mr-2 size-4" />
-                                                            Delete
+                                                            <Trash2 className="me-2 size-4" />
+                                                            {at(
+                                                                "delete",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -178,14 +195,12 @@ export default function Index({ brands }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this brand?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_brand_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            {brandToDelete && (
-                                <>
-                                    "{brandToDelete.name}" will be permanently
-                                    deleted. This cannot be undone.
-                                </>
-                            )}
+                            {brandToDelete && `"${brandToDelete.name}"`}{" "}
+                            {at("delete_brand_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -193,10 +208,10 @@ export default function Index({ brands }) {
                             variant="outline"
                             onClick={() => setBrandToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

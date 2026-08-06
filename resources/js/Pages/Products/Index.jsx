@@ -269,18 +269,18 @@ export default function Index({
                                 variant="ghost"
                                 size="sm"
                                 onClick={clearFilters}
-                                className="ml-auto"
+                                className="ms-auto"
                             >
-                                <X className="mr-1.5 size-3.5" />
+                                <X className="me-1.5 size-3.5" />
                                 {tt("clear_filters", locale)}
                             </Button>
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setAlertOpen(true)}
-                                className={hasActiveFilters ? "" : "ml-auto"}
+                                className={hasActiveFilters ? "" : "ms-auto"}
                             >
-                                <Bell className="mr-1.5 size-3.5" />
+                                <Bell className="me-1.5 size-3.5" />
                                 {tt("notify_me", locale)}
                             </Button>
                         </>
@@ -324,7 +324,10 @@ export default function Index({
                                     <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
                                         <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
                                             {discounted && (
-                                                <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                <div
+                                                    dir="ltr"
+                                                    className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
+                                                >
                                                     -
                                                     {
                                                         product.discount_percentage

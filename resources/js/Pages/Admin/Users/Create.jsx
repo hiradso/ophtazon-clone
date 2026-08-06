@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,11 +12,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
-
-const ROLE_LABELS = { admin: "Admin", staff: "Staff", customer: "Customer" };
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Create({ stores, countries }) {
+    const { locale: uiLocale } = usePage().props;
+
+    const ROLE_LABELS = {
+        admin: at("role_admin", uiLocale),
+        staff: at("role_staff", uiLocale),
+        customer: at("role_customer", uiLocale),
+    };
+
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         email: "",
@@ -35,9 +42,12 @@ export default function Create({ stores, countries }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Users", href: route("admin.users.index") },
-                { label: "Add User" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("users", uiLocale),
+                    href: route("admin.users.index"),
+                },
+                { label: at("add_user", uiLocale) },
             ]}
             header={
                 <div className="flex items-center gap-3">
@@ -47,26 +57,34 @@ export default function Create({ stores, countries }) {
                         nativeButton={false}
                         render={<Link href={route("admin.users.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Add User
+                        {at("add_user", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title="Add User" />
+            <Head title={at("add_user", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>User Details</CardTitle>
+                                <CardTitle>
+                                    {at("basic_information", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="name">
+                                        {at("name_field", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="name"
                                         value={data.name}
@@ -82,7 +100,9 @@ export default function Create({ stores, countries }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="email">Email</Label>
+                                    <Label htmlFor="email">
+                                        {at("email_field", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="email"
                                         type="email"
@@ -99,7 +119,9 @@ export default function Create({ stores, countries }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">
+                                        {at("password", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="password"
                                         type="password"
@@ -116,7 +138,7 @@ export default function Create({ stores, countries }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label>Role</Label>
+                                    <Label>{at("role", uiLocale)}</Label>
                                     <Select
                                         value={data.role}
                                         onValueChange={(value) =>
@@ -125,68 +147,71 @@ export default function Create({ stores, countries }) {
                                     >
                                         <SelectTrigger className="w-full">
                                             <SelectValue>
-                                                {(value) => ROLE_LABELS[value]}
+                                                {(value) =>
+                                                    ROLE_LABELS[value] ??
+                                                    at("select_role", uiLocale)
+                                                }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="admin">
-                                                Admin
+                                                {at("role_admin", uiLocale)}
                                             </SelectItem>
                                             <SelectItem value="staff">
-                                                Staff
+                                                {at("role_staff", uiLocale)}
                                             </SelectItem>
                                             <SelectItem value="customer">
-                                                Customer
+                                                {at("role_customer", uiLocale)}
                                             </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.role && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.role}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label>{at("store", uiLocale)}</Label>
+                                    <Select
+                                        value={data.store_id}
+                                        onValueChange={(value) =>
+                                            setData("store_id", value)
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue>
+                                                {(value) =>
+                                                    value
+                                                        ? stores.find(
+                                                              (s) =>
+                                                                  String(
+                                                                      s.id,
+                                                                  ) === value,
+                                                          )?.name
+                                                        : at(
+                                                              "no_brand",
+                                                              uiLocale,
+                                                          )
+                                                }
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {stores.map((store) => (
+                                                <SelectItem
+                                                    key={store.id}
+                                                    value={String(store.id)}
+                                                >
+                                                    {store.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
 
-                                {data.role === "staff" && (
-                                    <div className="space-y-1.5">
-                                        <Label>Store</Label>
-                                        <Select
-                                            value={data.store_id}
-                                            onValueChange={(value) =>
-                                                setData("store_id", value)
-                                            }
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue>
-                                                    {(value) =>
-                                                        value
-                                                            ? stores.find(
-                                                                  (s) =>
-                                                                      String(
-                                                                          s.id,
-                                                                      ) ===
-                                                                      value,
-                                                              )?.name
-                                                            : "Select store"
-                                                    }
-                                                </SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {stores.map((store) => (
-                                                    <SelectItem
-                                                        key={store.id}
-                                                        value={String(store.id)}
-                                                    >
-                                                        {store.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        {errors.store_id && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.store_id}
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
-
                                 <div className="space-y-1.5">
-                                    <Label>Country (optional)</Label>
+                                    <Label>{at("country", uiLocale)}</Label>
                                     <Select
                                         value={data.country_id}
                                         onValueChange={(value) =>
@@ -203,7 +228,10 @@ export default function Create({ stores, countries }) {
                                                                       c.id,
                                                                   ) === value,
                                                           )?.name
-                                                        : "None"
+                                                        : at(
+                                                              "select_country",
+                                                              uiLocale,
+                                                          )
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
@@ -228,7 +256,9 @@ export default function Create({ stores, countries }) {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -242,10 +272,12 @@ export default function Create({ stores, countries }) {
                                     <Link href={route("admin.users.index")} />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save User"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

@@ -37,9 +37,9 @@ import {
 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { at } from "@/lib/admin-i18n";
 
 // این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
-// خودِ رنگ‌ها در resources/css/app.css قابل تغییرند؛ این‌جا فقط اسم وضعیت‌ها هستند.
 const statusColor = {
     draft: "bg-status-draft/15 text-status-draft border-status-draft/30",
     pending_review:
@@ -54,8 +54,17 @@ const statusColor = {
 };
 
 export default function Index({ products }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [productToDelete, setProductToDelete] = useState(null);
+
+    const STATUS_LABELS = {
+        draft: at("status_draft", uiLocale),
+        pending_review: at("status_pending_review", uiLocale),
+        available: at("status_available", uiLocale),
+        reserved: at("status_reserved", uiLocale),
+        sold: at("status_sold", uiLocale),
+        archived: at("status_archived", uiLocale),
+    };
 
     useEffect(() => {
         if (flash?.success) {
@@ -72,24 +81,22 @@ export default function Index({ products }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Products" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("products", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Products
+                    {at("products", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Products" />
+            <Head title={at("products", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {products.total}{" "}
-                            {products.total === 1 ? "product" : "products"}{" "}
-                            total
+                            {products.total} {at("total", uiLocale)}
                         </p>
 
                         <Button
@@ -98,8 +105,8 @@ export default function Index({ products }) {
                                 <Link href={route("admin.products.create")} />
                             }
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add product
+                            <Plus className="me-1.5 size-4" />
+                            {at("add", uiLocale)} {at("products", uiLocale)}
                         </Button>
                     </div>
 
@@ -108,13 +115,25 @@ export default function Index({ products }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="w-14"></TableHead>
-                                        <TableHead>Reference</TableHead>
-                                        <TableHead>Title</TableHead>
-                                        <TableHead>Category</TableHead>
-                                        <TableHead>Store</TableHead>
-                                        <TableHead>Price</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead className="w-20"></TableHead>
+                                        <TableHead>
+                                            {at("reference", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("title", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("category", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("store", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("price", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -138,33 +157,33 @@ export default function Index({ products }) {
 
                                         return (
                                             <TableRow key={product.id}>
-                                                <TableCell>
+                                                <TableCell className="align-middle">
                                                     {product.images?.[0] ? (
                                                         <img
                                                             src={`/storage/${product.images[0].url}`}
                                                             alt=""
-                                                            className="size-10 rounded-md object-cover"
+                                                            className="size-14 rounded-md object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="flex size-10 items-center justify-center rounded-md bg-muted text-muted-foreground">
-                                                            <ImageOff className="size-4" />
+                                                        <div className="flex size-14 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                                                            <ImageOff className="size-5" />
                                                         </div>
                                                     )}
                                                 </TableCell>
-                                                <TableCell className="text-muted-foreground">
+                                                <TableCell className="align-middle text-muted-foreground">
                                                     {product.reference}
                                                 </TableCell>
-                                                <TableCell className="font-medium">
+                                                <TableCell className="align-middle font-medium">
                                                     {product.title.en}
                                                 </TableCell>
-                                                <TableCell className="text-muted-foreground">
+                                                <TableCell className="align-middle text-muted-foreground">
                                                     {product.category?.name
                                                         ?.en ?? "—"}
                                                 </TableCell>
-                                                <TableCell className="text-muted-foreground">
+                                                <TableCell className="align-middle text-muted-foreground">
                                                     {product.store?.name ?? "—"}
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="align-middle">
                                                     {discounted ? (
                                                         <div className="flex flex-col text-sm">
                                                             <span className="text-xs text-muted-foreground line-through">
@@ -193,7 +212,7 @@ export default function Index({ products }) {
                                                         </span>
                                                     )}
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="align-middle">
                                                     <div className="flex flex-wrap gap-1.5">
                                                         <Badge
                                                             variant="outline"
@@ -204,20 +223,25 @@ export default function Index({ products }) {
                                                                 ] ?? ""
                                                             }
                                                         >
-                                                            {product.status.replace(
-                                                                "_",
-                                                                " ",
-                                                            )}
+                                                            {
+                                                                STATUS_LABELS[
+                                                                    product
+                                                                        .status
+                                                                ]
+                                                            }
                                                         </Badge>
                                                         {discounted && (
                                                             <Badge className="bg-destructive text-white">
-                                                                <Tag className="mr-1 size-3" />
-                                                                Discounted
+                                                                <Tag className="me-1 size-3" />
+                                                                {at(
+                                                                    "discounted",
+                                                                    uiLocale,
+                                                                )}
                                                             </Badge>
                                                         )}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="align-middle">
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger
                                                             render={
@@ -240,8 +264,11 @@ export default function Index({ products }) {
                                                                     />
                                                                 }
                                                             >
-                                                                <Eye className="mr-2 size-4" />
-                                                                View
+                                                                <Eye className="me-2 size-4" />
+                                                                {at(
+                                                                    "view",
+                                                                    uiLocale,
+                                                                )}
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
                                                                 render={
@@ -253,8 +280,11 @@ export default function Index({ products }) {
                                                                     />
                                                                 }
                                                             >
-                                                                <Pencil className="mr-2 size-4" />
-                                                                Edit
+                                                                <Pencil className="me-2 size-4" />
+                                                                {at(
+                                                                    "edit",
+                                                                    uiLocale,
+                                                                )}
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
                                                                 variant="destructive"
@@ -264,8 +294,11 @@ export default function Index({ products }) {
                                                                     )
                                                                 }
                                                             >
-                                                                <Trash2 className="mr-2 size-4" />
-                                                                Delete
+                                                                <Trash2 className="me-2 size-4" />
+                                                                {at(
+                                                                    "delete",
+                                                                    uiLocale,
+                                                                )}
                                                             </DropdownMenuItem>
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
@@ -317,13 +350,17 @@ export default function Index({ products }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this product?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_product_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
                             {productToDelete && (
                                 <>
-                                    "{productToDelete.title.en}" will be moved
-                                    to trash and can be restored later by an
-                                    admin.
+                                    "{productToDelete.title.en}"{" "}
+                                    {at(
+                                        "delete_product_confirm_desc",
+                                        uiLocale,
+                                    )}
                                 </>
                             )}
                         </DialogDescription>
@@ -333,10 +370,10 @@ export default function Index({ products }) {
                             variant="outline"
                             onClick={() => setProductToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

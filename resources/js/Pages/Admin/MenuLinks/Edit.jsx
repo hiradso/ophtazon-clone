@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,9 +13,12 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Edit({ menuLink }) {
+    const { locale: uiLocale } = usePage().props;
+
     const { data, setData, put, processing, errors } = useForm({
         location: menuLink.location ?? "footer",
         group_label: {
@@ -41,8 +44,11 @@ export default function Edit({ menuLink }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Menu Links", href: route("admin.menu-links.index") },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("menu_links", uiLocale),
+                    href: route("admin.menu-links.index"),
+                },
                 { label: menuLink.label?.en ?? "" },
             ]}
             header={
@@ -53,26 +59,34 @@ export default function Edit({ menuLink }) {
                         nativeButton={false}
                         render={<Link href={route("admin.menu-links.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Edit Menu Link
+                        {at("edit_menu_link", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit — ${menuLink.label?.en ?? ""}`} />
+            <Head
+                title={`${at("edit", uiLocale)} — ${menuLink.label?.en ?? ""}`}
+            />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Link Details</CardTitle>
+                                <CardTitle>
+                                    {at("link_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <Label>Location</Label>
+                                    <Label>{at("location", uiLocale)}</Label>
                                     <Select
                                         value={data.location}
                                         onValueChange={(value) =>
@@ -83,17 +97,20 @@ export default function Edit({ menuLink }) {
                                             <SelectValue>
                                                 {(value) =>
                                                     value === "header"
-                                                        ? "Top navigation"
-                                                        : "Footer"
+                                                        ? at(
+                                                              "top_navigation",
+                                                              uiLocale,
+                                                          )
+                                                        : at("footer", uiLocale)
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="header">
-                                                Top navigation
+                                                {at("top_navigation", uiLocale)}
                                             </SelectItem>
                                             <SelectItem value="footer">
-                                                Footer
+                                                {at("footer", uiLocale)}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -126,9 +143,15 @@ export default function Edit({ menuLink }) {
                                                     <Label
                                                         htmlFor={`group_label_${locale}`}
                                                     >
-                                                        Footer column{" "}
+                                                        {at(
+                                                            "footer_column",
+                                                            uiLocale,
+                                                        )}{" "}
                                                         {locale !== "en" &&
-                                                            "(optional)"}
+                                                            at(
+                                                                "optional",
+                                                                uiLocale,
+                                                            )}
                                                     </Label>
                                                     <Input
                                                         id={`group_label_${locale}`}
@@ -172,9 +195,12 @@ export default function Edit({ menuLink }) {
                                                 <Label
                                                     htmlFor={`label_${locale}`}
                                                 >
-                                                    Label{" "}
+                                                    {at("label", uiLocale)}{" "}
                                                     {locale !== "en" &&
-                                                        "(optional)"}
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
                                                 </Label>
                                                 <Input
                                                     id={`label_${locale}`}
@@ -209,7 +235,9 @@ export default function Edit({ menuLink }) {
                                 </Tabs>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="url">URL</Label>
+                                    <Label htmlFor="url">
+                                        {at("url_field", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="url"
                                         value={data.url}
@@ -226,7 +254,7 @@ export default function Edit({ menuLink }) {
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="sort_order">
-                                        Sort order
+                                        {at("sort_order", uiLocale)}
                                     </Label>
                                     <Input
                                         id="sort_order"
@@ -249,7 +277,9 @@ export default function Edit({ menuLink }) {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -265,10 +295,12 @@ export default function Edit({ menuLink }) {
                                     />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Changes"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

@@ -28,9 +28,10 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ stores }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [storeToDelete, setStoreToDelete] = useState(null);
 
     useEffect(() => {
@@ -47,23 +48,25 @@ export default function Index({ stores }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Stores" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("stores", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Stores
+                    {at("stores", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Stores" />
+            <Head title={at("stores", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
                             {stores.length}{" "}
-                            {stores.length === 1 ? "store" : "stores"}
+                            {stores.length === 1
+                                ? at("store_singular", uiLocale)
+                                : at("stores_count", uiLocale)}
                         </p>
 
                         <Button
@@ -72,8 +75,8 @@ export default function Index({ stores }) {
                                 <Link href={route("admin.stores.create")} />
                             }
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add store
+                            <Plus className="me-1.5 size-4" />
+                            {at("add_store", uiLocale)}
                         </Button>
                     </div>
 
@@ -82,11 +85,21 @@ export default function Index({ stores }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Country</TableHead>
-                                        <TableHead>Email</TableHead>
-                                        <TableHead>Products</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>
+                                            {at("name_field", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("country", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("email_field", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("products_count_col", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -97,27 +110,26 @@ export default function Index({ stores }) {
                                                 colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No stores yet. Add the first one
-                                                to get started.
+                                                {at("no_stores_yet", uiLocale)}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {stores.map((store) => (
                                         <TableRow key={store.id}>
-                                            <TableCell className="font-medium">
+                                            <TableCell className="align-middle font-medium">
                                                 {store.name}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {store.country?.name ?? "—"}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {store.email ?? "—"}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {store.products_count}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -127,11 +139,14 @@ export default function Index({ stores }) {
                                                     }
                                                 >
                                                     {store.is_active
-                                                        ? "Active"
-                                                        : "Inactive"}
+                                                        ? at("active", uiLocale)
+                                                        : at(
+                                                              "hidden",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger
                                                         render={
@@ -154,8 +169,11 @@ export default function Index({ stores }) {
                                                                 />
                                                             }
                                                         >
-                                                            <Pencil className="mr-2 size-4" />
-                                                            Edit
+                                                            <Pencil className="me-2 size-4" />
+                                                            {at(
+                                                                "edit",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
@@ -165,8 +183,11 @@ export default function Index({ stores }) {
                                                                 )
                                                             }
                                                         >
-                                                            <Trash2 className="mr-2 size-4" />
-                                                            Delete
+                                                            <Trash2 className="me-2 size-4" />
+                                                            {at(
+                                                                "delete",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -186,14 +207,12 @@ export default function Index({ stores }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this store?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_store_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            {storeToDelete && (
-                                <>
-                                    "{storeToDelete.name}" will be permanently
-                                    deleted. This cannot be undone.
-                                </>
-                            )}
+                            {storeToDelete && `"${storeToDelete.name}"`}{" "}
+                            {at("delete_store_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -201,10 +220,10 @@ export default function Index({ stores }) {
                             variant="outline"
                             onClick={() => setStoreToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,9 +13,12 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Create() {
+    const { locale: uiLocale } = usePage().props;
+
     const { data, setData, post, processing, errors } = useForm({
         location: "footer",
         group_label: { en: "", fr: "", fa: "" },
@@ -33,9 +36,12 @@ export default function Create() {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Menu Links", href: route("admin.menu-links.index") },
-                { label: "Add Link" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("menu_links", uiLocale),
+                    href: route("admin.menu-links.index"),
+                },
+                { label: at("add_link", uiLocale) },
             ]}
             header={
                 <div className="flex items-center gap-3">
@@ -45,26 +51,32 @@ export default function Create() {
                         nativeButton={false}
                         render={<Link href={route("admin.menu-links.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Add Menu Link
+                        {at("add_menu_link", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title="Add Menu Link" />
+            <Head title={at("add_menu_link", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Link Details</CardTitle>
+                                <CardTitle>
+                                    {at("link_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <Label>Location</Label>
+                                    <Label>{at("location", uiLocale)}</Label>
                                     <Select
                                         value={data.location}
                                         onValueChange={(value) =>
@@ -75,17 +87,20 @@ export default function Create() {
                                             <SelectValue>
                                                 {(value) =>
                                                     value === "header"
-                                                        ? "Top navigation"
-                                                        : "Footer"
+                                                        ? at(
+                                                              "top_navigation",
+                                                              uiLocale,
+                                                          )
+                                                        : at("footer", uiLocale)
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="header">
-                                                Top navigation
+                                                {at("top_navigation", uiLocale)}
                                             </SelectItem>
                                             <SelectItem value="footer">
-                                                Footer
+                                                {at("footer", uiLocale)}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -118,9 +133,15 @@ export default function Create() {
                                                     <Label
                                                         htmlFor={`group_label_${locale}`}
                                                     >
-                                                        Footer column{" "}
+                                                        {at(
+                                                            "footer_column",
+                                                            uiLocale,
+                                                        )}{" "}
                                                         {locale !== "en" &&
-                                                            "(optional)"}
+                                                            at(
+                                                                "optional",
+                                                                uiLocale,
+                                                            )}
                                                     </Label>
                                                     <Input
                                                         id={`group_label_${locale}`}
@@ -166,9 +187,10 @@ export default function Create() {
                                                         </p>
                                                     )}
                                                     <p className="text-xs text-muted-foreground">
-                                                        Links with the same
-                                                        column name are grouped
-                                                        together in the footer.
+                                                        {at(
+                                                            "group_links_hint",
+                                                            uiLocale,
+                                                        )}
                                                     </p>
                                                 </div>
                                             )}
@@ -177,9 +199,12 @@ export default function Create() {
                                                 <Label
                                                     htmlFor={`label_${locale}`}
                                                 >
-                                                    Label{" "}
+                                                    {at("label", uiLocale)}{" "}
                                                     {locale !== "en" &&
-                                                        "(optional)"}
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
                                                 </Label>
                                                 <Input
                                                     id={`label_${locale}`}
@@ -221,7 +246,9 @@ export default function Create() {
                                 </Tabs>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="url">URL</Label>
+                                    <Label htmlFor="url">
+                                        {at("url_field", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="url"
                                         value={data.url}
@@ -239,7 +266,7 @@ export default function Create() {
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="sort_order">
-                                        Sort order
+                                        {at("sort_order", uiLocale)}
                                     </Label>
                                     <Input
                                         id="sort_order"
@@ -262,7 +289,9 @@ export default function Create() {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -278,10 +307,12 @@ export default function Create() {
                                     />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Link"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_link", uiLocale)}
                             </Button>
                         </div>
                     </form>

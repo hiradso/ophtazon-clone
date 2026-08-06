@@ -24,7 +24,14 @@ import {
     CarouselPrevious,
     CarouselNext,
 } from "@/components/ui/carousel";
-import { ArrowLeft, ImageOff, MapPin, ShieldCheck, Flame } from "lucide-react";
+import {
+    ArrowLeft,
+    ArrowRight,
+    ImageOff,
+    MapPin,
+    ShieldCheck,
+    Flame,
+} from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
@@ -160,7 +167,11 @@ export default function Show({ product, relatedProducts }) {
                     render={<Link href={route("products.index")} />}
                     className="mb-6"
                 >
-                    <ArrowLeft className="mr-1.5 size-4" />
+                    {locale === "fa" ? (
+                        <ArrowRight className="me-1.5 size-4" />
+                    ) : (
+                        <ArrowLeft className="me-1.5 size-4" />
+                    )}
                     {tt("back_to_results", locale)}
                 </Button>
 
@@ -168,7 +179,10 @@ export default function Show({ product, relatedProducts }) {
                     {/* گالری تصاویر */}
                     <div className="relative self-start">
                         {discounted && (
-                            <div className="absolute top-3 left-3 z-10 rounded-md bg-destructive px-2.5 py-1 text-sm font-semibold text-white shadow-md">
+                            <div
+                                dir="ltr"
+                                className="absolute top-3 start-3 z-10 rounded-md bg-destructive px-2.5 py-1 text-sm font-semibold text-white shadow-md"
+                            >
                                 -{product.discount_percentage}%
                             </div>
                         )}
@@ -218,7 +232,7 @@ export default function Show({ product, relatedProducts }) {
                                     variant="outline"
                                     className="bg-status-available/15 text-status-available border-status-available/30"
                                 >
-                                    <ShieldCheck className="mr-1 size-3" />
+                                    <ShieldCheck className="me-1 size-3" />
                                     Checked by Ophtazon
                                 </Badge>
                             )}
@@ -244,7 +258,10 @@ export default function Show({ product, relatedProducts }) {
                                 {product.currency}
                             </span>
                             {discounted && (
-                                <Badge className="bg-destructive text-white">
+                                <Badge
+                                    dir="ltr"
+                                    className="bg-destructive text-white"
+                                >
                                     -{product.discount_percentage}%
                                 </Badge>
                             )}
@@ -277,7 +294,7 @@ export default function Show({ product, relatedProducts }) {
                                         );
                                     }}
                                 >
-                                    <ShoppingCart className="mr-1.5 size-4" />
+                                    <ShoppingCart className="me-1.5 size-4" />
                                     {tt("add_to_cart", locale)}
                                 </Button>
                             </motion.div>
@@ -371,7 +388,14 @@ export default function Show({ product, relatedProducts }) {
                             Related Equipment
                         </h2>
 
-                        <Carousel opts={{ align: "start" }} className="px-10">
+                        <Carousel
+                            dir={locale === "fa" ? "rtl" : "ltr"}
+                            opts={{
+                                align: "start",
+                                direction: locale === "fa" ? "rtl" : "ltr",
+                            }}
+                            className="px-10"
+                        >
                             <CarouselContent>
                                 {relatedProducts.map((related) => (
                                     <CarouselItem
@@ -389,7 +413,10 @@ export default function Show({ product, relatedProducts }) {
                                                     {hasDiscount(
                                                         related.discount_percentage,
                                                     ) && (
-                                                        <div className="absolute top-2 left-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow">
+                                                        <div
+                                                            dir="ltr"
+                                                            className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
+                                                        >
                                                             -
                                                             {
                                                                 related.discount_percentage
@@ -435,8 +462,8 @@ export default function Show({ product, relatedProducts }) {
                                     </CarouselItem>
                                 ))}
                             </CarouselContent>
-                            <CarouselPrevious className="left-0" />
-                            <CarouselNext className="right-0" />
+                            <CarouselPrevious className="start-0" />
+                            <CarouselNext className="end-0" />
                         </Carousel>
                     </div>
                 )}

@@ -61,89 +61,90 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
+import { at } from "@/lib/admin-i18n";
+import { switchLocale } from "@/lib/switchLocale";
 
+import { Button } from "@/components/ui/button";
 const navItems = [
     {
-        label: "Dashboard",
+        labelKey: "dashboard",
         icon: LayoutDashboard,
         routeName: "dashboard",
         pattern: "dashboard",
     },
     {
-        label: "Orders",
+        labelKey: "orders",
         icon: ClipboardList,
         routeName: "admin.orders.index",
         pattern: "admin.orders.*",
     },
     {
-        label: "Products",
+        labelKey: "products",
         icon: Package,
         routeName: "admin.products.index",
         pattern: "admin.products.*",
     },
     {
-        label: "Categories",
+        labelKey: "categories",
         icon: FolderTree,
         routeName: "admin.categories.index",
         pattern: "admin.categories.*",
     },
     {
-        label: "Brands",
+        labelKey: "brands",
         icon: Award,
         routeName: "admin.brands.index",
         pattern: "admin.brands.*",
     },
     {
-        label: "Stores",
+        labelKey: "stores",
         icon: Building2,
         routeName: "admin.stores.index",
         pattern: "admin.stores.*",
     },
     {
-        label: "Messages",
+        labelKey: "messages",
         icon: Mail,
         routeName: "admin.contact-requests.index",
         pattern: "admin.contact-requests.*",
     },
     {
-        label: "Users",
+        labelKey: "users",
         icon: Users,
         routeName: "admin.users.index",
         pattern: "admin.users.*",
     },
     {
-        label: "Settings",
+        labelKey: "settings",
         icon: Settings,
         routeName: "admin.settings.edit",
         pattern: "admin.settings.*",
     },
 ];
-
 const siteContentGroup = {
-    label: "Site Content",
+    labelKey: "site_content",
     icon: LayoutTemplate,
     children: [
         {
-            label: "Homepage",
+            labelKey: "homepage",
             icon: LayoutTemplate,
             routeName: "admin.page-sections.index",
             pattern: "admin.page-sections.*",
         },
         {
-            label: "Pages",
+            labelKey: "pages",
             icon: FileText,
             routeName: "admin.pages.index",
             pattern: "admin.pages.*",
         },
         {
-            label: "Menu Links",
+            labelKey: "menu_links",
             icon: Link2,
             routeName: "admin.menu-links.index",
             pattern: "admin.menu-links.*",
         },
         {
-            label: "Media Library",
+            labelKey: "media_library",
             icon: Image,
             routeName: "admin.media.index",
             pattern: "admin.media.*",
@@ -161,8 +162,11 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
     const [siteContentOpen, setSiteContentOpen] = useState(isSiteContentActive);
 
     return (
-        <SidebarProvider>
-            <Sidebar collapsible="icon">
+        <SidebarProvider dir={locale === "fa" ? "rtl" : "ltr"}>
+            <Sidebar
+                collapsible="icon"
+                side={locale === "fa" ? "right" : "left"}
+            >
                 <SidebarHeader>
                     <SidebarMenu>
                         <SidebarMenuItem>
@@ -194,7 +198,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                 {navItems.map((item) => (
                                     <SidebarMenuItem key={item.routeName}>
                                         <SidebarMenuButton
-                                            tooltip={item.label}
+                                            tooltip={at(item.labelKey, locale)}
                                             isActive={route().current(
                                                 item.pattern,
                                             )}
@@ -205,7 +209,9 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                             }
                                         >
                                             <item.icon />
-                                            <span>{item.label}</span>
+                                            <span>
+                                                {at(item.labelKey, locale)}
+                                            </span>
                                         </SidebarMenuButton>
                                         {item.routeName ===
                                             "admin.contact-requests.index" &&
@@ -220,16 +226,24 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                 {/* منوی والد قابل‌جمع‌شدن: Site Content */}
                                 <SidebarMenuItem>
                                     <SidebarMenuButton
-                                        tooltip={siteContentGroup.label}
+                                        tooltip={at(
+                                            siteContentGroup.labelKey,
+                                            locale,
+                                        )}
                                         isActive={isSiteContentActive}
                                         onClick={() =>
                                             setSiteContentOpen(!siteContentOpen)
                                         }
                                     >
                                         <siteContentGroup.icon />
-                                        <span>{siteContentGroup.label}</span>
+                                        <span>
+                                            {at(
+                                                siteContentGroup.labelKey,
+                                                locale,
+                                            )}
+                                        </span>
                                         <ChevronRight
-                                            className={`ml-auto size-4 transition-transform ${
+                                            className={`ms-auto size-4 transition-transform ${
                                                 siteContentOpen
                                                     ? "rotate-90"
                                                     : ""
@@ -267,9 +281,10 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                                             >
                                                                 <child.icon />
                                                                 <span>
-                                                                    {
-                                                                        child.label
-                                                                    }
+                                                                    {at(
+                                                                        child.labelKey,
+                                                                        locale,
+                                                                    )}
                                                                 </span>
                                                             </SidebarMenuSubButton>
                                                         </SidebarMenuSubItem>
@@ -302,7 +317,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                                     {user.email}
                                                 </span>
                                             </div>
-                                            <ChevronsUpDown className="ml-auto size-4" />
+                                            <ChevronsUpDown className="ms-auto size-4" />
                                         </SidebarMenuButton>
                                     }
                                 />
@@ -317,7 +332,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                             />
                                         }
                                     >
-                                        <UserRound className="mr-2 size-4" />
+                                        <UserRound className="me-2 size-4" />
                                         Profile
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
@@ -331,7 +346,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                         variant="destructive"
                                         nativeButton={true}
                                     >
-                                        <LogOut className="mr-2 size-4" />
+                                        <LogOut className="me-2 size-4" />
                                         Log Out
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -344,7 +359,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
             <SidebarInset>
                 <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4">
                     <SidebarTrigger />
-                    <Separator orientation="vertical" className="mr-2 h-4" />
+                    <Separator orientation="vertical" className="me-2 h-4" />
 
                     {breadcrumbs && breadcrumbs.length > 0 && (
                         <Breadcrumb>
@@ -382,7 +397,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                         </Breadcrumb>
                     )}
 
-                    <div className="ml-auto flex items-center gap-1">
+                    <div className="ms-auto flex items-center gap-1">
                         <Tooltip>
                             <TooltipTrigger
                                 render={
@@ -419,29 +434,17 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                             />
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                    onClick={() =>
-                                        router.post(
-                                            route("locale.update", "en"),
-                                        )
-                                    }
+                                    onClick={() => switchLocale("en")}
                                 >
                                     English
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() =>
-                                        router.post(
-                                            route("locale.update", "fr"),
-                                        )
-                                    }
+                                    onClick={() => switchLocale("fr")}
                                 >
                                     Français
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() =>
-                                        router.post(
-                                            route("locale.update", "fa"),
-                                        )
-                                    }
+                                    onClick={() => switchLocale("fa")}
                                 >
                                     فارسی
                                 </DropdownMenuItem>

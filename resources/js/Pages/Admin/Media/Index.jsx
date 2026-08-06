@@ -132,9 +132,9 @@ export default function Index({ media }) {
                                     }
                                 >
                                     {processing ? (
-                                        <Loader2 className="mr-1.5 size-4 animate-spin" />
+                                        <Loader2 className="me-1.5 size-4 animate-spin" />
                                     ) : (
-                                        <Upload className="mr-1.5 size-4" />
+                                        <Upload className="me-1.5 size-4" />
                                     )}
                                     {processing ? "Uploading..." : "Upload"}
                                 </Button>

@@ -20,6 +20,8 @@ class UpdateSettingRequest extends FormRequest
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:255'],
             'robots_txt' => ['nullable', 'string', 'max:2000'],
+            'font_latin' => ['required', 'in:Geist,Inter,Roboto,Poppins,Nunito Sans,Playfair Display'],
+            'font_persian' => ['required', 'in:Vazirmatn,Noto Sans Arabic,Rubik,Noto Naskh Arabic'],
         ];
     }
 }

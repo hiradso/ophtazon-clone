@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,9 +13,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Edit({ store, countries }) {
+    const { locale: uiLocale } = usePage().props;
+
     const { data, setData, put, processing, errors } = useForm({
         country_id: store.country_id ? String(store.country_id) : "",
         name: store.name ?? "",
@@ -35,8 +38,11 @@ export default function Edit({ store, countries }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Stores", href: route("admin.stores.index") },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("stores", uiLocale),
+                    href: route("admin.stores.index"),
+                },
                 { label: store.name },
             ]}
             header={
@@ -47,59 +53,68 @@ export default function Edit({ store, countries }) {
                         nativeButton={false}
                         render={<Link href={route("admin.stores.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Edit Store
+                        {at("edit", uiLocale)} {at("store_singular", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit — ${store.name}`} />
+            <Head title={`${at("edit", uiLocale)} — ${store.name}`} />
 
             <div className="py-8">
-                <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Store Details</CardTitle>
+                                <CardTitle>
+                                    {at("store_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="name">Name</Label>
-                                        <Input
-                                            id="name"
-                                            value={data.name}
-                                            onChange={(e) =>
-                                                setData("name", e.target.value)
-                                            }
-                                        />
-                                        {errors.name && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.name}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <Label htmlFor="slug">Slug</Label>
-                                        <Input
-                                            id="slug"
-                                            value={data.slug}
-                                            onChange={(e) =>
-                                                setData("slug", e.target.value)
-                                            }
-                                        />
-                                        {errors.slug && (
-                                            <p className="text-sm text-destructive">
-                                                {errors.slug}
-                                            </p>
-                                        )}
-                                    </div>
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="name">
+                                        {at("name_field", uiLocale)}
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        value={data.name}
+                                        onChange={(e) =>
+                                            setData("name", e.target.value)
+                                        }
+                                    />
+                                    {errors.name && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.name}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label>Country</Label>
+                                    <Label htmlFor="slug">
+                                        {at("slug", uiLocale)}
+                                    </Label>
+                                    <Input
+                                        id="slug"
+                                        value={data.slug}
+                                        onChange={(e) =>
+                                            setData("slug", e.target.value)
+                                        }
+                                    />
+                                    {errors.slug && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.slug}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label>{at("country", uiLocale)}</Label>
                                     <Select
                                         value={data.country_id}
                                         onValueChange={(value) =>
@@ -116,7 +131,10 @@ export default function Edit({ store, countries }) {
                                                                       c.id,
                                                                   ) === value,
                                                           )?.name
-                                                        : "Select country"
+                                                        : at(
+                                                              "select_country",
+                                                              uiLocale,
+                                                          )
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
@@ -139,10 +157,12 @@ export default function Edit({ store, countries }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="address">Address</Label>
+                                    <Label htmlFor="address">
+                                        {at("address", uiLocale)}
+                                    </Label>
                                     <Textarea
                                         id="address"
-                                        rows={3}
+                                        rows={2}
                                         value={data.address}
                                         onChange={(e) =>
                                             setData("address", e.target.value)
@@ -152,7 +172,9 @@ export default function Edit({ store, countries }) {
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="phone">Phone</Label>
+                                        <Label htmlFor="phone">
+                                            {at("phone_field", uiLocale)}
+                                        </Label>
                                         <Input
                                             id="phone"
                                             value={data.phone}
@@ -162,7 +184,9 @@ export default function Edit({ store, countries }) {
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="email">Email</Label>
+                                        <Label htmlFor="email">
+                                            {at("email_field", uiLocale)}
+                                        </Label>
                                         <Input
                                             id="email"
                                             type="email"
@@ -180,7 +204,9 @@ export default function Edit({ store, countries }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="logo_url">Logo URL</Label>
+                                    <Label htmlFor="logo_url">
+                                        {at("logo_url", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="logo_url"
                                         value={data.logo_url}
@@ -198,7 +224,9 @@ export default function Edit({ store, countries }) {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -212,10 +240,12 @@ export default function Edit({ store, countries }) {
                                     <Link href={route("admin.stores.index")} />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Changes"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

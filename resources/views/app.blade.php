@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'fa' ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,29 @@
             $currentLocale = app()->getLocale();
             $slogan = $currentLocale === 'fr'
                 ? 'Le marché de confiance pour le matériel ophtalmique'
-                : 'Trusted marketplace for ophthalmic equipment';
+                : ($currentLocale === 'fa'
+                    ? 'بازار قابل‌اعتماد تجهیزات چشم‌پزشکی'
+                    : 'Trusted marketplace for ophthalmic equipment');
+
+            // نگاشت اسم انتخابی ادمین (که در دیتابیس ذخیره شده) به اسم واقعی
+            // family که پکیج‌های fontsource آن را ثبت می‌کنند
+            $latinFontMap = [
+                'Geist' => '"Geist Variable"',
+                'Inter' => '"Inter Variable"',
+                'Roboto' => '"Roboto"',
+                'Poppins' => '"Poppins"',
+                'Nunito Sans' => '"Nunito Sans Variable"',
+                'Playfair Display' => '"Playfair Display Variable"',
+            ];
+            $persianFontMap = [
+                'Vazirmatn' => '"Vazirmatn Variable"',
+                'Noto Sans Arabic' => '"Noto Sans Arabic Variable"',
+                'Rubik' => '"Rubik Variable"',
+                'Noto Naskh Arabic' => '"Noto Naskh Arabic"',
+            ];
+
+            $latinFontFamily = $latinFontMap[$siteSettings->font_latin] ?? $latinFontMap['Geist'];
+            $persianFontFamily = $persianFontMap[$siteSettings->font_persian] ?? $persianFontMap['Vazirmatn'];
         @endphp
 
         @if ($siteSettings->logo)
@@ -21,6 +43,15 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- فونت انتخابی ادمین — برای هر زبان جدا اعمال می‌شود -->
+        <style>
+            html[lang="fa"],
+            html[lang="fa"] body,
+            html[lang="fa"] * {
+                font-family: {!! $persianFontFamily !!}, {!! $latinFontFamily !!}, sans-serif !important;
+            }
+        </style>
 
         <!-- استایل اسپلش اسکرین اولیه — عمداً inline، تا قبل از لود باندل CSS اصلی هم نمایش داده شود -->
         <style>
@@ -151,65 +182,61 @@
         @inertia
 
         <script>
-    (function () {
-        var loader = document.getElementById('initial-loader');
-        if (!loader) return;
+            (function () {
+                var loader = document.getElementById('initial-loader');
+                if (!loader) return;
 
-        var appRoot = document.getElementById('app');
-        var domReady = false;
-        var pageLoaded = false;
+                var appRoot = document.getElementById('app');
+                var domReady = false;
+                var pageLoaded = false;
 
-        function hideLoader() {
-            if (!domReady || !pageLoaded) return;
+                function hideLoader() {
+                    if (!domReady || !pageLoaded) return;
 
-            requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                    loader.classList.add('fade-out');
-                    setTimeout(function () {
-                        if (loader.parentNode) {
-                            loader.parentNode.removeChild(loader);
-                        }
-                    }, 450);
-                });
-            });
-        }
+                    requestAnimationFrame(function () {
+                        requestAnimationFrame(function () {
+                            loader.classList.add('fade-out');
+                            setTimeout(function () {
+                                if (loader.parentNode) {
+                                    loader.parentNode.removeChild(loader);
+                                }
+                            }, 450);
+                        });
+                    });
+                }
 
-        // شرط اول: آیا React محتوا را داخل #app رندر کرده؟
-        if (appRoot && appRoot.children.length > 0) {
-            domReady = true;
-        } else {
-            var observer = new MutationObserver(function () {
                 if (appRoot && appRoot.children.length > 0) {
                     domReady = true;
-                    observer.disconnect();
-                    hideLoader();
+                } else {
+                    var observer = new MutationObserver(function () {
+                        if (appRoot && appRoot.children.length > 0) {
+                            domReady = true;
+                            observer.disconnect();
+                            hideLoader();
+                        }
+                    });
+                    if (appRoot) {
+                        observer.observe(appRoot, { childList: true });
+                    }
                 }
-            });
-            if (appRoot) {
-                observer.observe(appRoot, { childList: true });
-            }
-        }
 
-        // شرط دوم: آیا کل صفحه (شامل تمام فایل‌های CSS/JS) کامل بارگذاری شده؟
-        if (document.readyState === 'complete') {
-            pageLoaded = true;
-        } else {
-            window.addEventListener('load', function () {
-                pageLoaded = true;
+                if (document.readyState === 'complete') {
+                    pageLoaded = true;
+                } else {
+                    window.addEventListener('load', function () {
+                        pageLoaded = true;
+                        hideLoader();
+                    });
+                }
+
                 hideLoader();
-            });
-        }
 
-        // اگر هر دو شرط از قبل برقرار بودند (مثلاً روی اینترنت خیلی سریع)
-        hideLoader();
-
-        // محافظ ایمنی نهایی — حداکثر ۱۲ ثانیه (روی شبکه‌ی کند زمان بیشتری لازم است)
-        setTimeout(function () {
-            domReady = true;
-            pageLoaded = true;
-            hideLoader();
-        }, 12000);
-    })();
-</script>
+                setTimeout(function () {
+                    domReady = true;
+                    pageLoaded = true;
+                    hideLoader();
+                }, 12000);
+            })();
+        </script>
     </body>
 </html>

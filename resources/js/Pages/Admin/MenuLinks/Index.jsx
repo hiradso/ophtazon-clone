@@ -28,9 +28,10 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ menuLinks }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [linkToDelete, setLinkToDelete] = useState(null);
 
     useEffect(() => {
@@ -46,23 +47,22 @@ export default function Index({ menuLinks }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Menu Links" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("menu_links", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Menu Links
+                    {at("menu_links", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Menu Links" />
+            <Head title={at("menu_links", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {menuLinks.length}{" "}
-                            {menuLinks.length === 1 ? "link" : "links"}
+                            {menuLinks.length} {at("total", uiLocale)}
                         </p>
 
                         <Button
@@ -71,8 +71,8 @@ export default function Index({ menuLinks }) {
                                 <Link href={route("admin.menu-links.create")} />
                             }
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add link
+                            <Plus className="me-1.5 size-4" />
+                            {at("add_link", uiLocale)}
                         </Button>
                     </div>
 
@@ -81,11 +81,19 @@ export default function Index({ menuLinks }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Location</TableHead>
-                                        <TableHead>Group</TableHead>
-                                        <TableHead>Label</TableHead>
+                                        <TableHead>
+                                            {at("location", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("footer_column", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("label", uiLocale)}
+                                        </TableHead>
                                         <TableHead>URL</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -96,32 +104,39 @@ export default function Index({ menuLinks }) {
                                                 colSpan={6}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No menu links yet. Add the first
-                                                one to get started.
+                                                {at("no_links_yet", uiLocale)}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {menuLinks.map((link) => (
                                         <TableRow key={link.id}>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className="capitalize"
                                                 >
-                                                    {link.location}
+                                                    {link.location === "header"
+                                                        ? at(
+                                                              "top_navigation",
+                                                              uiLocale,
+                                                          )
+                                                        : at(
+                                                              "footer",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell className="align-middle text-muted-foreground">
                                                 {link.group_label?.en ?? "—"}
                                             </TableCell>
-                                            <TableCell className="font-medium text-foreground">
+                                            <TableCell className="align-middle font-medium text-foreground">
                                                 {link.label?.en}
                                             </TableCell>
-                                            <TableCell className="max-w-48 truncate text-muted-foreground">
+                                            <TableCell className="align-middle max-w-48 truncate text-muted-foreground">
                                                 {link.url}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -131,11 +146,14 @@ export default function Index({ menuLinks }) {
                                                     }
                                                 >
                                                     {link.is_active
-                                                        ? "Active"
-                                                        : "Hidden"}
+                                                        ? at("active", uiLocale)
+                                                        : at(
+                                                              "hidden",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger
                                                         render={
@@ -158,8 +176,11 @@ export default function Index({ menuLinks }) {
                                                                 />
                                                             }
                                                         >
-                                                            <Pencil className="mr-2 size-4" />
-                                                            Edit
+                                                            <Pencil className="me-2 size-4" />
+                                                            {at(
+                                                                "edit",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
@@ -169,8 +190,11 @@ export default function Index({ menuLinks }) {
                                                                 )
                                                             }
                                                         >
-                                                            <Trash2 className="mr-2 size-4" />
-                                                            Delete
+                                                            <Trash2 className="me-2 size-4" />
+                                                            {at(
+                                                                "delete",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -190,12 +214,14 @@ export default function Index({ menuLinks }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this link?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_link_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
                             {linkToDelete && (
                                 <>
-                                    "{linkToDelete.label?.en}" will be
-                                    permanently deleted.
+                                    "{linkToDelete.label?.en}"{" "}
+                                    {at("delete_link_confirm_desc", uiLocale)}
                                 </>
                             )}
                         </DialogDescription>
@@ -205,10 +231,10 @@ export default function Index({ menuLinks }) {
                             variant="outline"
                             onClick={() => setLinkToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

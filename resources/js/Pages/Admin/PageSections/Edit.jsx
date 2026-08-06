@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,17 +7,20 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft } from "lucide-react";
-
-const TYPE_LABELS = {
-    hero: "Hero Banner",
-    categories: "Category Grid",
-    latest_products: "Latest Listings",
-    discounted_products: "On Sale (Discounted Products)",
-    custom_content: "Custom Content",
-};
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Edit({ section }) {
+    const { locale: uiLocale } = usePage().props;
+
+    const TYPE_LABELS = {
+        hero: at("type_hero", uiLocale),
+        categories: at("type_categories", uiLocale),
+        latest_products: at("type_latest_products", uiLocale),
+        discounted_products: at("type_discounted_products", uiLocale),
+        custom_content: at("type_custom_content", uiLocale),
+    };
+
     const { data, setData, put, processing } = useForm({
         content: section.content ?? {},
         is_active: section.is_active ?? true,
@@ -43,8 +46,11 @@ export default function Edit({ section }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Homepage", href: route("admin.page-sections.index") },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("homepage_sections", uiLocale),
+                    href: route("admin.page-sections.index"),
+                },
                 { label: TYPE_LABELS[section.type] },
             ]}
             header={
@@ -57,15 +63,21 @@ export default function Edit({ section }) {
                             <Link href={route("admin.page-sections.index")} />
                         }
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Edit Section
+                        {at("edit_section_title", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit — ${TYPE_LABELS[section.type]}`} />
+            <Head
+                title={`${at("edit", uiLocale)} — ${TYPE_LABELS[section.type]}`}
+            />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
@@ -77,7 +89,7 @@ export default function Edit({ section }) {
                                         {TYPE_LABELS[section.type]}
                                     </CardTitle>
                                     <Badge variant="outline">
-                                        Type cannot be changed
+                                        {at("type_cannot_change", uiLocale)}
                                     </Badge>
                                 </div>
                             </CardHeader>
@@ -114,10 +126,16 @@ export default function Edit({ section }) {
                                                             <Label
                                                                 htmlFor={`title_${locale}`}
                                                             >
-                                                                Title{" "}
+                                                                {at(
+                                                                    "title",
+                                                                    uiLocale,
+                                                                )}{" "}
                                                                 {locale !==
                                                                     "en" &&
-                                                                    "(optional)"}
+                                                                    at(
+                                                                        "optional",
+                                                                        uiLocale,
+                                                                    )}
                                                             </Label>
                                                             <Input
                                                                 id={`title_${locale}`}
@@ -147,10 +165,16 @@ export default function Edit({ section }) {
                                                             <Label
                                                                 htmlFor={`subtitle_${locale}`}
                                                             >
-                                                                Subtitle{" "}
+                                                                {at(
+                                                                    "subtitle",
+                                                                    uiLocale,
+                                                                )}{" "}
                                                                 {locale !==
                                                                     "en" &&
-                                                                    "(optional)"}
+                                                                    at(
+                                                                        "optional",
+                                                                        uiLocale,
+                                                                    )}
                                                             </Label>
                                                             <Input
                                                                 id={`subtitle_${locale}`}
@@ -186,10 +210,16 @@ export default function Edit({ section }) {
                                                             <Label
                                                                 htmlFor={`heading_${locale}`}
                                                             >
-                                                                Heading{" "}
+                                                                {at(
+                                                                    "heading",
+                                                                    uiLocale,
+                                                                )}{" "}
                                                                 {locale !==
                                                                     "en" &&
-                                                                    "(optional)"}
+                                                                    at(
+                                                                        "optional",
+                                                                        uiLocale,
+                                                                    )}
                                                             </Label>
                                                             <Input
                                                                 id={`heading_${locale}`}
@@ -219,10 +249,16 @@ export default function Edit({ section }) {
                                                             <Label
                                                                 htmlFor={`body_${locale}`}
                                                             >
-                                                                Body text{" "}
+                                                                {at(
+                                                                    "body_text",
+                                                                    uiLocale,
+                                                                )}{" "}
                                                                 {locale !==
                                                                     "en" &&
-                                                                    "(optional)"}
+                                                                    at(
+                                                                        "optional",
+                                                                        uiLocale,
+                                                                    )}
                                                             </Label>
                                                             <Input
                                                                 id={`body_${locale}`}
@@ -257,8 +293,7 @@ export default function Edit({ section }) {
 
                                 {needsNoExtraFields && (
                                     <p className="rounded-md border border-dashed border-border p-3 text-sm text-muted-foreground">
-                                        This section pulls data automatically —
-                                        no extra fields needed.
+                                        {at("no_extra_fields_hint", uiLocale)}
                                     </p>
                                 )}
 
@@ -271,7 +306,7 @@ export default function Edit({ section }) {
                                         }
                                     />
                                     <Label htmlFor="is_active">
-                                        Visible on homepage
+                                        {at("visible_on_homepage", uiLocale)}
                                     </Label>
                                 </div>
                             </CardContent>
@@ -290,10 +325,12 @@ export default function Edit({ section }) {
                                     />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Changes"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

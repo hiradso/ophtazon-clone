@@ -75,7 +75,7 @@ export default function Index({ pages }) {
                             nativeButton={false}
                             render={<Link href={route("admin.pages.create")} />}
                         >
-                            <Plus className="mr-1.5 size-4" />
+                            <Plus className="me-1.5 size-4" />
                             Add page
                         </Button>
                     </div>
@@ -155,7 +155,7 @@ export default function Index({ pages }) {
                                                                     />
                                                                 }
                                                             >
-                                                                <ExternalLink className="mr-2 size-4" />
+                                                                <ExternalLink className="me-2 size-4" />
                                                                 View
                                                             </DropdownMenuItem>
                                                         )}
@@ -169,7 +169,7 @@ export default function Index({ pages }) {
                                                                 />
                                                             }
                                                         >
-                                                            <Pencil className="mr-2 size-4" />
+                                                            <Pencil className="me-2 size-4" />
                                                             Edit
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
@@ -180,7 +180,7 @@ export default function Index({ pages }) {
                                                                 )
                                                             }
                                                         >
-                                                            <Trash2 className="mr-2 size-4" />
+                                                            <Trash2 className="me-2 size-4" />
                                                             Delete
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>

@@ -3,6 +3,21 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/vazirmatn";
+@import "@fontsource-variable/inter";
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/600.css";
+@import "@fontsource/roboto/700.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/poppins/700.css";
+@import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/noto-sans-arabic";
+@import "@fontsource-variable/rubik";
+@import "@fontsource/noto-naskh-arabic/400.css";
+@import "@fontsource/noto-naskh-arabic/700.css";
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
@@ -84,13 +99,6 @@
         --status-reserved: oklch(0.6 0.13 235);
         --status-sold: oklch(0.4 0.01 250);
         --status-archived: oklch(0.5 0.01 250);
-    }
-
-    /* اعمال خودکار فونت وزیرمتن وقتی زبان صفحه فارسی است.
-   چون app.blade.php از قبل lang="fa" را روی <html> می‌گذارد،
-   این قانون بدون نیاز به هیچ تغییر جاوااسکریپتی کار می‌کند. */
-    html[lang="fa"] {
-        --font-sans: "Vazirmatn Variable", "Geist Variable", sans-serif;
     }
 
     * {

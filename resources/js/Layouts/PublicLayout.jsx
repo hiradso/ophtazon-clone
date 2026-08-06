@@ -24,6 +24,7 @@ import Footer from "@/Components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
+import { switchLocale } from "@/lib/switchLocale";
 
 function formatPrice(price) {
     const num = Number(price);
@@ -86,18 +87,18 @@ export default function PublicLayout({ children }) {
                     <form
                         action={route("products.index")}
                         method="get"
-                        className="relative ml-auto hidden max-w-sm flex-1 md:block"
+                        className="relative ms-auto hidden max-w-sm flex-1 md:block"
                     >
-                        <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="absolute top-1/2 start-3 size-4 -translate-y-1/2 text-muted-foreground" />
                         <input
                             type="text"
                             name="q"
                             placeholder={tt("search_placeholder", locale)}
-                            className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                            className="h-9 w-full rounded-md border border-input bg-background ps-9 pe-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                         />
                     </form>
 
-                    <div className="ml-auto flex items-center gap-2 md:ml-0">
+                    <div className="ms-auto flex items-center gap-2 md:ms-0">
                         <ThemeToggle />
                         <DropdownMenu>
                             <DropdownMenuTrigger
@@ -113,29 +114,17 @@ export default function PublicLayout({ children }) {
                             />
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                    onClick={() =>
-                                        router.post(
-                                            route("locale.update", "en"),
-                                        )
-                                    }
+                                    onClick={() => switchLocale("en")}
                                 >
                                     English
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() =>
-                                        router.post(
-                                            route("locale.update", "fr"),
-                                        )
-                                    }
+                                    onClick={() => switchLocale("fr")}
                                 >
                                     Français
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    onClick={() =>
-                                        router.post(
-                                            route("locale.update", "fa"),
-                                        )
-                                    }
+                                    onClick={() => switchLocale("fa")}
                                 >
                                     فارسی
                                 </DropdownMenuItem>
@@ -271,7 +260,7 @@ function ScrollToTopButton() {
                     whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.92 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="fixed right-6 bottom-6 z-40 flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"
+                    className="fixed end-6 bottom-6 z-40 flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"
                     aria-label="Scroll to top"
                 >
                     <ArrowUp className="size-5" />
@@ -363,7 +352,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                     <ShoppingCart className="size-4" />
                 </motion.div>
                 {cartItemsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">
+                    <span className="absolute -top-1 -end-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">
                         {cartItemsCount}
                     </span>
                 )}
@@ -376,7 +365,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute top-full right-0 z-50 mt-2 w-[30rem] rounded-lg border border-border bg-popover p-3 text-popover-foreground shadow-lg"
+                        className="absolute top-full end-0 z-50 mt-2 w-[30rem] rounded-lg border border-border bg-popover p-3 text-popover-foreground shadow-lg"
                     >
                         {loading && !preview ? (
                             <p className="py-6 text-center text-sm text-muted-foreground">
@@ -399,17 +388,17 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                         </colgroup>
                                         <thead>
                                             <tr className="border-b border-border text-[11px] font-medium text-muted-foreground">
-                                                <th className="py-2 pl-0.5 text-left"></th>
-                                                <th className="py-2 pl-2 text-left">
+                                                <th className="py-2 ps-0.5 text-start"></th>
+                                                <th className="py-2 ps-2 text-start">
                                                     Item
                                                 </th>
                                                 <th className="py-2 text-center">
                                                     Qty
                                                 </th>
-                                                <th className="py-2 pr-2 text-right">
+                                                <th className="py-2 pe-2 text-end">
                                                     Price
                                                 </th>
-                                                <th className="py-2 pr-0.5 text-right"></th>
+                                                <th className="py-2 pe-0.5 text-end"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -426,7 +415,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                         className="border-b border-border/60 last:border-0"
                                                     >
                                                         <td
-                                                            className="cursor-pointer py-2 pl-0.5"
+                                                            className="cursor-pointer py-2 ps-0.5"
                                                             onClick={() =>
                                                                 router.visit(
                                                                     route(
@@ -452,7 +441,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                             </div>
                                                         </td>
                                                         <td
-                                                            className="cursor-pointer truncate py-2 pr-2 pl-2 text-xs font-normal text-foreground hover:text-primary"
+                                                            className="cursor-pointer truncate py-2 pe-2 ps-2 text-xs font-normal text-foreground hover:text-primary"
                                                             onClick={() =>
                                                                 router.visit(
                                                                     route(
@@ -512,7 +501,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                                 </button>
                                                             </div>
                                                         </td>
-                                                        <td className="py-2 pr-2 text-right text-xs font-normal whitespace-nowrap text-foreground">
+                                                        <td className="py-2 pe-2 text-end text-xs font-normal whitespace-nowrap text-foreground">
                                                             {formatPrice(
                                                                 item.product
                                                                     .price *
@@ -523,7 +512,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                                     .currency
                                                             }
                                                         </td>
-                                                        <td className="py-2 pr-0.5 text-right">
+                                                        <td className="py-2 pe-0.5 text-end">
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
@@ -563,7 +552,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                     render={<Link href={route("cart.index")} />}
                                 >
                                     Go to cart
-                                    <ArrowRight className="ml-1.5 size-3.5" />
+                                    <ArrowRight className="ms-1.5 size-3.5" />
                                 </Button>
                             </>
                         )}

@@ -1,13 +1,16 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 export default function Edit({ brand }) {
+    const { locale: uiLocale } = usePage().props;
+
     const { data, setData, put, processing, errors } = useForm({
         name: brand.name ?? "",
         logo_url: brand.logo_url ?? "",
@@ -22,8 +25,11 @@ export default function Edit({ brand }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Brands", href: route("admin.brands.index") },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("brands", uiLocale),
+                    href: route("admin.brands.index"),
+                },
                 { label: brand.name },
             ]}
             header={
@@ -34,26 +40,34 @@ export default function Edit({ brand }) {
                         nativeButton={false}
                         render={<Link href={route("admin.brands.index")} />}
                     >
-                        <ArrowLeft className="size-4" />
+                        {uiLocale === "fa" ? (
+                            <ArrowRight className="size-4" />
+                        ) : (
+                            <ArrowLeft className="size-4" />
+                        )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Edit Brand
+                        {at("edit", uiLocale)} {at("brand_singular", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit — ${brand.name}`} />
+            <Head title={`${at("edit", uiLocale)} — ${brand.name}`} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Brand Details</CardTitle>
+                                <CardTitle>
+                                    {at("brand_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="name">
+                                        {at("name_field", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="name"
                                         value={data.name}
@@ -69,7 +83,9 @@ export default function Edit({ brand }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="logo_url">Logo URL</Label>
+                                    <Label htmlFor="logo_url">
+                                        {at("logo_url", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="logo_url"
                                         value={data.logo_url}
@@ -87,7 +103,9 @@ export default function Edit({ brand }) {
                                             setData("is_active", checked)
                                         }
                                     />
-                                    <Label htmlFor="is_active">Active</Label>
+                                    <Label htmlFor="is_active">
+                                        {at("active", uiLocale)}
+                                    </Label>
                                 </div>
                             </CardContent>
                         </Card>
@@ -101,10 +119,12 @@ export default function Edit({ brand }) {
                                     <Link href={route("admin.brands.index")} />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Changes"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

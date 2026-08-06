@@ -28,21 +28,17 @@ import {
     arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { at } from "@/lib/admin-i18n";
 
-const TYPE_LABELS = {
-    hero: "Hero Banner",
-    categories: "Category Grid",
-    latest_products: "Latest Listings",
-    discounted_products: "On Sale (Discounted Products)",
-    custom_content: "Custom Content",
-};
+function typeLabel(type, uiLocale) {
+    return at(`type_${type}`, uiLocale);
+}
 
 export default function Index({ sections: initialSections }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [sections, setSections] = useState(initialSections);
     const [sectionToDelete, setSectionToDelete] = useState(null);
 
-    // اگر داده‌ی سرور (مثلاً بعد از حذف) تغییر کرد، state محلی را هم به‌روز کن
     useEffect(() => {
         setSections(initialSections);
     }, [initialSections]);
@@ -65,7 +61,6 @@ export default function Index({ sections: initialSections }) {
         const newIndex = sections.findIndex((s) => s.id === over.id);
         const reordered = arrayMove(sections, oldIndex, newIndex);
 
-        // به‌روزرسانی فوری و خوش‌بینانه‌ی ظاهر، قبل از پاسخ سرور
         setSections(reordered);
 
         router.post(
@@ -87,23 +82,22 @@ export default function Index({ sections: initialSections }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Homepage" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("homepage_sections", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Homepage Sections
+                    {at("homepage_sections", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Homepage Sections" />
+            <Head title={at("homepage_sections", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            Drag sections to reorder how they appear on the
-                            homepage.
+                            {at("reorder_hint", uiLocale)}
                         </p>
 
                         <Button
@@ -114,15 +108,14 @@ export default function Index({ sections: initialSections }) {
                                 />
                             }
                         >
-                            <Plus className="mr-1.5 size-4" />
-                            Add section
+                            <Plus className="me-1.5 size-4" />
+                            {at("add_section", uiLocale)}
                         </Button>
                     </div>
 
                     {sections.length === 0 ? (
                         <div className="rounded-lg border border-dashed border-border py-16 text-center text-sm text-muted-foreground">
-                            No sections yet. Add the first one to build your
-                            homepage.
+                            {at("no_sections_yet", uiLocale)}
                         </div>
                     ) : (
                         <DndContext
@@ -139,6 +132,7 @@ export default function Index({ sections: initialSections }) {
                                         <SortableSectionCard
                                             key={section.id}
                                             section={section}
+                                            uiLocale={uiLocale}
                                             onDelete={() =>
                                                 setSectionToDelete(section)
                                             }
@@ -157,13 +151,18 @@ export default function Index({ sections: initialSections }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this section?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_section_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
                             {sectionToDelete && (
                                 <>
-                                    This "{TYPE_LABELS[sectionToDelete.type]}"
-                                    section will be permanently removed from the
-                                    homepage.
+                                    "{typeLabel(sectionToDelete.type, uiLocale)}
+                                    "{" "}
+                                    {at(
+                                        "delete_section_confirm_desc",
+                                        uiLocale,
+                                    )}
                                 </>
                             )}
                         </DialogDescription>
@@ -173,10 +172,10 @@ export default function Index({ sections: initialSections }) {
                             variant="outline"
                             onClick={() => setSectionToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -185,7 +184,7 @@ export default function Index({ sections: initialSections }) {
     );
 }
 
-function SortableSectionCard({ section, onDelete }) {
+function SortableSectionCard({ section, uiLocale, onDelete }) {
     const {
         attributes,
         listeners,
@@ -217,7 +216,7 @@ function SortableSectionCard({ section, onDelete }) {
                     <div className="flex-1">
                         <div className="flex items-center gap-2">
                             <p className="font-medium text-foreground">
-                                {TYPE_LABELS[section.type]}
+                                {typeLabel(section.type, uiLocale)}
                             </p>
                             <Badge
                                 variant="outline"
@@ -227,7 +226,9 @@ function SortableSectionCard({ section, onDelete }) {
                                         : "bg-muted text-muted-foreground border-border"
                                 }
                             >
-                                {section.is_active ? "Visible" : "Hidden"}
+                                {section.is_active
+                                    ? at("visible", uiLocale)
+                                    : at("hidden", uiLocale)}
                             </Badge>
                         </div>
                         {section.content?.title?.en && (
