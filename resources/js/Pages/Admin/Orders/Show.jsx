@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 export default function Show({ order }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -104,7 +105,10 @@ export default function Show({ order }) {
                                                     }{" "}
                                                     ·{" "}
                                                     {at("qty_short", uiLocale)}:{" "}
-                                                    {item.quantity}
+                                                    {toFa(
+                                                        item.quantity,
+                                                        uiLocale,
+                                                    )}
                                                 </p>
                                             </div>
                                             <p className="text-foreground">

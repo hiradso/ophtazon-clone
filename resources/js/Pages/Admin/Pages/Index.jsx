@@ -34,9 +34,11 @@ import {
     Trash2,
     ExternalLink,
 } from "lucide-react";
+import { toFa } from "@/lib/toFa";
+import { at } from "@/lib/admin-i18n";
 
 export default function Index({ pages }) {
-    const { flash } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
     const [pageToDelete, setPageToDelete] = useState(null);
 
     useEffect(() => {
@@ -52,23 +54,25 @@ export default function Index({ pages }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Pages" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                { label: at("pages", uiLocale) },
             ]}
             header={
                 <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    Pages
+                    {at("pages", uiLocale)}
                 </h2>
             }
         >
-            <Head title="Pages" />
+            <Head title={at("pages", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {pages.length}{" "}
-                            {pages.length === 1 ? "page" : "pages"}
+                            {toFa(pages.length, uiLocale)}{" "}
+                            {pages.length === 1
+                                ? at("page_singular", uiLocale)
+                                : at("pages_count", uiLocale)}
                         </p>
 
                         <Button
@@ -76,7 +80,7 @@ export default function Index({ pages }) {
                             render={<Link href={route("admin.pages.create")} />}
                         >
                             <Plus className="me-1.5 size-4" />
-                            Add page
+                            {at("add_page", uiLocale)}
                         </Button>
                     </div>
 
@@ -85,9 +89,15 @@ export default function Index({ pages }) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Title</TableHead>
-                                        <TableHead>Slug</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>
+                                            {at("title", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("slug", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
+                                            {at("status", uiLocale)}
+                                        </TableHead>
                                         <TableHead className="w-12"></TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -98,21 +108,23 @@ export default function Index({ pages }) {
                                                 colSpan={4}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
-                                                No pages yet. Add the first one
-                                                to get started.
+                                                {at("no_pages_yet", uiLocale)}
                                             </TableCell>
                                         </TableRow>
                                     )}
 
                                     {pages.map((page) => (
                                         <TableRow key={page.id}>
-                                            <TableCell className="font-medium text-foreground">
+                                            <TableCell className="align-middle font-medium text-foreground">
                                                 {page.title.en}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell
+                                                className="align-middle text-muted-foreground"
+                                                dir="ltr"
+                                            >
                                                 /pages/{page.slug}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <Badge
                                                     variant="outline"
                                                     className={
@@ -122,11 +134,17 @@ export default function Index({ pages }) {
                                                     }
                                                 >
                                                     {page.is_published
-                                                        ? "Published"
-                                                        : "Draft"}
+                                                        ? at(
+                                                              "published",
+                                                              uiLocale,
+                                                          )
+                                                        : at(
+                                                              "status_draft",
+                                                              uiLocale,
+                                                          )}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="align-middle">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger
                                                         render={
@@ -148,7 +166,10 @@ export default function Index({ pages }) {
                                                                     <a
                                                                         href={route(
                                                                             "pages.show",
-                                                                            page.slug,
+                                                                            {
+                                                                                locale: uiLocale,
+                                                                                page: page.slug,
+                                                                            },
                                                                         )}
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
@@ -156,7 +177,10 @@ export default function Index({ pages }) {
                                                                 }
                                                             >
                                                                 <ExternalLink className="me-2 size-4" />
-                                                                View
+                                                                {at(
+                                                                    "view",
+                                                                    uiLocale,
+                                                                )}
                                                             </DropdownMenuItem>
                                                         )}
                                                         <DropdownMenuItem
@@ -170,7 +194,10 @@ export default function Index({ pages }) {
                                                             }
                                                         >
                                                             <Pencil className="me-2 size-4" />
-                                                            Edit
+                                                            {at(
+                                                                "edit",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
@@ -181,7 +208,10 @@ export default function Index({ pages }) {
                                                             }
                                                         >
                                                             <Trash2 className="me-2 size-4" />
-                                                            Delete
+                                                            {at(
+                                                                "delete",
+                                                                uiLocale,
+                                                            )}
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -201,14 +231,12 @@ export default function Index({ pages }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete this page?</DialogTitle>
+                        <DialogTitle>
+                            {at("delete_page_confirm_title", uiLocale)}
+                        </DialogTitle>
                         <DialogDescription>
-                            {pageToDelete && (
-                                <>
-                                    "{pageToDelete.title}" will be permanently
-                                    deleted. This cannot be undone.
-                                </>
-                            )}
+                            {pageToDelete && `"${pageToDelete.title.en}"`}{" "}
+                            {at("delete_page_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -216,10 +244,10 @@ export default function Index({ pages }) {
                             variant="outline"
                             onClick={() => setPageToDelete(null)}
                         >
-                            Cancel
+                            {at("cancel", uiLocale)}
                         </Button>
                         <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
+                            {at("delete", uiLocale)}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

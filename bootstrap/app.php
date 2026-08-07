@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+            'setlocale.url' => \App\Http\Middleware\SetLocaleFromUrl::class,
         ]);
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,

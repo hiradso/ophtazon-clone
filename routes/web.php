@@ -26,40 +26,77 @@ use App\Http\Controllers\PageController as PublicPageController;
 use App\Http\Controllers\Admin\MenuLinkController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\LocaleController;
 
-Route::get('/', [HomeController::class, 'index'])->name('welcome');
-
+// فایل‌های ویژه‌ی سئو — بدون پیشوند زبان، همیشه در ریشه‌ی دامنه
 Route::get('/robots.txt', [RobotsController::class, 'index'])->name('robots');
-
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart', [CartController::class, 'store'])
-    ->middleware('throttle:20,1')
-    ->name('cart.store');
-Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
-Route::patch('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index');
-});
+// آدرس ریشه بدون زبان (/) به نسخه‌ی انگلیسی هدایت می‌شود
+Route::redirect('/', '/en', 301);
 
+/*
+|--------------------------------------------------------------------------
+| سایت عمومی — همه با پیشوند زبان (/en, /fr, /fa)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('{locale}')
+    ->where(['locale' => 'en|fr|fa'])
+    ->middleware('setlocale.url')
+    ->group(function () {
+        Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
+        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        Route::post('/cart', [CartController::class, 'store'])
+            ->middleware('throttle:20,1')
+            ->name('cart.store');
+        Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+        Route::patch('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+        Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified', 'role:admin,staff'])->name('dashboard');
+        Route::middleware('auth')->group(function () {
+            Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+            Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+            Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+            Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
 
-Route::get('/products', [ControllersProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product:slug}', [ControllersProductController::class, 'show'])->name('products.show');
+        Route::get('/products', [ControllersProductController::class, 'index'])->name('products.index');
+        Route::get('/products/{product:slug}', [ControllersProductController::class, 'show'])->name('products.show');
+
+        Route::get('/pages/{page:slug}', [PublicPageController::class, 'show'])->name('pages.show');
+
+        Route::post('/contact-requests', [ContactRequestController::class, 'store'])
+            ->middleware('throttle:5,1')
+            ->name('contact-requests.store');
+        Route::post('/newsletter', [NewsletterController::class, 'store'])
+            ->middleware('throttle:5,1')
+            ->name('newsletter.store');
+        Route::post('/alerts', [AlertController::class, 'store'])
+            ->middleware('throttle:5,1')
+            ->name('alerts.store');
+    });
+
+/*
+|--------------------------------------------------------------------------
+| احراز هویت — عمداً بدون پیشوند زبان (بین سایت عمومی و پنل مدیریت مشترک است)
+|--------------------------------------------------------------------------
+*/
+require __DIR__ . '/auth.php';
+
+/*
+|--------------------------------------------------------------------------
+| پنل مدیریت — عمداً بدون پیشوند زبان (پشت لاگین است، نیازی به ایندکس گوگل ندارد)
+| زبان همچنان با مکانیزم قبلی (session، از طریق App\Http\Middleware\SetLocale) کار می‌کند
+|--------------------------------------------------------------------------
+*/
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified', 'role:admin,staff'])
+    ->name('dashboard');
 
 Route::middleware(['auth', 'role:admin,staff'])
     ->prefix('admin')
@@ -81,9 +118,9 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('page-sections', PageSectionController::class)->except(['show']);
         Route::post('page-sections/{page_section}/move', [PageSectionController::class, 'move'])->name('page-sections.move');
+        Route::post('page-sections/reorder', [PageSectionController::class, 'reorder'])->name('page-sections.reorder');
         Route::resource('pages', PageController::class)->except(['show']);
         Route::resource('menu-links', MenuLinkController::class)->except(['show']);
-        // داخل گروه admin:
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
         Route::get('media', [MediaController::class, 'index'])->name('media.index');
@@ -92,26 +129,7 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media-picker.list');
         Route::post('media-picker', [MediaController::class, 'pickerUpload'])->name('media-picker.upload');
         Route::put('media/{medium}', [MediaController::class, 'update'])->name('media.update');
-        // داخل گروه admin، کنار بقیه‌ی روت‌های page-sections:
-        Route::post('page-sections/reorder', [PageSectionController::class, 'reorder'])->name('page-sections.reorder');
     });
 
-
-Route::get('/pages/{page:slug}', [PublicPageController::class, 'show'])->name('pages.show');
-Route::post('/contact-requests', [ContactRequestController::class, 'store'])
-    ->middleware('throttle:5,1')
-    ->name('contact-requests.store');
-Route::post('/newsletter', [NewsletterController::class, 'store'])
-    ->middleware('throttle:5,1')
-    ->name('newsletter.store');
-Route::post('/alerts', [AlertController::class, 'store'])
-    ->middleware('throttle:5,1')
-    ->name('alerts.store');
-// بیرون از هر گروه خاصی، کنار بقیه‌ی روت‌های cart:
-Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
-
-use App\Http\Controllers\LocaleController;
-
+// سوییچر زبان پنل مدیریت (session-based) — همچنان مورد استفاده در AdminLayout
 Route::post('/locale/{locale}', [LocaleController::class, 'update'])->name('locale.update');
-
-require __DIR__ . '/auth.php';

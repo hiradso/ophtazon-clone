@@ -38,6 +38,7 @@ import {
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 // این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
 const statusColor = {
@@ -96,7 +97,8 @@ export default function Index({ products }) {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {products.total} {at("total", uiLocale)}
+                            {toFa(products.total, uiLocale)}{" "}
+                            {at("total", uiLocale)}
                         </p>
 
                         <Button
@@ -189,6 +191,7 @@ export default function Index({ products }) {
                                                             <span className="text-xs text-muted-foreground line-through">
                                                                 {formatPrice(
                                                                     product.price,
+                                                                    uiLocale,
                                                                 )}{" "}
                                                                 {
                                                                     product.currency
@@ -197,6 +200,7 @@ export default function Index({ products }) {
                                                             <span className="font-medium text-foreground">
                                                                 {formatPrice(
                                                                     product.effective_price,
+                                                                    uiLocale,
                                                                 )}{" "}
                                                                 {
                                                                     product.currency
@@ -207,6 +211,7 @@ export default function Index({ products }) {
                                                         <span className="text-muted-foreground">
                                                             {formatPrice(
                                                                 product.price,
+                                                                uiLocale,
                                                             )}{" "}
                                                             {product.currency}
                                                         </span>

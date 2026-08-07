@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, ArrowRight, Pencil, ImageOff, Tag } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 export default function Show({ product }) {
     const { locale: uiLocale } = usePage().props;
@@ -176,11 +177,15 @@ export default function Show({ product }) {
                                 {discounted ? (
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm text-muted-foreground line-through">
-                                            {formatPrice(product.price)}
+                                            {formatPrice(
+                                                product.price,
+                                                uiLocale,
+                                            )}
                                         </span>
                                         <span className="font-medium text-foreground">
                                             {formatPrice(
                                                 product.effective_price,
+                                                uiLocale,
                                             )}{" "}
                                             {product.currency}
                                         </span>
@@ -191,14 +196,14 @@ export default function Show({ product }) {
                                     </div>
                                 ) : (
                                     <p className="font-medium text-foreground">
-                                        {formatPrice(product.price)}{" "}
+                                        {formatPrice(product.price, uiLocale)}{" "}
                                         {product.currency}
                                     </p>
                                 )}
                             </div>
                             <InfoRow
                                 label={at("stock_quantity", uiLocale)}
-                                value={product.stock_quantity}
+                                value={toFa(product.stock_quantity, uiLocale)}
                             />
                             <InfoRow
                                 label={at("condition", uiLocale)}
@@ -212,13 +217,23 @@ export default function Show({ product }) {
                             />
                             <InfoRow
                                 label={at("manufacture_year", uiLocale)}
-                                value={product.manufacture_year ?? "—"}
+                                value={
+                                    product.manufacture_year
+                                        ? toFa(
+                                              product.manufacture_year,
+                                              uiLocale,
+                                          )
+                                        : "—"
+                                }
                             />
                             <InfoRow
                                 label={at("warranty_months", uiLocale)}
                                 value={
                                     product.warranty_months > 0
-                                        ? product.warranty_months
+                                        ? toFa(
+                                              product.warranty_months,
+                                              uiLocale,
+                                          )
                                         : "—"
                                 }
                             />

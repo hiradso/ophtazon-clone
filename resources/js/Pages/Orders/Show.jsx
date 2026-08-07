@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle2 } from "lucide-react";
 import { t } from "@/lib/translate";
+import { toFa } from "@/lib/toFa";
 
 export default function Show({ order }) {
     const { locale } = usePage().props;
@@ -31,7 +32,7 @@ export default function Show({ order }) {
                             >
                                 <span className="text-muted-foreground">
                                     {t(item.product_title_snapshot, locale)} ×{" "}
-                                    {item.quantity}
+                                    {toFa(item.quantity, locale)}
                                 </span>
                                 <span className="text-foreground">
                                     {(item.unit_price * item.quantity).toFixed(

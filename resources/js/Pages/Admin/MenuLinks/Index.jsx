@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 export default function Index({ menuLinks }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -62,7 +63,8 @@ export default function Index({ menuLinks }) {
                 <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {menuLinks.length} {at("total", uiLocale)}
+                            {toFa(menuLinks.length, uiLocale)}{" "}
+                            {at("total", uiLocale)}
                         </p>
 
                         <Button

@@ -36,6 +36,7 @@ import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -183,7 +184,7 @@ export default function Show({ product, relatedProducts }) {
                                 dir="ltr"
                                 className="absolute top-3 start-3 z-10 rounded-md bg-destructive px-2.5 py-1 text-sm font-semibold text-white shadow-md"
                             >
-                                -{product.discount_percentage}%
+                                -{toFa(product.discount_percentage, locale)}%
                             </div>
                         )}
                         <div className="flex h-48 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
@@ -249,12 +250,12 @@ export default function Show({ product, relatedProducts }) {
                         <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
                             {discounted && (
                                 <span className="text-lg text-muted-foreground line-through">
-                                    {formatPrice(product.price)}{" "}
+                                    {formatPrice(product.price, locale)}{" "}
                                     {product.currency}
                                 </span>
                             )}
                             <span className="text-3xl font-bold text-foreground">
-                                {formatPrice(product.effective_price)}{" "}
+                                {formatPrice(product.effective_price, locale)}{" "}
                                 {product.currency}
                             </span>
                             {discounted && (
@@ -262,7 +263,8 @@ export default function Show({ product, relatedProducts }) {
                                     dir="ltr"
                                     className="bg-destructive text-white"
                                 >
-                                    -{product.discount_percentage}%
+                                    -{toFa(product.discount_percentage, locale)}
+                                    %
                                 </Badge>
                             )}
                         </div>
@@ -335,16 +337,18 @@ export default function Show({ product, relatedProducts }) {
                                     Manufacture year
                                 </p>
                                 <p className="font-medium text-foreground">
-                                    {product.manufacture_year ?? "—"}
+                                    {product.manufacture_year
+                                        ? toFa(product.manufacture_year, locale)
+                                        : "—"}
                                 </p>
                             </div>
                             <div>
                                 <p className="text-muted-foreground">
-                                    Warranty
+                                    {tt("warranty", locale)}
                                 </p>
                                 <p className="font-medium text-foreground">
                                     {product.warranty_months > 0
-                                        ? `${product.warranty_months} months`
+                                        ? `${toFa(product.warranty_months, locale)} ${tt("months_suffix", locale)}`
                                         : "—"}
                                 </p>
                             </div>
@@ -418,9 +422,10 @@ export default function Show({ product, relatedProducts }) {
                                                             className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
                                                         >
                                                             -
-                                                            {
-                                                                related.discount_percentage
-                                                            }
+                                                            {toFa(
+                                                                related.discount_percentage,
+                                                                locale,
+                                                            )}
                                                             %
                                                         </div>
                                                     )}
@@ -453,6 +458,7 @@ export default function Show({ product, relatedProducts }) {
                                                     <p className="font-semibold text-foreground">
                                                         {formatPrice(
                                                             related.effective_price,
+                                                            locale,
                                                         )}{" "}
                                                         {related.currency}
                                                     </p>

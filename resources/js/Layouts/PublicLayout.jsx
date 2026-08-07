@@ -25,11 +25,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { switchLocale } from "@/lib/switchLocale";
-
-function formatPrice(price) {
-    const num = Number(price);
-    return Number.isInteger(num) ? num.toString() : num.toFixed(2);
-}
+import { formatPrice } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 export default function PublicLayout({ children }) {
     const { auth, cartItemsCount, headerLinks, flash, siteSettings, locale } =
@@ -353,7 +350,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                 </motion.div>
                 {cartItemsCount > 0 && (
                     <span className="absolute -top-1 -end-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">
-                        {cartItemsCount}
+                        {toFa(cartItemsCount, locale)}
                     </span>
                 )}
             </Button>
@@ -479,9 +476,10 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                                     <Minus className="size-2.5" />
                                                                 </button>
                                                                 <span className="w-4 text-center text-xs text-foreground">
-                                                                    {
-                                                                        item.quantity
-                                                                    }
+                                                                    {toFa(
+                                                                        item.quantity,
+                                                                        locale,
+                                                                    )}
                                                                 </span>
                                                                 <button
                                                                     type="button"
@@ -506,6 +504,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                                 item.product
                                                                     .price *
                                                                     item.quantity,
+                                                                locale,
                                                             )}{" "}
                                                             {
                                                                 item.product
@@ -540,7 +539,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                         Subtotal
                                     </span>
                                     <span className="font-semibold text-foreground">
-                                        {formatPrice(preview.total)}{" "}
+                                        {formatPrice(preview.total, locale)}{" "}
                                         {preview.currency}
                                     </span>
                                 </div>

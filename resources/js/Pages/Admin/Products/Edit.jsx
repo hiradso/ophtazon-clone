@@ -569,12 +569,18 @@ export default function Edit({
                                         {discountPreviewActive ? (
                                             <span className="flex items-center gap-1.5 font-semibold text-foreground">
                                                 <Tag className="size-3.5 text-destructive" />
-                                                {formatPrice(previewFinalPrice)}{" "}
+                                                {formatPrice(
+                                                    previewFinalPrice,
+                                                    uiLocale,
+                                                )}{" "}
                                                 {data.currency}
                                             </span>
                                         ) : (
                                             <span className="text-muted-foreground">
-                                                {formatPrice(data.price || 0)}{" "}
+                                                {formatPrice(
+                                                    data.price || 0,
+                                                    uiLocale,
+                                                )}{" "}
                                                 {data.currency}
                                             </span>
                                         )}

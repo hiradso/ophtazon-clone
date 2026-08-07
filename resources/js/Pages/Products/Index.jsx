@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 export default function Index({
     products,
@@ -289,7 +290,7 @@ export default function Index({
 
                 {/* نتایج */}
                 <p className="mb-4 text-sm text-muted-foreground">
-                    {products.total}{" "}
+                    {toFa(products.total, locale)}{" "}
                     {products.total === 1
                         ? tt("result", locale)
                         : tt("results", locale)}
@@ -380,12 +381,14 @@ export default function Index({
                                                     <span className="text-sm text-muted-foreground line-through">
                                                         {formatPrice(
                                                             product.price,
+                                                            locale,
                                                         )}
                                                     </span>
                                                 )}
                                                 <p className="text-lg font-semibold text-foreground">
                                                     {formatPrice(
                                                         product.effective_price,
+                                                        locale,
                                                     )}{" "}
                                                     {product.currency}
                                                 </p>

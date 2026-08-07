@@ -157,3 +157,11 @@
     --color-status-sold: var(--status-sold);
     --color-status-archived: var(--status-archived);
 }
+@media print {
+    [data-slot="sidebar-wrapper"] > div:first-child {
+        display: none !important;
+    }
+    [data-slot="sidebar-inset"] {
+        margin: 0 !important;
+    }
+}

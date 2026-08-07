@@ -17,9 +17,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
+import { at } from "@/lib/admin-i18n";
 
 export default function Edit({ page }) {
     const { locale: uiLocale } = usePage().props;
+
     const { data, setData, put, processing, errors } = useForm({
         title: {
             en: page.title?.en ?? "",
@@ -50,8 +52,11 @@ export default function Edit({ page }) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Pages", href: route("admin.pages.index") },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("pages", uiLocale),
+                    href: route("admin.pages.index"),
+                },
                 { label: page.title.en },
             ]}
             header={
@@ -69,19 +74,21 @@ export default function Edit({ page }) {
                         )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Edit Page
+                        {at("edit", uiLocale)} {at("page_singular", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit — ${page.title.en}`} />
+            <Head title={`${at("edit", uiLocale)} — ${page.title.en}`} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Page Details</CardTitle>
+                                <CardTitle>
+                                    {at("page_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <Tabs defaultValue="en">
@@ -110,9 +117,12 @@ export default function Edit({ page }) {
                                                 <Label
                                                     htmlFor={`title_${locale}`}
                                                 >
-                                                    Title{" "}
+                                                    {at("title", uiLocale)}{" "}
                                                     {locale !== "en" &&
-                                                        "(optional)"}
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
                                                 </Label>
                                                 <Input
                                                     id={`title_${locale}`}
@@ -145,9 +155,12 @@ export default function Edit({ page }) {
 
                                             <div className="space-y-1.5">
                                                 <Label>
-                                                    Content{" "}
+                                                    {at("content", uiLocale)}{" "}
                                                     {locale !== "en" &&
-                                                        "(optional)"}
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
                                                 </Label>
                                                 <RichTextEditor
                                                     value={
@@ -178,7 +191,10 @@ export default function Edit({ page }) {
                                                 <Label
                                                     htmlFor={`meta_${locale}`}
                                                 >
-                                                    Meta description (SEO)
+                                                    {at(
+                                                        "meta_description_seo",
+                                                        uiLocale,
+                                                    )}
                                                 </Label>
                                                 <Textarea
                                                     id={`meta_${locale}`}
@@ -211,7 +227,9 @@ export default function Edit({ page }) {
                                 </Tabs>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="slug">Slug</Label>
+                                    <Label htmlFor="slug">
+                                        {at("slug", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="slug"
                                         value={data.slug}
@@ -224,14 +242,20 @@ export default function Edit({ page }) {
                                             {errors.slug}
                                         </p>
                                     )}
-                                    <p className="text-xs text-muted-foreground">
-                                        Available at /pages/{data.slug}
+                                    <p
+                                        className="text-xs text-muted-foreground"
+                                        dir="ltr"
+                                    >
+                                        {at("slug_hint_prefix", uiLocale)}
+                                        {data.slug}
                                     </p>
                                 </div>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label>Image (optional)</Label>
+                                        <Label>
+                                            {at("image_optional", uiLocale)}
+                                        </Label>
                                         <MediaPicker
                                             value={data.featured_image}
                                             onSelect={(path) =>
@@ -246,7 +270,9 @@ export default function Edit({ page }) {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <Label>Display style</Label>
+                                        <Label>
+                                            {at("display_style", uiLocale)}
+                                        </Label>
                                         <Select
                                             value={data.image_display_style}
                                             onValueChange={(value) =>
@@ -260,17 +286,29 @@ export default function Edit({ page }) {
                                                 <SelectValue>
                                                     {(value) =>
                                                         value === "banner"
-                                                            ? "Simple banner"
-                                                            : "Full-width background"
+                                                            ? at(
+                                                                  "simple_banner",
+                                                                  uiLocale,
+                                                              )
+                                                            : at(
+                                                                  "full_width_background",
+                                                                  uiLocale,
+                                                              )
                                                     }
                                                 </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="banner">
-                                                    Simple banner
+                                                    {at(
+                                                        "simple_banner",
+                                                        uiLocale,
+                                                    )}
                                                 </SelectItem>
                                                 <SelectItem value="background">
-                                                    Full-width background
+                                                    {at(
+                                                        "full_width_background",
+                                                        uiLocale,
+                                                    )}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -286,7 +324,7 @@ export default function Edit({ page }) {
                                         }
                                     />
                                     <Label htmlFor="is_published">
-                                        Published
+                                        {at("published", uiLocale)}
                                     </Label>
                                 </div>
                             </CardContent>
@@ -301,10 +339,12 @@ export default function Edit({ page }) {
                                     <Link href={route("admin.pages.index")} />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Changes"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_changes", uiLocale)}
                             </Button>
                         </div>
                     </form>

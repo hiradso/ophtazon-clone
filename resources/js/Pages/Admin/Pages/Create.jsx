@@ -17,6 +17,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
+import { at } from "@/lib/admin-i18n";
 
 const LOCALE_LABELS = {
     en: "English",
@@ -26,6 +27,7 @@ const LOCALE_LABELS = {
 
 export default function Create() {
     const { locale: uiLocale } = usePage().props;
+
     const { data, setData, post, processing, errors } = useForm({
         title: { en: "", fr: "", fa: "" },
         slug: "",
@@ -44,9 +46,12 @@ export default function Create() {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: "Dashboard", href: route("dashboard") },
-                { label: "Pages", href: route("admin.pages.index") },
-                { label: "Add Page" },
+                { label: at("dashboard", uiLocale), href: route("dashboard") },
+                {
+                    label: at("pages", uiLocale),
+                    href: route("admin.pages.index"),
+                },
+                { label: at("add_page", uiLocale) },
             ]}
             header={
                 <div className="flex items-center gap-3">
@@ -63,19 +68,21 @@ export default function Create() {
                         )}
                     </Button>
                     <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        Add Page
+                        {at("add_page", uiLocale)}
                     </h2>
                 </div>
             }
         >
-            <Head title="Add Page" />
+            <Head title={at("add_page", uiLocale)} />
 
             <div className="py-8">
                 <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Page Details</CardTitle>
+                                <CardTitle>
+                                    {at("page_details", uiLocale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <Tabs defaultValue="en">
@@ -104,9 +111,12 @@ export default function Create() {
                                                 <Label
                                                     htmlFor={`title_${locale}`}
                                                 >
-                                                    Title{" "}
+                                                    {at("title", uiLocale)}{" "}
                                                     {locale !== "en" &&
-                                                        "(optional)"}
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
                                                 </Label>
                                                 <Input
                                                     id={`title_${locale}`}
@@ -139,9 +149,12 @@ export default function Create() {
 
                                             <div className="space-y-1.5">
                                                 <Label>
-                                                    Content{" "}
+                                                    {at("content", uiLocale)}{" "}
                                                     {locale !== "en" &&
-                                                        "(optional)"}
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
                                                 </Label>
                                                 <RichTextEditor
                                                     value={
@@ -172,7 +185,10 @@ export default function Create() {
                                                 <Label
                                                     htmlFor={`meta_${locale}`}
                                                 >
-                                                    Meta description (SEO)
+                                                    {at(
+                                                        "meta_description_seo",
+                                                        uiLocale,
+                                                    )}
                                                 </Label>
                                                 <Textarea
                                                     id={`meta_${locale}`}
@@ -205,7 +221,9 @@ export default function Create() {
                                 </Tabs>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="slug">Slug</Label>
+                                    <Label htmlFor="slug">
+                                        {at("slug", uiLocale)}
+                                    </Label>
                                     <Input
                                         id="slug"
                                         value={data.slug}
@@ -219,15 +237,20 @@ export default function Create() {
                                             {errors.slug}
                                         </p>
                                     )}
-                                    <p className="text-xs text-muted-foreground">
-                                        Will be available at /pages/
+                                    <p
+                                        className="text-xs text-muted-foreground"
+                                        dir="ltr"
+                                    >
+                                        {at("slug_hint_prefix", uiLocale)}
                                         {data.slug || "..."}
                                     </p>
                                 </div>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label>Image (optional)</Label>
+                                        <Label>
+                                            {at("image_optional", uiLocale)}
+                                        </Label>
                                         <MediaPicker
                                             value={data.featured_image}
                                             onSelect={(path) =>
@@ -242,7 +265,9 @@ export default function Create() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <Label>Display style</Label>
+                                        <Label>
+                                            {at("display_style", uiLocale)}
+                                        </Label>
                                         <Select
                                             value={data.image_display_style}
                                             onValueChange={(value) =>
@@ -256,17 +281,29 @@ export default function Create() {
                                                 <SelectValue>
                                                     {(value) =>
                                                         value === "banner"
-                                                            ? "Simple banner"
-                                                            : "Full-width background"
+                                                            ? at(
+                                                                  "simple_banner",
+                                                                  uiLocale,
+                                                              )
+                                                            : at(
+                                                                  "full_width_background",
+                                                                  uiLocale,
+                                                              )
                                                     }
                                                 </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="banner">
-                                                    Simple banner
+                                                    {at(
+                                                        "simple_banner",
+                                                        uiLocale,
+                                                    )}
                                                 </SelectItem>
                                                 <SelectItem value="background">
-                                                    Full-width background
+                                                    {at(
+                                                        "full_width_background",
+                                                        uiLocale,
+                                                    )}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -282,7 +319,7 @@ export default function Create() {
                                         }
                                     />
                                     <Label htmlFor="is_published">
-                                        Published
+                                        {at("published", uiLocale)}
                                     </Label>
                                 </div>
                             </CardContent>
@@ -297,10 +334,12 @@ export default function Create() {
                                     <Link href={route("admin.pages.index")} />
                                 }
                             >
-                                Cancel
+                                {at("cancel", uiLocale)}
                             </Button>
                             <Button type="submit" disabled={processing}>
-                                {processing ? "Saving..." : "Save Page"}
+                                {processing
+                                    ? at("saving", uiLocale)
+                                    : at("save_page", uiLocale)}
                             </Button>
                         </div>
                     </form>

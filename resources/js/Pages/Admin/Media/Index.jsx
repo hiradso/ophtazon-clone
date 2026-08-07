@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Upload, Trash2, Loader2, Copy, Pencil, Check, X } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 export default function Index({ media }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -182,7 +183,7 @@ export default function Index({ media }) {
                     </Card>
 
                     <p className="mb-4 text-sm text-muted-foreground">
-                        {media.total}{" "}
+                        {toFa(media.total, uiLocale)}{" "}
                         {media.total === 1
                             ? at("file_singular", uiLocale)
                             : at("files_count", uiLocale)}

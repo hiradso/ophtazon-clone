@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { t } from "@/lib/translate";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 export default function Index({ cart, countries }) {
     const { locale } = usePage().props;
@@ -254,7 +255,11 @@ export default function Index({ cart, countries }) {
                                                     )}
                                                     <span className="text-muted-foreground/70">
                                                         {" "}
-                                                        × {item.quantity}
+                                                        ×{" "}
+                                                        {toFa(
+                                                            item.quantity,
+                                                            locale,
+                                                        )}
                                                     </span>
                                                 </span>
                                                 <span className="shrink-0 text-right whitespace-nowrap">
@@ -264,6 +269,7 @@ export default function Index({ cart, countries }) {
                                                                 item.product
                                                                     .price *
                                                                     item.quantity,
+                                                                locale,
                                                             )}
                                                         </span>
                                                     )}
@@ -272,6 +278,7 @@ export default function Index({ cart, countries }) {
                                                             item.product
                                                                 .effective_price *
                                                                 item.quantity,
+                                                            locale,
                                                         )}{" "}
                                                         {item.product.currency}
                                                     </span>
@@ -286,7 +293,7 @@ export default function Index({ cart, countries }) {
                                 <div className="flex justify-between text-base font-semibold text-foreground">
                                     <span>Total</span>
                                     <span>
-                                        {formatPrice(total)} {currency}
+                                        {formatPrice(total, locale)} {currency}
                                     </span>
                                 </div>
 

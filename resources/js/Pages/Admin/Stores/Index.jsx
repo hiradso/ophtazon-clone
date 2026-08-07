@@ -29,6 +29,7 @@ import {
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 export default function Index({ stores }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -127,7 +128,10 @@ export default function Index({ stores }) {
                                                 {store.email ?? "—"}
                                             </TableCell>
                                             <TableCell className="align-middle text-muted-foreground">
-                                                {store.products_count}
+                                                {toFa(
+                                                    store.products_count,
+                                                    uiLocale,
+                                                )}
                                             </TableCell>
                                             <TableCell className="align-middle">
                                                 <Badge

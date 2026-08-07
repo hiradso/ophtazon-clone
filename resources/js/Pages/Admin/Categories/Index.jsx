@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 export default function Index({ categories }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -63,7 +64,7 @@ export default function Index({ categories }) {
                 <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            {categories.length}{" "}
+                            {toFa(categories.length, uiLocale)}{" "}
                             {categories.length === 1
                                 ? at("category_singular", uiLocale)
                                 : at("categories_count", uiLocale)}
@@ -134,7 +135,11 @@ export default function Index({ categories }) {
                                                 )?.name.en ?? "—"}
                                             </TableCell>
                                             <TableCell className="align-middle text-muted-foreground">
-                                                {category.products_count ?? 0}
+                                                {toFa(
+                                                    category.products_count ??
+                                                        0,
+                                                    uiLocale,
+                                                )}
                                             </TableCell>
                                             <TableCell className="align-middle">
                                                 <Badge

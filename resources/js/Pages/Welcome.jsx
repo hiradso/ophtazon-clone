@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -289,9 +290,10 @@ function LatestProductsSection({ products }) {
                                                     className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
                                                 >
                                                     -
-                                                    {
-                                                        product.discount_percentage
-                                                    }
+                                                    {toFa(
+                                                        product.discount_percentage,
+                                                        locale,
+                                                    )}
                                                     %
                                                 </div>
                                             )}
@@ -340,12 +342,14 @@ function LatestProductsSection({ products }) {
                                                     <span className="text-sm text-muted-foreground line-through">
                                                         {formatPrice(
                                                             product.price,
+                                                            locale,
                                                         )}
                                                     </span>
                                                 )}
                                                 <p className="text-lg font-semibold text-foreground">
                                                     {formatPrice(
                                                         product.effective_price,
+                                                        locale,
                                                     )}{" "}
                                                     {product.currency}
                                                 </p>
@@ -374,7 +378,7 @@ function DiscountedProductsSection({ products }) {
                     <div className="flex items-center gap-2">
                         <Flame className="size-5 text-destructive" />
                         <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                            On Sale
+                            {tt("on_sale", locale)}
                         </h2>
                     </div>
                 </div>
@@ -402,7 +406,12 @@ function DiscountedProductsSection({ products }) {
                                                 dir="ltr"
                                                 className="absolute top-2 start-2 z-10 rounded bg-destructive px-1.5 py-0.5 text-xs font-semibold text-white shadow"
                                             >
-                                                -{product.discount_percentage}%
+                                                -
+                                                {toFa(
+                                                    product.discount_percentage,
+                                                    locale,
+                                                )}
+                                                %
                                             </div>
                                             {product.images?.[0] ? (
                                                 <motion.img
@@ -434,6 +443,7 @@ function DiscountedProductsSection({ products }) {
                                                 <span className="font-semibold text-foreground">
                                                     {formatPrice(
                                                         product.effective_price,
+                                                        locale,
                                                     )}{" "}
                                                     {product.currency}
                                                 </span>

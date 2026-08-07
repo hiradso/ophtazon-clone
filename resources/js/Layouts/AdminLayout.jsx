@@ -65,6 +65,8 @@ import { at } from "@/lib/admin-i18n";
 import { switchLocale } from "@/lib/switchLocale";
 
 import { Button } from "@/components/ui/button";
+import { toFa } from "@/lib/toFa";
+
 const navItems = [
     {
         labelKey: "dashboard",
@@ -153,7 +155,8 @@ const siteContentGroup = {
 };
 
 export default function AdminLayout({ header, breadcrumbs, children }) {
-    const { auth, newContactRequestsCount, locale } = usePage().props;
+    const { auth, newContactRequestsCount, locale, siteSettings } =
+        usePage().props;
     const user = auth.user;
 
     const isSiteContentActive = siteContentGroup.children.some((child) =>
@@ -174,15 +177,27 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                 size="lg"
                                 render={<Link href={route("dashboard")} />}
                             >
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                    <span className="text-sm font-bold">O</span>
-                                </div>
+                                {siteSettings?.logo ? (
+                                    <img
+                                        src={`/storage/${siteSettings.logo}`}
+                                        alt={siteSettings.site_name}
+                                        className="size-8 rounded-lg object-contain"
+                                    />
+                                ) : (
+                                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                        <span className="text-sm font-bold">
+                                            {siteSettings?.site_name?.charAt(
+                                                0,
+                                            ) ?? "O"}
+                                        </span>
+                                    </div>
+                                )}
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">
-                                        Ophtazon
+                                        {siteSettings?.site_name ?? "Ophtazon"}
                                     </span>
                                     <span className="text-xs text-sidebar-foreground/70">
-                                        Admin Panel
+                                        {at("admin_panel_label", locale)}
                                     </span>
                                 </div>
                             </SidebarMenuButton>
@@ -192,7 +207,6 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
 
                 <SidebarContent>
                     <SidebarGroup>
-                        <SidebarGroupLabel>Catalog</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
                                 {navItems.map((item) => (
@@ -217,7 +231,10 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                             "admin.contact-requests.index" &&
                                             newContactRequestsCount > 0 && (
                                                 <SidebarMenuBadge className="bg-destructive text-white peer-hover/menu-button:text-white peer-data-active/menu-button:text-white group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:top-0 group-data-[collapsible=icon]:right-0 group-data-[collapsible=icon]:h-3 group-data-[collapsible=icon]:min-w-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:text-[9px] group-data-[collapsible=icon]:leading-none rounded-full">
-                                                    {newContactRequestsCount}
+                                                    {toFa(
+                                                        newContactRequestsCount,
+                                                        locale,
+                                                    )}
                                                 </SidebarMenuBadge>
                                             )}
                                     </SidebarMenuItem>
@@ -246,7 +263,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                             className={`ms-auto size-4 transition-transform ${
                                                 siteContentOpen
                                                     ? "rotate-90"
-                                                    : ""
+                                                    : "rtl:rotate-180"
                                             }`}
                                         />
                                     </SidebarMenuButton>
@@ -328,12 +345,14 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                     <DropdownMenuItem
                                         render={
                                             <Link
-                                                href={route("profile.edit")}
+                                                href={route("profile.edit", {
+                                                    locale,
+                                                })}
                                             />
                                         }
                                     >
                                         <UserRound className="me-2 size-4" />
-                                        Profile
+                                        {at("profile", locale)}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         render={
@@ -347,7 +366,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                         nativeButton={true}
                                     >
                                         <LogOut className="me-2 size-4" />
-                                        Log Out
+                                        {at("log_out", locale)}
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -407,7 +426,9 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                         nativeButton={false}
                                         render={
                                             <Link
-                                                href={route("welcome")}
+                                                href={route("welcome", {
+                                                    locale,
+                                                })}
                                                 target="_blank"
                                             />
                                         }
@@ -417,7 +438,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                 }
                             />
                             <TooltipContent side="bottom">
-                                View site
+                                {at("view_site", locale)}
                             </TooltipContent>
                         </Tooltip>
                         <DropdownMenu>
@@ -471,7 +492,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                                 }
                             />
                             <TooltipContent side="bottom">
-                                Log out
+                                {at("log_out", locale)}
                             </TooltipContent>
                         </Tooltip>
                     </div>

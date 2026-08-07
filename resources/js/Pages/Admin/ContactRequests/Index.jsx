@@ -31,6 +31,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { at } from "@/lib/admin-i18n";
+import { toFa } from "@/lib/toFa";
 
 const statusColor = {
     new: "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
@@ -97,7 +98,7 @@ export default function Index({ contactRequests }) {
             <div className="py-8">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                     <p className="mb-6 text-sm text-muted-foreground">
-                        {contactRequests.total}{" "}
+                        {toFa(contactRequests.total, uiLocale)}{" "}
                         {contactRequests.total === 1
                             ? at("request_singular", uiLocale)
                             : at("requests_count", uiLocale)}

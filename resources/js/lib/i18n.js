@@ -58,6 +58,7 @@ const translations = {
         last_one_available: "Last one available!",
         low_stock_prefix: "Only",
         low_stock_suffix: "left in stock",
+        on_sale: "On Sale",
     },
     fr: {
         products: "Produits",
@@ -120,6 +121,7 @@ const translations = {
         last_one_available: "Dernier exemplaire disponible !",
         low_stock_prefix: "Il ne reste que",
         low_stock_suffix: "en stock",
+        on_sale: "En Promotion",
     },
     fa: {
         products: "محصولات",
@@ -179,6 +181,7 @@ const translations = {
         last_one_available: "آخرین نسخه‌ی موجود!",
         low_stock_prefix: "فقط",
         low_stock_suffix: "عدد باقی مانده",
+        on_sale: "حراج",
     },
 };
 

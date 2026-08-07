@@ -91,6 +91,7 @@ export default function Index({ cart }) {
                                                     <p className="text-xs text-muted-foreground line-through">
                                                         {formatPrice(
                                                             item.product.price,
+                                                            locale,
                                                         )}{" "}
                                                         {item.product.currency}
                                                     </p>
@@ -99,6 +100,7 @@ export default function Index({ cart }) {
                                                     {formatPrice(
                                                         item.product
                                                             .effective_price,
+                                                        locale,
                                                     )}{" "}
                                                     {item.product.currency}
                                                 </p>
@@ -126,7 +128,7 @@ export default function Index({ cart }) {
                                         Subtotal
                                     </span>
                                     <span className="text-xl font-semibold text-foreground">
-                                        {formatPrice(total)} {currency}
+                                        {formatPrice(total, locale)} {currency}
                                     </span>
                                 </div>
 

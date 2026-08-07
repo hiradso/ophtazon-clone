@@ -1,3 +1,9 @@
+const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+
+function toFaDigits(str) {
+    return str.replace(/[0-9]/g, (digit) => PERSIAN_DIGITS[digit]);
+}
+
 export function hasDiscount(discountPercentage) {
     return Boolean(discountPercentage) && discountPercentage > 0;
 }
@@ -8,7 +14,13 @@ export function getDiscountedPrice(price, discountPercentage) {
     return Math.round(discounted * 100) / 100;
 }
 
-export function formatPrice(price) {
+/**
+ * قیمت را فرمت می‌کند. اگر locale برابر 'fa' باشد، ارقام خروجی
+ * خودکار به فارسی تبدیل می‌شوند — پارامتر locale اختیاری است،
+ * پس فراخوانی‌های قدیمی بدون locale همچنان کار می‌کنند (لاتین می‌مانند).
+ */
+export function formatPrice(price, locale) {
     const num = Number(price);
-    return Number.isInteger(num) ? num.toString() : num.toFixed(2);
+    const formatted = Number.isInteger(num) ? num.toString() : num.toFixed(2);
+    return locale === "fa" ? toFaDigits(formatted) : formatted;
 }
