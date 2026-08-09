@@ -23,6 +23,10 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'locale' => fn() => app()->getLocale(),
+            'ziggy' => fn() => [
+                ...(new \Tighten\Ziggy\Ziggy)->toArray(),
+                'location' => $request->url(),
+            ],
             'auth' => [
                 'user' => $request->user(),
             ],
