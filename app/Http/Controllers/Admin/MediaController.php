@@ -7,6 +7,7 @@ use App\Models\Media;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -34,12 +35,13 @@ class MediaController extends Controller
 
         foreach ($request->file('files') as $file) {
             $path = $file->store('media', 'public');
+            [$path, $mimeType] = $this->convertToWebp($file, $path);
 
             Media::create([
                 'filename' => $file->getClientOriginalName(),
                 'path' => $path,
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize(),
+                'mime_type' => $mimeType,
+                'size' => Storage::disk('public')->size($path),
                 'uploaded_by' => Auth::id(),
             ]);
         }
@@ -89,15 +91,70 @@ class MediaController extends Controller
 
         $file = $request->file('file');
         $path = $file->store('media', 'public');
+        [$path, $mimeType] = $this->convertToWebp($file, $path);
 
         $media = Media::create([
             'filename' => $file->getClientOriginalName(),
             'path' => $path,
-            'mime_type' => $file->getMimeType(),
-            'size' => $file->getSize(),
+            'mime_type' => $mimeType,
+            'size' => Storage::disk('public')->size($path),
             'uploaded_by' => Auth::id(),
         ]);
 
         return response()->json($media);
+    }
+
+    /**
+     * فایل تصویری ذخیره‌شده را (در صورت امکان) به فرمت WebP تبدیل می‌کند —
+     * برای بهبود Core Web Vitals، چون WebP معمولاً ۲۵-۳۵٪ سبک‌تر از JPEG/PNG است.
+     * SVG و GIF متحرک عمداً دست‌نخورده می‌مانند (SVG خودش سبک است؛ تبدیل GIF
+     * متحرک به WebP نیاز به پردازش فریم‌به‌فریم دارد که فعلاً پیاده‌سازی نشده).
+     *
+     * @return array{0: string, 1: string} مسیر نهایی و نوع MIME نهایی
+     */
+    private function convertToWebp(UploadedFile $file, string $path): array
+    {
+        $mime = $file->getMimeType();
+
+        if (! in_array($mime, ['image/jpeg', 'image/png'], true)) {
+            return [$path, $mime];
+        }
+
+        if (! function_exists('imagewebp')) {
+            // اگر GD روی سرور بدون پشتیبانی WebP کامپایل شده باشد،
+            // بی‌صدا از فایل اصلی (بدون تبدیل) استفاده می‌کنیم.
+            return [$path, $mime];
+        }
+
+        $fullPath = Storage::disk('public')->path($path);
+
+        $image = match ($mime) {
+            'image/jpeg' => @imagecreatefromjpeg($fullPath),
+            'image/png' => @imagecreatefrompng($fullPath),
+            default => null,
+        };
+
+        if (! $image) {
+            return [$path, $mime];
+        }
+
+        // حفظ شفافیت برای عکس‌های PNG
+        imagepalettetotruecolor($image);
+        imagealphablending($image, true);
+        imagesavealpha($image, true);
+
+        $webpPath = preg_replace('/\.[^.]+$/', '.webp', $path);
+        $webpFullPath = Storage::disk('public')->path($webpPath);
+
+        $success = imagewebp($image, $webpFullPath, 82);
+        imagedestroy($image);
+
+        if (! $success) {
+            return [$path, $mime];
+        }
+
+        Storage::disk('public')->delete($path);
+
+        return [$webpPath, 'image/webp'];
     }
 }
