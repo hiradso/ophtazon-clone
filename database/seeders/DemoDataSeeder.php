@@ -46,8 +46,15 @@ class DemoDataSeeder extends Seeder
             ]);
         });
 
-        // ۳. فروشگاه — از اولین کشور موجود در دیتابیس استفاده می‌کند
-        $country = Country::first();
+        $country = Country::firstOrCreate(
+            ['iso_code' => 'FR'],
+            [
+                'name' => 'France',
+                'currency_code' => 'EUR',
+                'phone_prefix' => '+33',
+                'is_active' => true,
+            ]
+        );
 
         $store = Store::create([
             'name' => 'Ophtazon',
