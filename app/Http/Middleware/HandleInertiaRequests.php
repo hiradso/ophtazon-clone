@@ -23,6 +23,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'locale' => fn() => app()->getLocale(),
+            'appUrl' => fn() => config('app.url'),
             'ziggy' => fn() => [
                 ...(new \Tighten\Ziggy\Ziggy)->toArray(),
                 'location' => $request->url(),

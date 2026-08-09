@@ -35,7 +35,7 @@ export default function Index({
     stores,
     filters,
 }) {
-    const { locale } = usePage().props;
+    const { locale, appUrl } = usePage().props;
 
     const CONDITION_LABELS = {
         new: tt("condition_new", locale),
@@ -109,30 +109,27 @@ export default function Index({
         <PublicLayout>
             <Head title="Browse Equipment">
                 {/* Canonical — به آدرس اصلی صفحه با پیشوند زبان فعلی اشاره می‌کند */}
-                <link
-                    rel="canonical"
-                    href={`${window.location.origin}/${locale}/products`}
-                />
+                <link rel="canonical" href={`${appUrl}/${locale}/products`} />
                 {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
                 <link
                     rel="alternate"
                     hrefLang="en"
-                    href={`${window.location.origin}/en/products`}
+                    href={`${appUrl}/en/products`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="fr"
-                    href={`${window.location.origin}/fr/products`}
+                    href={`${appUrl}/fr/products`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="fa"
-                    href={`${window.location.origin}/fa/products`}
+                    href={`${appUrl}/fa/products`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="x-default"
-                    href={`${window.location.origin}/en/products`}
+                    href={`${appUrl}/en/products`}
                 />
             </Head>
 

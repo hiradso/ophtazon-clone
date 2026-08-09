@@ -47,7 +47,7 @@ const CONDITION_LABELS = {
 const LOW_STOCK_THRESHOLD = 5;
 
 export default function Show({ product, relatedProducts }) {
-    const { locale } = usePage().props;
+    const { locale, appUrl } = usePage().props;
 
     const images = product.images ?? [];
     const [activeImage, setActiveImage] = useState(images[0] ?? null);
@@ -103,28 +103,28 @@ export default function Show({ product, relatedProducts }) {
                 {/* Canonical — همیشه به آدرس اصلی (با پیشوند زبان فعلی) و بدون پارامتر اضافه اشاره می‌کند */}
                 <link
                     rel="canonical"
-                    href={`${window.location.origin}/${locale}/products/${product.slug}`}
+                    href={`${appUrl}/${locale}/products/${product.slug}`}
                 />
                 {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
                 <link
                     rel="alternate"
                     hrefLang="en"
-                    href={`${window.location.origin}/en/products/${product.slug}`}
+                    href={`${appUrl}/en/products/${product.slug}`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="fr"
-                    href={`${window.location.origin}/fr/products/${product.slug}`}
+                    href={`${appUrl}/fr/products/${product.slug}`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="fa"
-                    href={`${window.location.origin}/fa/products/${product.slug}`}
+                    href={`${appUrl}/fa/products/${product.slug}`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="x-default"
-                    href={`${window.location.origin}/en/products/${product.slug}`}
+                    href={`${appUrl}/en/products/${product.slug}`}
                 />
 
                 {/* Open Graph — برای اشتراک‌گذاری در شبکه‌های اجتماعی */}
@@ -143,12 +143,12 @@ export default function Show({ product, relatedProducts }) {
                 />
                 <meta
                     property="og:url"
-                    content={`${window.location.origin}/products/${product.slug}`}
+                    content={`${appUrl}/products/${product.slug}`}
                 />
                 {(product.og_image || product.images?.[0]?.url) && (
                     <meta
                         property="og:image"
-                        content={`${window.location.origin}/storage/${product.og_image || product.images[0].url}`}
+                        content={`${appUrl}/storage/${product.og_image || product.images[0].url}`}
                     />
                 )}
 
@@ -160,12 +160,12 @@ export default function Show({ product, relatedProducts }) {
                         name: productTitle,
                         description: productDescription || "",
                         image: product.images?.[0]
-                            ? `${window.location.origin}/storage/${product.images[0].url}`
+                            ? `${appUrl}/storage/${product.images[0].url}`
                             : undefined,
                         sku: product.reference,
                         offers: {
                             "@type": "Offer",
-                            url: `${window.location.origin}/products/${product.slug}`,
+                            url: `${appUrl}/products/${product.slug}`,
                             priceCurrency: product.currency,
                             price: product.effective_price,
                             availability:

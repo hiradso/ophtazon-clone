@@ -38,35 +38,20 @@ export default function Welcome({
     latestProducts,
     discountedProducts,
 }) {
-    const { locale } = usePage().props;
+    const { locale, appUrl } = usePage().props;
     return (
         <PublicLayout>
             <Head title="Ophtazon — Ophthalmic Equipment Marketplace">
                 {/* Canonical — به آدرس اصلی صفحه اصلی با پیشوند زبان فعلی اشاره می‌کند */}
-                <link
-                    rel="canonical"
-                    href={`${window.location.origin}/${locale}`}
-                />
+                <link rel="canonical" href={`${appUrl}/${locale}`} />
                 {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
-                <link
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${window.location.origin}/en`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${window.location.origin}/fr`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${window.location.origin}/fa`}
-                />
+                <link rel="alternate" hrefLang="en" href={`${appUrl}/en`} />
+                <link rel="alternate" hrefLang="fr" href={`${appUrl}/fr`} />
+                <link rel="alternate" hrefLang="fa" href={`${appUrl}/fa`} />
                 <link
                     rel="alternate"
                     hrefLang="x-default"
-                    href={`${window.location.origin}/en`}
+                    href={`${appUrl}/en`}
                 />
             </Head>
 

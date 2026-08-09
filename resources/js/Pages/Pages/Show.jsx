@@ -3,7 +3,7 @@ import PublicLayout from "@/Layouts/PublicLayout";
 import { t } from "@/lib/translate";
 
 export default function Show({ page }) {
-    const { locale } = usePage().props;
+    const { locale, appUrl } = usePage().props;
 
     const hasBackgroundImage =
         page.featured_image && page.image_display_style === "background";
@@ -23,28 +23,28 @@ export default function Show({ page }) {
                 {/* Canonical — به آدرس اصلی صفحه با پیشوند زبان فعلی اشاره می‌کند */}
                 <link
                     rel="canonical"
-                    href={`${window.location.origin}/${locale}/pages/${page.slug}`}
+                    href={`${appUrl}/${locale}/pages/${page.slug}`}
                 />
                 {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
                 <link
                     rel="alternate"
                     hrefLang="en"
-                    href={`${window.location.origin}/en/pages/${page.slug}`}
+                    href={`${appUrl}/en/pages/${page.slug}`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="fr"
-                    href={`${window.location.origin}/fr/pages/${page.slug}`}
+                    href={`${appUrl}/fr/pages/${page.slug}`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="fa"
-                    href={`${window.location.origin}/fa/pages/${page.slug}`}
+                    href={`${appUrl}/fa/pages/${page.slug}`}
                 />
                 <link
                     rel="alternate"
                     hrefLang="x-default"
-                    href={`${window.location.origin}/en/pages/${page.slug}`}
+                    href={`${appUrl}/en/pages/${page.slug}`}
                 />
             </Head>
             {hasBackgroundImage ? (
