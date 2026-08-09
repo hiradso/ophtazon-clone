@@ -107,7 +107,34 @@ export default function Index({
 
     return (
         <PublicLayout>
-            <Head title="Browse Equipment" />
+            <Head title="Browse Equipment">
+                {/* Canonical — به آدرس اصلی صفحه با پیشوند زبان فعلی اشاره می‌کند */}
+                <link
+                    rel="canonical"
+                    href={`${window.location.origin}/${locale}/products`}
+                />
+                {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
+                <link
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${window.location.origin}/en/products`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${window.location.origin}/fr/products`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${window.location.origin}/fa/products`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${window.location.origin}/en/products`}
+                />
+            </Head>
 
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <h1 className="mb-6 text-2xl font-semibold tracking-tight text-foreground">

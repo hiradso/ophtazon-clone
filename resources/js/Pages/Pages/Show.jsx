@@ -20,6 +20,32 @@ export default function Show({ page }) {
                 {metaDescription && (
                     <meta name="description" content={metaDescription} />
                 )}
+                {/* Canonical — به آدرس اصلی صفحه با پیشوند زبان فعلی اشاره می‌کند */}
+                <link
+                    rel="canonical"
+                    href={`${window.location.origin}/${locale}/pages/${page.slug}`}
+                />
+                {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
+                <link
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${window.location.origin}/en/pages/${page.slug}`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${window.location.origin}/fr/pages/${page.slug}`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${window.location.origin}/fa/pages/${page.slug}`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${window.location.origin}/en/pages/${page.slug}`}
+                />
             </Head>
             {hasBackgroundImage ? (
                 <div

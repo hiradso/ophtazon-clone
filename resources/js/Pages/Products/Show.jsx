@@ -100,10 +100,31 @@ export default function Show({ product, relatedProducts }) {
                     }
                 />
 
-                {/* Canonical — همیشه به آدرس اصلی و بدون پارامتر اضافه اشاره می‌کند */}
+                {/* Canonical — همیشه به آدرس اصلی (با پیشوند زبان فعلی) و بدون پارامتر اضافه اشاره می‌کند */}
                 <link
                     rel="canonical"
-                    href={`${window.location.origin}/products/${product.slug}`}
+                    href={`${window.location.origin}/${locale}/products/${product.slug}`}
+                />
+                {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
+                <link
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${window.location.origin}/en/products/${product.slug}`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${window.location.origin}/fr/products/${product.slug}`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${window.location.origin}/fa/products/${product.slug}`}
+                />
+                <link
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${window.location.origin}/en/products/${product.slug}`}
                 />
 
                 {/* Open Graph — برای اشتراک‌گذاری در شبکه‌های اجتماعی */}
