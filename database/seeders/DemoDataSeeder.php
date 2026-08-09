@@ -16,7 +16,7 @@ class DemoDataSeeder extends Seeder
 {
     public function run(): void
     {
-        // ۱. دسته‌بندی‌ها
+        // ۱. دسته‌بندی‌ها — ایمن در برابر اجرای مجدد (بر اساس slug)
         $categoriesData = [
             ['en' => 'Autorefractor', 'fa' => 'اتورفرکتور'],
             ['en' => 'Slit Lamp', 'fa' => 'اسلیت لمپ'],
@@ -29,23 +29,26 @@ class DemoDataSeeder extends Seeder
         ];
 
         $categories = collect($categoriesData)->map(function ($cat, $index) {
-            return Category::create([
-                'name' => ['en' => $cat['en'], 'fa' => $cat['fa']],
-                'slug' => Str::slug($cat['en']),
-                'is_active' => true,
-                'sort_order' => $index,
-            ]);
+            return Category::firstOrCreate(
+                ['slug' => Str::slug($cat['en'])],
+                [
+                    'name' => ['en' => $cat['en'], 'fa' => $cat['fa']],
+                    'is_active' => true,
+                    'sort_order' => $index,
+                ]
+            );
         });
 
-        // ۲. برندها
+        // ۲. برندها — ایمن در برابر اجرای مجدد (بر اساس name)
         $brandNames = ['Zeiss', 'Topcon', 'Nidek', 'Haag-Streit', 'Canon'];
         $brands = collect($brandNames)->map(function ($name) {
-            return Brand::create([
-                'name' => $name,
-                'is_active' => true,
-            ]);
+            return Brand::firstOrCreate(
+                ['name' => $name],
+                ['is_active' => true]
+            );
         });
 
+        // ۳. کشور — ایمن در برابر اجرای مجدد (بر اساس iso_code)
         $country = Country::firstOrCreate(
             ['iso_code' => 'FR'],
             [
@@ -56,24 +59,25 @@ class DemoDataSeeder extends Seeder
             ]
         );
 
-        $store = Store::create([
-            'name' => 'Ophtazon',
-            'slug' => 'ophtazon',
-            'country_id' => $country?->id,
-            'address' => null,
-            'phone' => null,
-            'email' => 'contact@ophtazon.com',
-            'is_active' => true,
-        ]);
+        // ۴. فروشگاه — ایمن در برابر اجرای مجدد (بر اساس slug)
+        $store = Store::firstOrCreate(
+            ['slug' => 'ophtazon'],
+            [
+                'name' => 'Ophtazon',
+                'country_id' => $country->id,
+                'email' => 'contact@ophtazon.com',
+                'is_active' => true,
+            ]
+        );
 
-        // ۴. عکس‌های موجود در کتابخانه‌ی رسانه — برای استفاده به‌عنوان تصویر محصولات
+        // ۵. عکس‌های موجود در کتابخانه‌ی رسانه — برای استفاده به‌عنوان تصویر محصولات
         $mediaPaths = Media::pluck('path')->values();
 
         if ($mediaPaths->isEmpty()) {
             $this->command->warn('هیچ عکسی در کتابخانه‌ی رسانه پیدا نشد — محصولات بدون عکس ساخته می‌شوند.');
         }
 
-        // ۵. محصولات نمونه — عنوان/توضیحات به هر دو زبان انگلیسی و فارسی
+        // ۶. محصولات نمونه — ایمن در برابر اجرای مجدد (بر اساس slug ثابت، بدون رشته‌ی تصادفی)
         $productsData = [
             [
                 'title_en' => 'Zeiss Humphrey Field Analyzer 3',
@@ -140,26 +144,29 @@ class DemoDataSeeder extends Seeder
         foreach ($productsData as $index => $data) {
             $category = $categories->firstWhere('slug', Str::slug($data['category']));
             $brand = $brands->firstWhere('name', $data['brand']);
+            $slug = Str::slug($data['title_en']);
 
-            $product = Product::create([
-                'reference' => 'OPH-' . strtoupper(Str::random(6)),
-                'title' => ['en' => $data['title_en'], 'fa' => $data['title_fa']],
-                'description' => ['en' => $data['desc_en'], 'fa' => $data['desc_fa']],
-                'slug' => Str::slug($data['title_en']) . '-' . Str::random(4),
-                'category_id' => $category?->id,
-                'brand_id' => $brand?->id,
-                'store_id' => $store->id,
-                'condition' => $data['condition'],
-                'status' => 'available',
-                'price' => $data['price'],
-                'currency' => 'EUR',
-                'manufacture_year' => now()->year - rand(1, 5),
-                'warranty_months' => 12,
-                'is_checked' => true,
-                'stock_quantity' => 1,
-            ]);
+            $product = Product::firstOrCreate(
+                ['slug' => $slug],
+                [
+                    'reference' => 'OPH-' . strtoupper(Str::random(6)),
+                    'title' => ['en' => $data['title_en'], 'fa' => $data['title_fa']],
+                    'description' => ['en' => $data['desc_en'], 'fa' => $data['desc_fa']],
+                    'category_id' => $category?->id,
+                    'brand_id' => $brand?->id,
+                    'store_id' => $store->id,
+                    'condition' => $data['condition'],
+                    'status' => 'available',
+                    'price' => $data['price'],
+                    'currency' => 'EUR',
+                    'manufacture_year' => now()->year - rand(1, 5),
+                    'warranty_months' => 12,
+                    'is_checked' => true,
+                    'stock_quantity' => 1,
+                ]
+            );
 
-            if ($mediaPaths->isNotEmpty()) {
+            if ($mediaPaths->isNotEmpty() && $product->images()->count() === 0) {
                 ProductImage::create([
                     'product_id' => $product->id,
                     'url' => $mediaPaths->get($index % $mediaPaths->count()),
@@ -168,6 +175,6 @@ class DemoDataSeeder extends Seeder
             }
         }
 
-        $this->command->info('داده‌های نمونه با موفقیت ساخته شدند: ' . $categories->count() . ' دسته‌بندی، ' . $brands->count() . ' برند، ۱ فروشگاه، ' . count($productsData) . ' محصول.');
+        $this->command->info('داده‌های نمونه با موفقیت ساخته/تأیید شدند: ' . $categories->count() . ' دسته‌بندی، ' . $brands->count() . ' برند، ۱ فروشگاه، ' . count($productsData) . ' محصول.');
     }
 }
