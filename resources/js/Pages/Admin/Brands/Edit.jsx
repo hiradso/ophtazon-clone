@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import MediaPicker from "@/Components/MediaPicker";
 
 export default function Edit({ brand }) {
     const { locale: uiLocale } = usePage().props;
@@ -83,14 +84,11 @@ export default function Edit({ brand }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="logo_url">
-                                        {at("logo_url", uiLocale)}
-                                    </Label>
-                                    <Input
-                                        id="logo_url"
+                                    <Label>{at("logo", uiLocale)}</Label>
+                                    <MediaPicker
                                         value={data.logo_url}
-                                        onChange={(e) =>
-                                            setData("logo_url", e.target.value)
+                                        onSelect={(path) =>
+                                            setData("logo_url", path)
                                         }
                                     />
                                 </div>

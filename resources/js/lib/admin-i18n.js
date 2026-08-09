@@ -302,6 +302,27 @@ const adminTranslations = {
         print: "Print",
         export_csv: "Export CSV",
         admin_panel_label: "Admin Panel",
+        delete_account: "Delete Account",
+        delete_account_desc:
+            "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
+        confirm_delete_account_title:
+            "Are you sure you want to delete your account?",
+        confirm_delete_account_desc:
+            "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+        update_password: "Update Password",
+        update_password_desc:
+            "Ensure your account is using a long, random password to stay secure.",
+        current_password: "Current Password",
+        new_password: "New Password",
+        confirm_password: "Confirm Password",
+        saved_label: "Saved.",
+        profile_information: "Profile Information",
+        profile_information_desc:
+            "Update your account's profile information and email address.",
+        email_unverified: "Your email address is unverified.",
+        resend_verification: "Click here to re-send the verification email.",
+        verification_link_sent:
+            "A new verification link has been sent to your email address.",
     },
     fa: {
         dashboard: "داشبورد",
@@ -602,6 +623,27 @@ const adminTranslations = {
         print: "چاپ",
         export_csv: "خروجی CSV",
         admin_panel_label: "پنل مدیریت",
+        delete_account: "حذف حساب کاربری",
+        delete_account_desc:
+            "پس از حذف حساب کاربری، تمام منابع و داده‌های آن برای همیشه حذف می‌شوند. قبل از حذف حساب، هر داده یا اطلاعاتی که می‌خواهید نگه دارید را دانلود کنید.",
+        confirm_delete_account_title:
+            "مطمئنید که می‌خواهید حساب کاربری خود را حذف کنید؟",
+        confirm_delete_account_desc:
+            "پس از حذف حساب کاربری، تمام منابع و داده‌های آن برای همیشه حذف می‌شوند. لطفاً رمز عبور خود را برای تأیید حذف دائمی حساب وارد کنید.",
+        update_password: "به‌روزرسانی رمز عبور",
+        update_password_desc:
+            "برای امنیت بیشتر، از یک رمز طولانی و تصادفی استفاده کنید.",
+        current_password: "رمز عبور فعلی",
+        new_password: "رمز عبور جدید",
+        confirm_password: "تکرار رمز عبور",
+        saved_label: "ذخیره شد.",
+        profile_information: "اطلاعات پروفایل",
+        profile_information_desc:
+            "اطلاعات پروفایل و ایمیل حساب کاربری خود را به‌روزرسانی کنید.",
+        email_unverified: "آدرس ایمیل شما تأیید نشده است.",
+        resend_verification: "برای ارسال دوباره ایمیل تأیید، اینجا کلیک کنید.",
+        verification_link_sent:
+            "یک لینک تأیید جدید به آدرس ایمیل شما ارسال شد.",
     },
 };
 

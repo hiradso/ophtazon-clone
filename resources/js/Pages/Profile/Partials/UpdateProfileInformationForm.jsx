@@ -4,12 +4,14 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import { Link, useForm, usePage } from "@inertiajs/react";
+import { at } from "@/lib/admin-i18n";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
     className = "",
 }) {
+    const { locale: uiLocale } = usePage().props;
     const user = usePage().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
@@ -28,17 +30,20 @@ export default function UpdateProfileInformation({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-foreground">
-                    Profile Information
+                    {at("profile_information", uiLocale)}
                 </h2>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                    Update your account's profile information and email address.
+                    {at("profile_information_desc", uiLocale)}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel
+                        htmlFor="name"
+                        value={at("name_field", uiLocale)}
+                    />
 
                     <TextInput
                         id="name"
@@ -54,7 +59,10 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel
+                        htmlFor="email"
+                        value={at("email_field", uiLocale)}
+                    />
 
                     <TextInput
                         id="email"
@@ -72,28 +80,29 @@ export default function UpdateProfileInformation({
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="mt-2 text-sm text-foreground">
-                            Your email address is unverified.
+                            {at("email_unverified", uiLocale)}
                             <Link
                                 href={route("verification.send")}
                                 method="post"
                                 as="button"
                                 className="rounded-md text-sm text-muted-foreground underline hover:text-foreground focus:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                             >
-                                Click here to re-send the verification email.
+                                {at("resend_verification", uiLocale)}
                             </Link>
                         </p>
 
                         {status === "verification-link-sent" && (
                             <div className="mt-2 text-sm font-medium text-status-available">
-                                A new verification link has been sent to your
-                                email address.
+                                {at("verification_link_sent", uiLocale)}
                             </div>
                         )}
                     </div>
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>
+                        {at("save", uiLocale)}
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -102,7 +111,9 @@ export default function UpdateProfileInformation({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-muted-foreground">Saved.</p>
+                        <p className="text-sm text-muted-foreground">
+                            {at("saved_label", uiLocale)}
+                        </p>
                     </Transition>
                 </div>
             </form>
