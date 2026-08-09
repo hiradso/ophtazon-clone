@@ -56,6 +56,7 @@ class ProductController extends Controller
     public function show(string $product): Response
     {
         $product = Product::where('slug', $product)->firstOrFail();
+
         abort_unless($product->status === ProductStatus::Available, 404);
 
         $relatedProducts = Product::query()
