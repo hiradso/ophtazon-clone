@@ -53,10 +53,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function show(string $product): Response
+    public function show(): Response
     {
-        \Illuminate\Support\Facades\Log::info('DEBUG all route params:', request()->route()->parameters());
-        $product = Product::where('slug', $product)->firstOrFail();
+        $product = Product::where('slug', request()->route('product'))->firstOrFail();
 
         abort_unless($product->status === ProductStatus::Available, 404);
 
