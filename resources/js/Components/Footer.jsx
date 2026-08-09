@@ -32,6 +32,7 @@ export default function Footer() {
                                 <img
                                     src={`/storage/${siteSettings.logo}`}
                                     alt={siteSettings.site_name}
+                                    loading="lazy"
                                     className="size-8 rounded-lg object-contain"
                                 />
                             ) : (

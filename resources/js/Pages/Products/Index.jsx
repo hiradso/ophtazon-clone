@@ -344,6 +344,7 @@ export default function Index({
                                                     transition={{
                                                         duration: 0.4,
                                                     }}
+                                                    loading="lazy"
                                                     src={`/storage/${product.images[0].url}`}
                                                     alt={t(
                                                         product.title,

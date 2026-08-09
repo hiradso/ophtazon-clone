@@ -61,6 +61,7 @@ export default function Index({ cart }) {
                                                     <img
                                                         src={`/storage/${item.product.images[0].url}`}
                                                         alt=""
+                                                        loading="lazy"
                                                         className="h-full w-full object-cover"
                                                     />
                                                 ) : (

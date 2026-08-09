@@ -214,6 +214,7 @@ export default function Show({ product, relatedProducts }) {
                                         <img
                                             src={`/storage/${image.url}`}
                                             alt=""
+                                            loading="lazy"
                                             className="h-full w-full object-cover"
                                         />
                                     </button>
@@ -437,6 +438,7 @@ export default function Show({ product, relatedProducts }) {
                                                             transition={{
                                                                 duration: 0.4,
                                                             }}
+                                                            loading="lazy"
                                                             src={`/storage/${related.images[0].url}`}
                                                             alt={t(
                                                                 related.title,

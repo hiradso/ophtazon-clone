@@ -430,6 +430,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                                     <img
                                                                         src={`/storage/${item.product.image}`}
                                                                         alt=""
+                                                                        loading="lazy"
                                                                         className="h-full w-full object-cover"
                                                                     />
                                                                 ) : (

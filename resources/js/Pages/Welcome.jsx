@@ -305,6 +305,7 @@ function LatestProductsSection({ products }) {
                                                     transition={{
                                                         duration: 0.4,
                                                     }}
+                                                    loading="lazy"
                                                     src={`/storage/${product.images[0].url}`}
                                                     alt={t(
                                                         product.title,
@@ -421,6 +422,7 @@ function DiscountedProductsSection({ products }) {
                                                     transition={{
                                                         duration: 0.4,
                                                     }}
+                                                    loading="lazy"
                                                     src={`/storage/${product.images[0].url}`}
                                                     alt={t(
                                                         product.title,
