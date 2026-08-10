@@ -25,7 +25,6 @@ import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
-import SeoAlternateLinks from "@/Components/SeoAlternateLinks";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -39,10 +38,39 @@ export default function Welcome({
     latestProducts,
     discountedProducts,
 }) {
+    const { locale, appUrl } = usePage().props;
     return (
         <PublicLayout>
             <Head title="Ophtazon — Ophthalmic Equipment Marketplace">
-                <SeoAlternateLinks path="" />
+                <link
+                    key="canonical"
+                    rel="canonical"
+                    href={`${appUrl}/${locale}`}
+                />
+                <link
+                    key="hreflang-en"
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${appUrl}/en`}
+                />
+                <link
+                    key="hreflang-fr"
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${appUrl}/fr`}
+                />
+                <link
+                    key="hreflang-fa"
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${appUrl}/fa`}
+                />
+                <link
+                    key="hreflang-default"
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${appUrl}/en`}
+                />
             </Head>
 
             {sections.map((section) => {

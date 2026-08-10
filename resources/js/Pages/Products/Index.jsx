@@ -27,7 +27,6 @@ import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
-import SeoAlternateLinks from "@/Components/SeoAlternateLinks";
 
 export default function Index({
     products,
@@ -109,7 +108,35 @@ export default function Index({
     return (
         <PublicLayout>
             <Head title="Browse Equipment">
-                <SeoAlternateLinks path="/products" />
+                <link
+                    key="canonical"
+                    rel="canonical"
+                    href={`${appUrl}/${locale}/products`}
+                />
+                <link
+                    key="hreflang-en"
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${appUrl}/en/products`}
+                />
+                <link
+                    key="hreflang-fr"
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${appUrl}/fr/products`}
+                />
+                <link
+                    key="hreflang-fa"
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${appUrl}/fa/products`}
+                />
+                <link
+                    key="hreflang-default"
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${appUrl}/en/products`}
+                />
             </Head>
 
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

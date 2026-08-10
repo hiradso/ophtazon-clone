@@ -1,7 +1,6 @@
 import { Head, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { t } from "@/lib/translate";
-import SeoAlternateLinks from "@/Components/SeoAlternateLinks";
 
 export default function Show({ page }) {
     const { locale, appUrl } = usePage().props;
@@ -21,7 +20,35 @@ export default function Show({ page }) {
                 {metaDescription && (
                     <meta name="description" content={metaDescription} />
                 )}
-                <SeoAlternateLinks path={`/pages/${page.slug}`} />
+                <link
+                    key="canonical"
+                    rel="canonical"
+                    href={`${appUrl}/${locale}/pages/${page.slug}`}
+                />
+                <link
+                    key="hreflang-en"
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${appUrl}/en/pages/${page.slug}`}
+                />
+                <link
+                    key="hreflang-fr"
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${appUrl}/fr/pages/${page.slug}`}
+                />
+                <link
+                    key="hreflang-fa"
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${appUrl}/fa/pages/${page.slug}`}
+                />
+                <link
+                    key="hreflang-default"
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${appUrl}/en/pages/${page.slug}`}
+                />
             </Head>
             {hasBackgroundImage ? (
                 <div

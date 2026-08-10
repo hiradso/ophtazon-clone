@@ -37,7 +37,6 @@ import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
-import SeoAlternateLinks from "@/Components/SeoAlternateLinks";
 
 const CONDITION_LABELS = {
     new: "New",
@@ -100,8 +99,35 @@ export default function Show({ product, relatedProducts }) {
                         ""
                     }
                 />
-
-                <SeoAlternateLinks path={`/products/${product.slug}`} />
+                <link
+                    key="canonical"
+                    rel="canonical"
+                    href={`${appUrl}/${locale}/products/${product.slug}`}
+                />
+                <link
+                    key="hreflang-en"
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`${appUrl}/en/products/${product.slug}`}
+                />
+                <link
+                    key="hreflang-fr"
+                    rel="alternate"
+                    hrefLang="fr"
+                    href={`${appUrl}/fr/products/${product.slug}`}
+                />
+                <link
+                    key="hreflang-fa"
+                    rel="alternate"
+                    hrefLang="fa"
+                    href={`${appUrl}/fa/products/${product.slug}`}
+                />
+                <link
+                    key="hreflang-default"
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`${appUrl}/en/products/${product.slug}`}
+                />
 
                 {/* Open Graph — برای اشتراک‌گذاری در شبکه‌های اجتماعی */}
                 <meta property="og:type" content="product" />
