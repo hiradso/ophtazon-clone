@@ -153,6 +153,22 @@
             }
         </style>
 
+        {{-- Canonical و Hreflang — مستقیم توسط Blade/PHP ساخته می‌شوند، بدون وابستگی به Inertia Head --}}
+        @php
+            $rawPath = request()->path();
+            $pathSegments = explode('/', $rawPath);
+            $firstSegment = $pathSegments[0] ?? '';
+            $isLocalizedRoute = in_array($firstSegment, ['en', 'fr', 'fa'], true);
+            $restOfPath = $isLocalizedRoute ? implode('/', array_slice($pathSegments, 1)) : '';
+        @endphp
+        @if ($isLocalizedRoute)
+            <link rel="canonical" href="{{ url('/' . $currentLocale . ($restOfPath ? '/' . $restOfPath : '')) }}" />
+            @foreach (['en', 'fr', 'fa'] as $altLocale)
+                <link rel="alternate" hreflang="{{ $altLocale }}" href="{{ url('/' . $altLocale . ($restOfPath ? '/' . $restOfPath : '')) }}" />
+            @endforeach
+            <link rel="alternate" hreflang="x-default" href="{{ url('/en' . ($restOfPath ? '/' . $restOfPath : '')) }}" />
+        @endif
+
         <!-- Scripts -->
         @routes
         @viteReactRefresh
