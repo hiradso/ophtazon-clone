@@ -109,30 +109,30 @@ export default function Index({
         <PublicLayout>
             <Head title="Browse Equipment">
                 <link
-                    key="canonical"
+                    headKey="canonical"
                     rel="canonical"
                     href={`${appUrl}/${locale}/products`}
                 />
                 <link
-                    key="hreflang-en"
+                    headKey="hreflang-en"
                     rel="alternate"
                     hrefLang="en"
                     href={`${appUrl}/en/products`}
                 />
                 <link
-                    key="hreflang-fr"
+                    headKey="hreflang-fr"
                     rel="alternate"
                     hrefLang="fr"
                     href={`${appUrl}/fr/products`}
                 />
                 <link
-                    key="hreflang-fa"
+                    headKey="hreflang-fa"
                     rel="alternate"
                     hrefLang="fa"
                     href={`${appUrl}/fa/products`}
                 />
                 <link
-                    key="hreflang-default"
+                    headKey="hreflang-default"
                     rel="alternate"
                     hrefLang="x-default"
                     href={`${appUrl}/en/products`}

@@ -43,30 +43,30 @@ export default function Welcome({
         <PublicLayout>
             <Head title="Ophtazon — Ophthalmic Equipment Marketplace">
                 <link
-                    key="canonical"
+                    headKey="canonical"
                     rel="canonical"
                     href={`${appUrl}/${locale}`}
                 />
                 <link
-                    key="hreflang-en"
+                    headKey="hreflang-en"
                     rel="alternate"
                     hrefLang="en"
                     href={`${appUrl}/en`}
                 />
                 <link
-                    key="hreflang-fr"
+                    headKey="hreflang-fr"
                     rel="alternate"
                     hrefLang="fr"
                     href={`${appUrl}/fr`}
                 />
                 <link
-                    key="hreflang-fa"
+                    headKey="hreflang-fa"
                     rel="alternate"
                     hrefLang="fa"
                     href={`${appUrl}/fa`}
                 />
                 <link
-                    key="hreflang-default"
+                    headKey="hreflang-default"
                     rel="alternate"
                     hrefLang="x-default"
                     href={`${appUrl}/en`}

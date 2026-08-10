@@ -21,30 +21,30 @@ export default function Show({ page }) {
                     <meta name="description" content={metaDescription} />
                 )}
                 <link
-                    key="canonical"
+                    headKey="canonical"
                     rel="canonical"
                     href={`${appUrl}/${locale}/pages/${page.slug}`}
                 />
                 <link
-                    key="hreflang-en"
+                    headKey="hreflang-en"
                     rel="alternate"
                     hrefLang="en"
                     href={`${appUrl}/en/pages/${page.slug}`}
                 />
                 <link
-                    key="hreflang-fr"
+                    headKey="hreflang-fr"
                     rel="alternate"
                     hrefLang="fr"
                     href={`${appUrl}/fr/pages/${page.slug}`}
                 />
                 <link
-                    key="hreflang-fa"
+                    headKey="hreflang-fa"
                     rel="alternate"
                     hrefLang="fa"
                     href={`${appUrl}/fa/pages/${page.slug}`}
                 />
                 <link
-                    key="hreflang-default"
+                    headKey="hreflang-default"
                     rel="alternate"
                     hrefLang="x-default"
                     href={`${appUrl}/en/pages/${page.slug}`}
