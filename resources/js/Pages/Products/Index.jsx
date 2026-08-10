@@ -107,37 +107,7 @@ export default function Index({
 
     return (
         <PublicLayout>
-            <Head title="Browse Equipment">
-                <link
-                    headKey="canonical"
-                    rel="canonical"
-                    href={`${appUrl}/${locale}/products`}
-                />
-                <link
-                    headKey="hreflang-en"
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${appUrl}/en/products`}
-                />
-                <link
-                    headKey="hreflang-fr"
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${appUrl}/fr/products`}
-                />
-                <link
-                    headKey="hreflang-fa"
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${appUrl}/fa/products`}
-                />
-                <link
-                    headKey="hreflang-default"
-                    rel="alternate"
-                    hrefLang="x-default"
-                    href={`${appUrl}/en/products`}
-                />
-            </Head>
+            <Head title="Browse Equipment"></Head>
 
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <h1 className="mb-6 text-2xl font-semibold tracking-tight text-foreground">

@@ -41,37 +41,7 @@ export default function Welcome({
     const { locale, appUrl } = usePage().props;
     return (
         <PublicLayout>
-            <Head title="Ophtazon — Ophthalmic Equipment Marketplace">
-                <link
-                    headKey="canonical"
-                    rel="canonical"
-                    href={`${appUrl}/${locale}`}
-                />
-                <link
-                    headKey="hreflang-en"
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${appUrl}/en`}
-                />
-                <link
-                    headKey="hreflang-fr"
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${appUrl}/fr`}
-                />
-                <link
-                    headKey="hreflang-fa"
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${appUrl}/fa`}
-                />
-                <link
-                    headKey="hreflang-default"
-                    rel="alternate"
-                    hrefLang="x-default"
-                    href={`${appUrl}/en`}
-                />
-            </Head>
+            <Head title="Ophtazon — Ophthalmic Equipment Marketplace"></Head>
 
             {sections.map((section) => {
                 switch (section.type) {

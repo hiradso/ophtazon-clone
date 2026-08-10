@@ -99,35 +99,6 @@ export default function Show({ product, relatedProducts }) {
                         ""
                     }
                 />
-                <link
-                    headKey="canonical"
-                    rel="canonical"
-                    href={`${appUrl}/${locale}/products/${product.slug}`}
-                />
-                <link
-                    headKey="hreflang-en"
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${appUrl}/en/products/${product.slug}`}
-                />
-                <link
-                    headKey="hreflang-fr"
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${appUrl}/fr/products/${product.slug}`}
-                />
-                <link
-                    headKey="hreflang-fa"
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${appUrl}/fa/products/${product.slug}`}
-                />
-                <link
-                    headKey="hreflang-default"
-                    rel="alternate"
-                    hrefLang="x-default"
-                    href={`${appUrl}/en/products/${product.slug}`}
-                />
 
                 {/* Open Graph — برای اشتراک‌گذاری در شبکه‌های اجتماعی */}
                 <meta property="og:type" content="product" />

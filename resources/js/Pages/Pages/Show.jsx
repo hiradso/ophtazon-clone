@@ -20,35 +20,6 @@ export default function Show({ page }) {
                 {metaDescription && (
                     <meta name="description" content={metaDescription} />
                 )}
-                <link
-                    headKey="canonical"
-                    rel="canonical"
-                    href={`${appUrl}/${locale}/pages/${page.slug}`}
-                />
-                <link
-                    headKey="hreflang-en"
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${appUrl}/en/pages/${page.slug}`}
-                />
-                <link
-                    headKey="hreflang-fr"
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${appUrl}/fr/pages/${page.slug}`}
-                />
-                <link
-                    headKey="hreflang-fa"
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${appUrl}/fa/pages/${page.slug}`}
-                />
-                <link
-                    headKey="hreflang-default"
-                    rel="alternate"
-                    hrefLang="x-default"
-                    href={`${appUrl}/en/pages/${page.slug}`}
-                />
             </Head>
             {hasBackgroundImage ? (
                 <div
