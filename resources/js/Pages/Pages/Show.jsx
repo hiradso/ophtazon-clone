@@ -1,6 +1,7 @@
 import { Head, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { t } from "@/lib/translate";
+import SeoAlternateLinks from "@/Components/SeoAlternateLinks";
 
 export default function Show({ page }) {
     const { locale, appUrl } = usePage().props;
@@ -20,32 +21,7 @@ export default function Show({ page }) {
                 {metaDescription && (
                     <meta name="description" content={metaDescription} />
                 )}
-                {/* Canonical — به آدرس اصلی صفحه با پیشوند زبان فعلی اشاره می‌کند */}
-                <link
-                    rel="canonical"
-                    href={`${appUrl}/${locale}/pages/${page.slug}`}
-                />
-                {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
-                <link
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${appUrl}/en/pages/${page.slug}`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${appUrl}/fr/pages/${page.slug}`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${appUrl}/fa/pages/${page.slug}`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="x-default"
-                    href={`${appUrl}/en/pages/${page.slug}`}
-                />
+                <SeoAlternateLinks path={`/pages/${page.slug}`} />
             </Head>
             {hasBackgroundImage ? (
                 <div

@@ -27,6 +27,7 @@ import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import SeoAlternateLinks from "@/Components/SeoAlternateLinks";
 
 export default function Index({
     products,
@@ -108,29 +109,7 @@ export default function Index({
     return (
         <PublicLayout>
             <Head title="Browse Equipment">
-                {/* Canonical — به آدرس اصلی صفحه با پیشوند زبان فعلی اشاره می‌کند */}
-                <link rel="canonical" href={`${appUrl}/${locale}/products`} />
-                {/* Hreflang — به گوگل می‌گوید این صفحه به کدام زبان‌های دیگر هم ترجمه شده است */}
-                <link
-                    rel="alternate"
-                    hrefLang="en"
-                    href={`${appUrl}/en/products`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="fr"
-                    href={`${appUrl}/fr/products`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="fa"
-                    href={`${appUrl}/fa/products`}
-                />
-                <link
-                    rel="alternate"
-                    hrefLang="x-default"
-                    href={`${appUrl}/en/products`}
-                />
+                <SeoAlternateLinks path="/products" />
             </Head>
 
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
