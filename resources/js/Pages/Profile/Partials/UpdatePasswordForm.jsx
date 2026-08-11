@@ -6,6 +6,7 @@ import { Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
 import { useRef } from "react";
 import { tt } from "@/lib/i18n";
+import { KeyRound } from "lucide-react";
 
 export default function UpdatePasswordForm({ className = "" }) {
     const { locale: uiLocale } = usePage().props;
@@ -49,7 +50,8 @@ export default function UpdatePasswordForm({ className = "" }) {
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-foreground">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-foreground">
+                    <KeyRound className="size-4.5 text-muted-foreground" />
                     {tt("update_password", uiLocale)}
                 </h2>
 

@@ -177,6 +177,18 @@ export default function PublicLayout({ children }) {
                                         {tt("my_orders", locale)}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
+                                        nativeButton={false}
+                                        render={
+                                            <Link
+                                                href={route(
+                                                    "addresses.index",
+                                                )}
+                                            />
+                                        }
+                                    >
+                                        {tt("addresses", locale)}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
                                         nativeButton={true}
                                         render={
                                             <Link

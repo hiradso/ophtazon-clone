@@ -18,6 +18,7 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\RobotsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -63,6 +64,12 @@ Route::prefix('{locale}')
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+            Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+            Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+            Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
+            Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+            Route::post('/addresses/{address}/default', [AddressController::class, 'setDefault'])->name('addresses.setDefault');
         });
 
         Route::get('/products', [ControllersProductController::class, 'index'])->name('products.index');

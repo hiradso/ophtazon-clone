@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle2 } from "lucide-react";
 import { t } from "@/lib/translate";
+import { tt } from "@/lib/i18n";
 import { toFa } from "@/lib/toFa";
 
 export default function Show({ order }) {
@@ -12,15 +13,16 @@ export default function Show({ order }) {
 
     return (
         <PublicLayout>
-            <Head title={`Order ${order.order_number}`} />
+            <Head title={`${tt("order_number_label", locale)} ${order.order_number}`} />
             <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mb-5 text-center">
                     <CheckCircle2 className="mx-auto mb-4 size-12 text-status-available" />
                     <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                        Order placed successfully
+                        {tt("order_placed_success", locale)}
                     </h1>
                     <p className="mt-2 text-sm text-muted-foreground">
-                        Order number: {order.order_number}
+                        {tt("order_number_prefix", locale)}{" "}
+                        {order.order_number}
                     </p>
                 </div>
                 <Card>
@@ -35,8 +37,11 @@ export default function Show({ order }) {
                                     {toFa(item.quantity, locale)}
                                 </span>
                                 <span className="text-foreground">
-                                    {(item.unit_price * item.quantity).toFixed(
-                                        2,
+                                    {toFa(
+                                        (
+                                            item.unit_price * item.quantity
+                                        ).toFixed(2),
+                                        locale,
                                     )}{" "}
                                     {order.currency}
                                 </span>
@@ -44,14 +49,16 @@ export default function Show({ order }) {
                         ))}
                         <Separator />
                         <div className="flex justify-between font-semibold text-foreground">
-                            <span>Total</span>
+                            <span>{tt("total_label", locale)}</span>
                             <span>
-                                {order.total} {order.currency}
+                                {toFa(order.total, locale)} {order.currency}
                             </span>
                         </div>
                         <Separator />
                         <div className="text-sm">
-                            <p className="text-muted-foreground">Shipping to</p>
+                            <p className="text-muted-foreground">
+                                {tt("shipping_to", locale)}
+                            </p>
                             <p className="font-medium text-foreground">
                                 {order.shipping_address?.full_name}
                             </p>
@@ -69,7 +76,7 @@ export default function Show({ order }) {
                         nativeButton={false}
                         render={<Link href={route("products.index")} />}
                     >
-                        Continue shopping
+                        {tt("continue_shopping", locale)}
                     </Button>
                 </div>
             </div>

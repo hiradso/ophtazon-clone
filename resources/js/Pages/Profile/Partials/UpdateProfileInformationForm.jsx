@@ -5,6 +5,7 @@ import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { tt } from "@/lib/i18n";
+import { UserRound } from "lucide-react";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -29,7 +30,8 @@ export default function UpdateProfileInformation({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-foreground">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-foreground">
+                    <UserRound className="size-4.5 text-muted-foreground" />
                     {tt("profile_information", uiLocale)}
                 </h2>
 

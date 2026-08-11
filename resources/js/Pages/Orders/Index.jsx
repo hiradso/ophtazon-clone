@@ -1,4 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,15 +12,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { PackageOpen } from "lucide-react";
-
-const STATUS_LABELS = {
-    pending: "Pending",
-    paid: "Paid",
-    processing: "Processing",
-    shipped: "Shipped",
-    delivered: "Delivered",
-    cancelled: "Cancelled",
-};
+import { tt } from "@/lib/i18n";
+import { toFa } from "@/lib/toFa";
 
 const statusColor = {
     pending:
@@ -36,26 +29,30 @@ const statusColor = {
 };
 
 export default function Index({ orders }) {
+    const { locale: uiLocale } = usePage().props;
+    const dateLocale =
+        uiLocale === "fa" ? "fa-IR" : uiLocale === "fr" ? "fr-FR" : "en-US";
+
     return (
         <PublicLayout>
-            <Head title="My Orders" />
+            <Head title={tt("my_orders", uiLocale)} />
 
             <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
                 <h1 className="mb-6 text-2xl font-semibold tracking-tight text-foreground">
-                    My Orders
+                    {tt("my_orders", uiLocale)}
                 </h1>
 
                 {orders.data.length === 0 ? (
                     <div className="rounded-lg border border-dashed border-border py-16 text-center">
                         <PackageOpen className="mx-auto mb-3 size-10 text-muted-foreground" />
                         <p className="mb-4 text-sm text-muted-foreground">
-                            You haven't placed any orders yet.
+                            {tt("no_orders_yet", uiLocale)}
                         </p>
                         <Button
                             nativeButton={false}
                             render={<Link href={route("products.index")} />}
                         >
-                            Browse equipment
+                            {tt("browse_equipment", uiLocale)}
                         </Button>
                     </div>
                 ) : (
@@ -65,11 +62,24 @@ export default function Index({ orders }) {
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Order #</TableHead>
-                                            <TableHead>Items</TableHead>
-                                            <TableHead>Total</TableHead>
-                                            <TableHead>Status</TableHead>
-                                            <TableHead>Date</TableHead>
+                                            <TableHead>
+                                                {tt(
+                                                    "order_number_label",
+                                                    uiLocale,
+                                                )}
+                                            </TableHead>
+                                            <TableHead>
+                                                {tt("items_label", uiLocale)}
+                                            </TableHead>
+                                            <TableHead>
+                                                {tt("total_label", uiLocale)}
+                                            </TableHead>
+                                            <TableHead>
+                                                {tt("status_label", uiLocale)}
+                                            </TableHead>
+                                            <TableHead>
+                                                {tt("date_label", uiLocale)}
+                                            </TableHead>
                                             <TableHead className="w-20"></TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -80,13 +90,25 @@ export default function Index({ orders }) {
                                                     {order.order_number}
                                                 </TableCell>
                                                 <TableCell className="text-muted-foreground">
-                                                    {order.items.length}{" "}
+                                                    {toFa(
+                                                        order.items.length,
+                                                        uiLocale,
+                                                    )}{" "}
                                                     {order.items.length === 1
-                                                        ? "item"
-                                                        : "items"}
+                                                        ? tt(
+                                                              "item_singular",
+                                                              uiLocale,
+                                                          )
+                                                        : tt(
+                                                              "items_plural",
+                                                              uiLocale,
+                                                          )}
                                                 </TableCell>
                                                 <TableCell className="text-foreground">
-                                                    {order.total}{" "}
+                                                    {toFa(
+                                                        order.total,
+                                                        uiLocale,
+                                                    )}{" "}
                                                     {order.currency}
                                                 </TableCell>
                                                 <TableCell>
@@ -98,17 +120,18 @@ export default function Index({ orders }) {
                                                             ]
                                                         }
                                                     >
-                                                        {
-                                                            STATUS_LABELS[
-                                                                order.status
-                                                            ]
-                                                        }
+                                                        {tt(
+                                                            `status_${order.status}`,
+                                                            uiLocale,
+                                                        )}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-muted-foreground">
                                                     {new Date(
                                                         order.created_at,
-                                                    ).toLocaleDateString()}
+                                                    ).toLocaleDateString(
+                                                        dateLocale,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Button
@@ -124,7 +147,10 @@ export default function Index({ orders }) {
                                                             />
                                                         }
                                                     >
-                                                        View
+                                                        {tt(
+                                                            "view_label",
+                                                            uiLocale,
+                                                        )}
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>

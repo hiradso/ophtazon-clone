@@ -7,6 +7,7 @@ import TextInput from "@/Components/TextInput";
 import { useForm, usePage } from "@inertiajs/react";
 import { useRef, useState } from "react";
 import { tt } from "@/lib/i18n";
+import { Trash2 } from "lucide-react";
 
 export default function DeleteUserForm({ className = "" }) {
     const { locale: uiLocale } = usePage().props;
@@ -50,7 +51,8 @@ export default function DeleteUserForm({ className = "" }) {
     return (
         <section className={`space-y-6 ${className}`}>
             <header>
-                <h2 className="text-lg font-medium text-foreground">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-destructive">
+                    <Trash2 className="size-4.5" />
                     {tt("delete_account", uiLocale)}
                 </h2>
 
