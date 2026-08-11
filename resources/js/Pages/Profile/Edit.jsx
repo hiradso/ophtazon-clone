@@ -1,28 +1,40 @@
-import AdminLayout from "@/Layouts/AdminLayout";
-import { Head, usePage } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
+import { Head, Link, usePage } from "@inertiajs/react";
 import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
 import { at } from "@/lib/admin-i18n";
+import { ArrowLeft, ArrowRight, LayoutDashboard } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Edit({ mustVerifyEmail, status }) {
-    const { locale: uiLocale } = usePage().props;
+    const { auth, locale: uiLocale } = usePage().props;
+    const isStaffOrAdmin =
+        auth.user.role === "admin" || auth.user.role === "staff";
 
     return (
-        <AdminLayout
-            breadcrumbs={[
-                { label: at("dashboard", uiLocale), href: route("dashboard") },
-                { label: at("profile", uiLocale) },
-            ]}
-            header={
-                <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    {at("profile", uiLocale)}
-                </h2>
-            }
-        >
+        <PublicLayout>
             <Head title={at("profile", uiLocale)} />
             <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-2xl space-y-6 px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                            {at("profile", uiLocale)}
+                        </h2>
+
+                        {isStaffOrAdmin && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                nativeButton={false}
+                                render={<Link href={route("dashboard")} />}
+                            >
+                                <LayoutDashboard className="me-1.5 size-4" />
+                                {at("dashboard", uiLocale)}
+                            </Button>
+                        )}
+                    </div>
+
                     <div className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-8">
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
@@ -38,6 +50,6 @@ export default function Edit({ mustVerifyEmail, status }) {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
+        </PublicLayout>
     );
 }

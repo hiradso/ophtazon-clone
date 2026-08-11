@@ -1,40 +1,39 @@
 import { Head, Link, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Home } from "lucide-react";
-
-const STATUS_CONTENT = {
-    403: {
-        title: "No entry (without the right glasses)",
-        message:
-            "You don't have permission to view this page. If you think this is a mistake, contact an administrator.",
-    },
-    404: {
-        title: "We looked everywhere — even with a slit lamp",
-        message:
-            "This page doesn't exist, or it may have been moved, renamed, or sold to another clinic.",
-    },
-    419: {
-        title: "Your session blinked and expired",
-        message: "Please refresh the page and try again.",
-    },
-    429: {
-        title: "Slow down a little",
-        message:
-            "You've made too many requests. Please wait a moment and try again.",
-    },
-    500: {
-        title: "Something fogged up on our end",
-        message: "An unexpected error occurred. Our team has been notified.",
-    },
-    503: {
-        title: "Quick maintenance in progress",
-        message: "We're tuning a few instruments. Please check back shortly.",
-    },
-};
+import { ArrowLeft, ArrowRight, Home } from "lucide-react";
+import { tt } from "@/lib/i18n";
 
 export default function Error({ status }) {
     const { locale } = usePage().props ?? {};
+
+    const STATUS_CONTENT = {
+        403: {
+            title: tt("error_403_title", locale),
+            message: tt("error_403_message", locale),
+        },
+        404: {
+            title: tt("error_404_title", locale),
+            message: tt("error_404_message", locale),
+        },
+        419: {
+            title: tt("error_419_title", locale),
+            message: tt("error_419_message", locale),
+        },
+        429: {
+            title: tt("error_429_title", locale),
+            message: tt("error_429_message", locale),
+        },
+        500: {
+            title: tt("error_500_title", locale),
+            message: tt("error_500_message", locale),
+        },
+        503: {
+            title: tt("error_503_title", locale),
+            message: tt("error_503_message", locale),
+        },
+    };
+
     const content = STATUS_CONTENT[status] ?? STATUS_CONTENT[404];
 
     return (
@@ -83,7 +82,10 @@ export default function Error({ status }) {
                     </svg>
                 </div>
 
-                <p className="mb-2 text-7xl font-bold tracking-tight text-white sm:text-8xl">
+                <p
+                    dir="ltr"
+                    className="mb-2 text-7xl font-bold tracking-tight text-white sm:text-8xl"
+                >
                     {status}
                 </p>
 
@@ -100,16 +102,20 @@ export default function Error({ status }) {
                         variant="secondary"
                         onClick={() => window.history.back()}
                     >
-                        <ArrowLeft className="mr-1.5 size-4" />
-                        Go back
+                        {locale === "fa" ? (
+                            <ArrowRight className="me-1.5 size-4" />
+                        ) : (
+                            <ArrowLeft className="me-1.5 size-4" />
+                        )}
+                        {tt("go_back", locale)}
                     </Button>
                     <Button
                         nativeButton={false}
-                        render={<Link href="/" />}
+                        render={<Link href={route("welcome", { locale })} />}
                         className="bg-white text-primary hover:bg-white/90"
                     >
-                        <Home className="mr-1.5 size-4" />
-                        Back to homepage
+                        <Home className="me-1.5 size-4" />
+                        {tt("back_to_homepage", locale)}
                     </Button>
                 </div>
             </motion.div>

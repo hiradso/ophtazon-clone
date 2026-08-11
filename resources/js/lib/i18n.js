@@ -59,6 +59,25 @@ const translations = {
         low_stock_prefix: "Only",
         low_stock_suffix: "left in stock",
         on_sale: "On Sale",
+        error_403_title: "No entry (without the right glasses)",
+        error_403_message:
+            "You don't have permission to view this page. If you think this is a mistake, contact an administrator.",
+        error_404_title: "We looked everywhere — even with a slit lamp",
+        error_404_message:
+            "This page doesn't exist, or it may have been moved, renamed, or sold to another clinic.",
+        error_419_title: "Your session blinked and expired",
+        error_419_message: "Please refresh the page and try again.",
+        error_429_title: "Slow down a little",
+        error_429_message:
+            "You've made too many requests. Please wait a moment and try again.",
+        error_500_title: "Something fogged up on our end",
+        error_500_message:
+            "An unexpected error occurred. Our team has been notified.",
+        error_503_title: "Quick maintenance in progress",
+        error_503_message:
+            "We're tuning a few instruments. Please check back shortly.",
+        go_back: "Go back",
+        back_to_homepage: "Back to homepage",
     },
     fr: {
         products: "Produits",
@@ -122,6 +141,25 @@ const translations = {
         low_stock_prefix: "Il ne reste que",
         low_stock_suffix: "en stock",
         on_sale: "En Promotion",
+        error_403_title: "Accès refusé (sans les bonnes lunettes)",
+        error_403_message:
+            "Vous n'avez pas la permission de voir cette page. Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.",
+        error_404_title: "Nous avons cherché partout — même à la lampe à fente",
+        error_404_message:
+            "Cette page n'existe pas, ou elle a peut-être été déplacée, renommée, ou vendue à une autre clinique.",
+        error_419_title: "Votre session a cligné des yeux et a expiré",
+        error_419_message: "Veuillez actualiser la page et réessayer.",
+        error_429_title: "Ralentissez un peu",
+        error_429_message:
+            "Vous avez fait trop de requêtes. Veuillez patienter un instant et réessayer.",
+        error_500_title: "Quelque chose s'est embué de notre côté",
+        error_500_message:
+            "Une erreur inattendue est survenue. Notre équipe a été informée.",
+        error_503_title: "Maintenance rapide en cours",
+        error_503_message:
+            "Nous réglons quelques instruments. Revenez bientôt.",
+        go_back: "Retour",
+        back_to_homepage: "Retour à l'accueil",
     },
     fa: {
         products: "محصولات",
@@ -182,6 +220,24 @@ const translations = {
         low_stock_prefix: "فقط",
         low_stock_suffix: "عدد باقی مانده",
         on_sale: "حراج",
+        error_403_title: "ورود ممنوع (بدون عینک مناسب)",
+        error_403_message:
+            "شما اجازه‌ی دسترسی به این صفحه را ندارید. اگر فکر می‌کنید این یک اشتباه است، با مدیر تماس بگیرید.",
+        error_404_title: "همه‌جا را گشتیم — حتی با اسلیت لمپ",
+        error_404_message:
+            "این صفحه وجود ندارد، یا ممکن است جابه‌جا، تغییرنام داده، یا به یک کلینیک دیگر فروخته شده باشد.",
+        error_419_title: "نشست شما پلک زد و منقضی شد",
+        error_419_message: "لطفاً صفحه را تازه‌سازی کرده و دوباره تلاش کنید.",
+        error_429_title: "کمی آرام‌تر",
+        error_429_message:
+            "درخواست‌های زیادی ارسال کرده‌اید. لطفاً کمی صبر کرده و دوباره تلاش کنید.",
+        error_500_title: "یک‌جایی از سمت ما مه گرفت",
+        error_500_message: "یک خطای غیرمنتظره رخ داد. تیم ما مطلع شده است.",
+        error_503_title: "در حال نگهداری سریع",
+        error_503_message:
+            "داریم چند دستگاه را تنظیم می‌کنیم. لطفاً کمی بعد دوباره سر بزنید.",
+        go_back: "بازگشت",
+        back_to_homepage: "بازگشت به صفحه اصلی",
     },
 };
 
