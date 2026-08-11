@@ -6,7 +6,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import TextInput from "@/Components/TextInput";
 import { useForm, usePage } from "@inertiajs/react";
 import { useRef, useState } from "react";
-import { at } from "@/lib/admin-i18n";
+import { tt } from "@/lib/i18n";
 
 export default function DeleteUserForm({ className = "" }) {
     const { locale: uiLocale } = usePage().props;
@@ -51,32 +51,32 @@ export default function DeleteUserForm({ className = "" }) {
         <section className={`space-y-6 ${className}`}>
             <header>
                 <h2 className="text-lg font-medium text-foreground">
-                    {at("delete_account", uiLocale)}
+                    {tt("delete_account", uiLocale)}
                 </h2>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                    {at("delete_account_desc", uiLocale)}
+                    {tt("delete_account_desc", uiLocale)}
                 </p>
             </header>
 
             <DangerButton onClick={confirmUserDeletion}>
-                {at("delete_account", uiLocale)}
+                {tt("delete_account", uiLocale)}
             </DangerButton>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-foreground">
-                        {at("confirm_delete_account_title", uiLocale)}
+                        {tt("confirm_delete_account_title", uiLocale)}
                     </h2>
 
                     <p className="mt-1 text-sm text-muted-foreground">
-                        {at("confirm_delete_account_desc", uiLocale)}
+                        {tt("confirm_delete_account_desc", uiLocale)}
                     </p>
 
                     <div className="mt-6">
                         <InputLabel
                             htmlFor="password"
-                            value={at("password", uiLocale)}
+                            value={tt("password", uiLocale)}
                             className="sr-only"
                         />
 
@@ -91,7 +91,7 @@ export default function DeleteUserForm({ className = "" }) {
                             }
                             className="mt-1 block w-3/4"
                             isFocused
-                            placeholder={at("password", uiLocale)}
+                            placeholder={tt("password", uiLocale)}
                         />
 
                         <InputError
@@ -102,11 +102,11 @@ export default function DeleteUserForm({ className = "" }) {
 
                     <div className="mt-6 flex justify-end">
                         <SecondaryButton onClick={closeModal}>
-                            {at("cancel", uiLocale)}
+                            {tt("cancel", uiLocale)}
                         </SecondaryButton>
 
                         <DangerButton className="ms-3" disabled={processing}>
-                            {at("delete_account", uiLocale)}
+                            {tt("delete_account", uiLocale)}
                         </DangerButton>
                     </div>
                 </form>

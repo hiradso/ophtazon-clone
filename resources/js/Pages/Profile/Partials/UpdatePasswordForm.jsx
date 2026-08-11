@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
 import { useRef } from "react";
-import { at } from "@/lib/admin-i18n";
+import { tt } from "@/lib/i18n";
 
 export default function UpdatePasswordForm({ className = "" }) {
     const { locale: uiLocale } = usePage().props;
@@ -50,11 +50,11 @@ export default function UpdatePasswordForm({ className = "" }) {
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-foreground">
-                    {at("update_password", uiLocale)}
+                    {tt("update_password", uiLocale)}
                 </h2>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                    {at("update_password_desc", uiLocale)}
+                    {tt("update_password_desc", uiLocale)}
                 </p>
             </header>
 
@@ -62,7 +62,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                 <div>
                     <InputLabel
                         htmlFor="current_password"
-                        value={at("current_password", uiLocale)}
+                        value={tt("current_password", uiLocale)}
                     />
 
                     <TextInput
@@ -86,7 +86,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                 <div>
                     <InputLabel
                         htmlFor="password"
-                        value={at("new_password", uiLocale)}
+                        value={tt("new_password", uiLocale)}
                     />
 
                     <TextInput
@@ -105,7 +105,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                 <div>
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value={at("confirm_password", uiLocale)}
+                        value={tt("confirm_password", uiLocale)}
                     />
 
                     <TextInput
@@ -127,7 +127,7 @@ export default function UpdatePasswordForm({ className = "" }) {
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>
-                        {at("save", uiLocale)}
+                        {tt("save", uiLocale)}
                     </PrimaryButton>
 
                     <Transition
@@ -138,7 +138,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                         leaveTo="opacity-0"
                     >
                         <p className="text-sm text-muted-foreground">
-                            {at("saved_label", uiLocale)}
+                            {tt("saved_label", uiLocale)}
                         </p>
                     </Transition>
                 </div>

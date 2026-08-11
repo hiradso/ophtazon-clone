@@ -78,6 +78,32 @@ const translations = {
             "We're tuning a few instruments. Please check back shortly.",
         go_back: "Go back",
         back_to_homepage: "Back to homepage",
+        dashboard: "Dashboard",
+        profile_information: "Profile Information",
+        profile_information_desc:
+            "Update your account's profile information and email address.",
+        name_field: "Name",
+        email_field: "Email",
+        email_unverified: "Your email address is unverified.",
+        resend_verification: "Click here to re-send the verification email.",
+        verification_link_sent:
+            "A new verification link has been sent to your email address.",
+        save: "Save",
+        saved_label: "Saved.",
+        delete_account: "Delete Account",
+        delete_account_desc:
+            "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
+        confirm_delete_account_title:
+            "Are you sure you want to delete your account?",
+        confirm_delete_account_desc:
+            "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+        password: "Password",
+        update_password: "Update Password",
+        update_password_desc:
+            "Ensure your account is using a long, random password to stay secure.",
+        current_password: "Current Password",
+        new_password: "New Password",
+        confirm_password: "Confirm Password",
     },
     fr: {
         products: "Produits",
@@ -160,6 +186,33 @@ const translations = {
             "Nous réglons quelques instruments. Revenez bientôt.",
         go_back: "Retour",
         back_to_homepage: "Retour à l'accueil",
+        dashboard: "Tableau de bord",
+        profile_information: "Informations du profil",
+        profile_information_desc:
+            "Mettez à jour les informations de profil et l'adresse e-mail de votre compte.",
+        name_field: "Nom",
+        email_field: "E-mail",
+        email_unverified: "Votre adresse e-mail n'est pas vérifiée.",
+        resend_verification:
+            "Cliquez ici pour renvoyer l'e-mail de vérification.",
+        verification_link_sent:
+            "Un nouveau lien de vérification a été envoyé à votre adresse e-mail.",
+        save: "Enregistrer",
+        saved_label: "Enregistré.",
+        delete_account: "Supprimer le compte",
+        delete_account_desc:
+            "Une fois votre compte supprimé, toutes ses ressources et données seront définitivement supprimées. Avant de supprimer votre compte, veuillez télécharger toutes les données ou informations que vous souhaitez conserver.",
+        confirm_delete_account_title:
+            "Êtes-vous sûr de vouloir supprimer votre compte ?",
+        confirm_delete_account_desc:
+            "Une fois votre compte supprimé, toutes ses ressources et données seront définitivement supprimées. Veuillez saisir votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte.",
+        password: "Mot de passe",
+        update_password: "Mettre à jour le mot de passe",
+        update_password_desc:
+            "Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé.",
+        current_password: "Mot de passe actuel",
+        new_password: "Nouveau mot de passe",
+        confirm_password: "Confirmer le mot de passe",
     },
     fa: {
         products: "محصولات",
@@ -238,6 +291,31 @@ const translations = {
             "داریم چند دستگاه را تنظیم می‌کنیم. لطفاً کمی بعد دوباره سر بزنید.",
         go_back: "بازگشت",
         back_to_homepage: "بازگشت به صفحه اصلی",
+        dashboard: "داشبورد",
+        profile_information: "اطلاعات پروفایل",
+        profile_information_desc:
+            "اطلاعات پروفایل و ایمیل حساب کاربری خود را به‌روزرسانی کنید.",
+        name_field: "نام",
+        email_field: "ایمیل",
+        email_unverified: "آدرس ایمیل شما تأیید نشده است.",
+        resend_verification: "برای ارسال دوباره ایمیل تأیید، اینجا کلیک کنید.",
+        verification_link_sent:
+            "یک لینک تأیید جدید به آدرس ایمیل شما ارسال شد.",
+        save: "ذخیره",
+        saved_label: "ذخیره شد.",
+        delete_account: "حذف حساب کاربری",
+        delete_account_desc:
+            "پس از حذف حساب کاربری، تمام منابع و داده‌های آن برای همیشه حذف می‌شوند. قبل از حذف حساب، هر داده یا اطلاعاتی که می‌خواهید نگه دارید را دانلود کنید.",
+        confirm_delete_account_title:
+            "مطمئنید که می‌خواهید حساب کاربری خود را حذف کنید؟",
+        confirm_delete_account_desc:
+            "پس از حذف حساب کاربری، تمام منابع و داده‌های آن برای همیشه حذف می‌شوند. لطفاً رمز عبور خود را برای تأیید حذف دائمی حساب وارد کنید.",
+        password: "رمز عبور",
+        update_password: "به‌روزرسانی رمز عبور",
+        update_password_desc: "برای امنیت بیشتر، از یک رمز طولانی و تصادفی استفاده کنید.",
+        current_password: "رمز عبور فعلی",
+        new_password: "رمز عبور جدید",
+        confirm_password: "تکرار رمز عبور",
     },
 };
 

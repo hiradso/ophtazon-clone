@@ -4,7 +4,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import { Link, useForm, usePage } from "@inertiajs/react";
-import { at } from "@/lib/admin-i18n";
+import { tt } from "@/lib/i18n";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -30,11 +30,11 @@ export default function UpdateProfileInformation({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-foreground">
-                    {at("profile_information", uiLocale)}
+                    {tt("profile_information", uiLocale)}
                 </h2>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                    {at("profile_information_desc", uiLocale)}
+                    {tt("profile_information_desc", uiLocale)}
                 </p>
             </header>
 
@@ -42,7 +42,7 @@ export default function UpdateProfileInformation({
                 <div>
                     <InputLabel
                         htmlFor="name"
-                        value={at("name_field", uiLocale)}
+                        value={tt("name_field", uiLocale)}
                     />
 
                     <TextInput
@@ -61,7 +61,7 @@ export default function UpdateProfileInformation({
                 <div>
                     <InputLabel
                         htmlFor="email"
-                        value={at("email_field", uiLocale)}
+                        value={tt("email_field", uiLocale)}
                     />
 
                     <TextInput
@@ -80,20 +80,20 @@ export default function UpdateProfileInformation({
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="mt-2 text-sm text-foreground">
-                            {at("email_unverified", uiLocale)}
+                            {tt("email_unverified", uiLocale)}
                             <Link
                                 href={route("verification.send")}
                                 method="post"
                                 as="button"
                                 className="rounded-md text-sm text-muted-foreground underline hover:text-foreground focus:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                             >
-                                {at("resend_verification", uiLocale)}
+                                {tt("resend_verification", uiLocale)}
                             </Link>
                         </p>
 
                         {status === "verification-link-sent" && (
                             <div className="mt-2 text-sm font-medium text-status-available">
-                                {at("verification_link_sent", uiLocale)}
+                                {tt("verification_link_sent", uiLocale)}
                             </div>
                         )}
                     </div>
@@ -101,7 +101,7 @@ export default function UpdateProfileInformation({
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>
-                        {at("save", uiLocale)}
+                        {tt("save", uiLocale)}
                     </PrimaryButton>
 
                     <Transition
@@ -112,7 +112,7 @@ export default function UpdateProfileInformation({
                         leaveTo="opacity-0"
                     >
                         <p className="text-sm text-muted-foreground">
-                            {at("saved_label", uiLocale)}
+                            {tt("saved_label", uiLocale)}
                         </p>
                     </Transition>
                 </div>
