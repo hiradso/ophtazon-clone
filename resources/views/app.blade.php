@@ -44,12 +44,19 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- فونت انتخابی ادمین — برای هر زبان جدا اعمال می‌شود -->
+        <!--
+            فونت‌های انتخابی ادمین — هر دو همیشه در یک font-family stack واحد
+            اعمال می‌شوند (نه فقط وقتی زبان صفحه fa باشد)، چون مرورگر به‌صورت
+            خودکار برای هر حرف، اولین فونتی که واقعاً آن گلیف را دارد انتخاب
+            می‌کند: حروف لاتین → فونت لاتین، حروف فارسی/عربی → Vazirmatn.
+            این یعنی متن فارسی همیشه Vazirmatn است، حتی وقتی زبان فعلی صفحه
+            انگلیسی/فرانسه باشد (مثلاً گزینه‌ی «فارسی» داخل دراپ‌داون انتخاب زبان).
+        -->
         <style>
-            html[lang="fa"],
-            html[lang="fa"] body,
-            html[lang="fa"] * {
-                font-family: {!! $persianFontFamily !!}, {!! $latinFontFamily !!}, sans-serif !important;
+            html,
+            html body,
+            html * {
+                font-family: {!! $latinFontFamily !!}, {!! $persianFontFamily !!}, sans-serif !important;
             }
         </style>
 
