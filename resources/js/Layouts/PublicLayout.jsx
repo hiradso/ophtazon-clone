@@ -42,7 +42,7 @@ export default function PublicLayout({ children }) {
             <header className="sticky top-0 z-40 border-b border-border/50 bg-card/70 backdrop-blur-lg supports-[backdrop-filter]:bg-card/60">
                 <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
                     <Link
-                        href={route("welcome")}
+                        href={route("welcome", { locale })}
                         className="flex items-center gap-2 shrink-0"
                     >
                         {siteSettings.logo ? (
@@ -65,7 +65,7 @@ export default function PublicLayout({ children }) {
 
                     <nav className="hidden items-center gap-6 md:flex">
                         <Link
-                            href={route("products.index")}
+                            href={route("products.index", { locale })}
                             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                         >
                             {tt("products", locale)}
@@ -82,7 +82,7 @@ export default function PublicLayout({ children }) {
                     </nav>
 
                     <form
-                        action={route("products.index")}
+                        action={route("products.index", { locale })}
                         method="get"
                         className="relative ms-auto hidden max-w-sm flex-1 md:block"
                     >
@@ -160,7 +160,9 @@ export default function PublicLayout({ children }) {
                                         nativeButton={false}
                                         render={
                                             <Link
-                                                href={route("profile.edit")}
+                                                href={route("profile.edit", {
+                                                    locale,
+                                                })}
                                             />
                                         }
                                     >
@@ -170,7 +172,9 @@ export default function PublicLayout({ children }) {
                                         nativeButton={false}
                                         render={
                                             <Link
-                                                href={route("orders.index")}
+                                                href={route("orders.index", {
+                                                    locale,
+                                                })}
                                             />
                                         }
                                     >
@@ -182,6 +186,7 @@ export default function PublicLayout({ children }) {
                                             <Link
                                                 href={route(
                                                     "addresses.index",
+                                                    { locale },
                                                 )}
                                             />
                                         }
@@ -289,7 +294,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
     const fetchPreview = async () => {
         setLoading(true);
         try {
-            const res = await fetch(route("cart.preview"));
+            const res = await fetch(route("cart.preview", { locale }));
             const data = await res.json();
             setPreview(data);
         } finally {
@@ -309,7 +314,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
 
     const removeItem = (itemId) => {
         setBusyId(itemId);
-        router.delete(route("cart.destroy", itemId), {
+        router.delete(route("cart.destroy", { locale, cartItem: itemId }), {
             preserveScroll: true,
             preserveState: true,
             onFinish: () => {
@@ -326,7 +331,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
 
         setBusyId(item.id);
         router.patch(
-            route("cart.update", item.id),
+            route("cart.update", { locale, cartItem: item.id }),
             { quantity: nextQuantity },
             {
                 preserveScroll: true,
@@ -349,7 +354,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                 variant="ghost"
                 size="icon"
                 nativeButton={false}
-                render={<Link href={route("cart.index")} />}
+                render={<Link href={route("cart.index", { locale })} />}
                 className="relative"
             >
                 <motion.div
@@ -561,7 +566,13 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                     className="mt-3 w-full"
                                     size="sm"
                                     nativeButton={false}
-                                    render={<Link href={route("cart.index")} />}
+                                    render={
+                                        <Link
+                                            href={route("cart.index", {
+                                                locale,
+                                            })}
+                                        />
+                                    }
                                 >
                                     Go to cart
                                     <ArrowRight className="ms-1.5 size-3.5" />

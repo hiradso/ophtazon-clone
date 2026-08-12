@@ -47,7 +47,7 @@ class OrderController extends Controller
         $cart = Cart::where('user_id', $user->id)->first();
 
         if (! $cart || $cart->items()->count() === 0) {
-            return back()->with('error', 'Your cart is empty.');
+            return back()->with('error', 'cart_empty');
         }
 
         $order = DB::transaction(function () use ($request, $user, $cart) {
@@ -118,7 +118,7 @@ class OrderController extends Controller
             return $order;
         });
 
-        return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
+        return redirect()->route('orders.show', $order)->with('success', 'order_placed_success');
     }
 
     public function show(Request $request, Order $order): Response

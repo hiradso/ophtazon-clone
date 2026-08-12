@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { t } from "@/lib/translate";
+import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { countryLabel } from "@/lib/countries";
@@ -46,11 +47,11 @@ export default function Index({ cart, countries }) {
 
     return (
         <PublicLayout>
-            <Head title="Checkout" />
+            <Head title={tt("checkout", locale)} />
 
             <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
                 <h1 className="mb-6 text-2xl font-semibold tracking-tight text-foreground">
-                    Checkout
+                    {tt("checkout", locale)}
                 </h1>
 
                 <form
@@ -61,13 +62,15 @@ export default function Index({ cart, countries }) {
                     <div className="space-y-6 lg:col-span-2">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Shipping details</CardTitle>
+                                <CardTitle>
+                                    {tt("shipping_details", locale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
                                         <Label htmlFor="full_name">
-                                            Full name
+                                            {tt("full_name_field", locale)}
                                         </Label>
                                         <Input
                                             id="full_name"
@@ -86,7 +89,9 @@ export default function Index({ cart, countries }) {
                                         )}
                                     </div>
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="phone">Phone</Label>
+                                        <Label htmlFor="phone">
+                                            {tt("phone_field", locale)}
+                                        </Label>
                                         <Input
                                             id="phone"
                                             value={data.phone}
@@ -103,7 +108,7 @@ export default function Index({ cart, countries }) {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label>Country</Label>
+                                    <Label>{tt("country_field", locale)}</Label>
                                     <Select
                                         value={data.country_id}
                                         onValueChange={(value) =>
@@ -124,7 +129,10 @@ export default function Index({ cart, countries }) {
                                                               ),
                                                               locale,
                                                           )
-                                                        : "Select country"
+                                                        : tt(
+                                                              "select_country",
+                                                              locale,
+                                                          )
                                                 }
                                             </SelectValue>
                                         </SelectTrigger>
@@ -151,7 +159,9 @@ export default function Index({ cart, countries }) {
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
-                                        <Label htmlFor="city">City</Label>
+                                        <Label htmlFor="city">
+                                            {tt("city_field", locale)}
+                                        </Label>
                                         <Input
                                             id="city"
                                             value={data.city}
@@ -167,7 +177,8 @@ export default function Index({ cart, countries }) {
                                     </div>
                                     <div className="space-y-1.5">
                                         <Label htmlFor="postal_code">
-                                            Postal code (optional)
+                                            {tt("postal_code_field", locale)}{" "}
+                                            ({tt("optional", locale)})
                                         </Label>
                                         <Input
                                             id="postal_code"
@@ -184,7 +195,7 @@ export default function Index({ cart, countries }) {
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="address_line">
-                                        Address
+                                        {tt("address_line_field", locale)}
                                     </Label>
                                     <Textarea
                                         id="address_line"
@@ -208,7 +219,9 @@ export default function Index({ cart, countries }) {
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Payment method</CardTitle>
+                                <CardTitle>
+                                    {tt("payment_method", locale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <Select
@@ -221,17 +234,23 @@ export default function Index({ cart, countries }) {
                                         <SelectValue>
                                             {(value) =>
                                                 value === "bank_transfer"
-                                                    ? "Bank Transfer"
-                                                    : "Cash on Delivery"
+                                                    ? tt(
+                                                          "bank_transfer",
+                                                          locale,
+                                                      )
+                                                    : tt(
+                                                          "cash_on_delivery",
+                                                          locale,
+                                                      )
                                             }
                                         </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="bank_transfer">
-                                            Bank Transfer
+                                            {tt("bank_transfer", locale)}
                                         </SelectItem>
                                         <SelectItem value="cash_on_delivery">
-                                            Cash on Delivery
+                                            {tt("cash_on_delivery", locale)}
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -243,7 +262,9 @@ export default function Index({ cart, countries }) {
                     <div>
                         <Card>
                             <CardHeader>
-                                <CardTitle>Order summary</CardTitle>
+                                <CardTitle>
+                                    {tt("order_summary", locale)}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-3">
@@ -299,7 +320,7 @@ export default function Index({ cart, countries }) {
                                 <Separator />
 
                                 <div className="flex justify-between text-base font-semibold text-foreground">
-                                    <span>Total</span>
+                                    <span>{tt("total_label", locale)}</span>
                                     <span>
                                         {formatPrice(total, locale)} {currency}
                                     </span>
@@ -313,8 +334,8 @@ export default function Index({ cart, countries }) {
                                         disabled={processing}
                                     >
                                         {processing
-                                            ? "Placing order..."
-                                            : "Place order"}
+                                            ? tt("placing_order", locale)
+                                            : tt("place_order", locale)}
                                     </Button>
                                 </motion.div>
                             </CardContent>
