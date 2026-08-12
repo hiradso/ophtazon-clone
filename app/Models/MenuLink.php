@@ -6,7 +6,7 @@ use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['location', 'group_label', 'label', 'url', 'sort_order', 'is_active'])]
+#[Fillable(['location', 'group_label', 'label', 'url', 'page_id', 'parent_id', 'sort_order', 'is_active'])]
 class MenuLink extends Model
 {
     use HasTranslations;
@@ -18,5 +18,20 @@ class MenuLink extends Model
         return [
             'is_active' => 'boolean',
         ];
+    }
+
+    public function page()
+    {
+        return $this->belongsTo(Page::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(MenuLink::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(MenuLink::class, 'parent_id');
     }
 }

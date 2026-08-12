@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Mail, Phone } from "lucide-react";
 import { tt } from "@/lib/i18n";
 import { t } from "@/lib/translate";
+import { menuLinkHref } from "@/lib/menuLinks";
 
 export default function Footer() {
     const { footerLinkGroups, siteSettings, locale } = usePage().props;
@@ -88,9 +89,9 @@ export default function Footer() {
                             </h3>
                             <ul className="space-y-2 text-sm">
                                 {group.links.map((link) => (
-                                    <li key={link.url}>
+                                    <li key={link.id}>
                                         <a
-                                            href={link.url}
+                                            href={menuLinkHref(link, locale)}
                                             className="text-muted-foreground hover:text-foreground"
                                         >
                                             {t(link.label, locale)}

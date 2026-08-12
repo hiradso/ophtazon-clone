@@ -15,6 +15,12 @@ class UpdatePageRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'parent_id' => [
+                'nullable',
+                'integer',
+                'exists:pages,id',
+                Rule::notIn([$this->route('page')->id]),
+            ],
             'title' => ['required', 'array'],
             'title.en' => ['required', 'string', 'max:255'],
             'title.fr' => ['nullable', 'string', 'max:255'],

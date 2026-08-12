@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -16,8 +17,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 
-export default function Edit({ menuLink }) {
+export default function Edit({ menuLink, pageOptions, parentOptions }) {
     const { locale: uiLocale } = usePage().props;
+    const [linkType, setLinkType] = useState(
+        menuLink.page_id ? "existing_page" : "custom_url",
+    );
 
     const { data, setData, put, processing, errors } = useForm({
         location: menuLink.location ?? "footer",
@@ -32,9 +36,15 @@ export default function Edit({ menuLink }) {
             fa: menuLink.label?.fa ?? "",
         },
         url: menuLink.url ?? "",
+        page_id: menuLink.page_id ? String(menuLink.page_id) : "",
+        parent_id: menuLink.parent_id ? String(menuLink.parent_id) : "",
         sort_order: menuLink.sort_order ?? "0",
         is_active: menuLink.is_active ?? true,
     });
+
+    const availableParents = parentOptions.filter(
+        (parent) => parent.location === data.location,
+    );
 
     const submit = (e) => {
         e.preventDefault();
@@ -235,22 +245,164 @@ export default function Edit({ menuLink }) {
                                 </Tabs>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="url">
-                                        {at("url_field", uiLocale)}
-                                    </Label>
-                                    <Input
-                                        id="url"
-                                        value={data.url}
-                                        onChange={(e) =>
-                                            setData("url", e.target.value)
-                                        }
-                                    />
-                                    {errors.url && (
-                                        <p className="text-sm text-destructive">
-                                            {errors.url}
-                                        </p>
-                                    )}
+                                    <Label>{at("link_type", uiLocale)}</Label>
+                                    <Select
+                                        value={linkType}
+                                        onValueChange={(value) => {
+                                            setLinkType(value);
+                                            setData({
+                                                ...data,
+                                                url: "",
+                                                page_id: "",
+                                            });
+                                        }}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue>
+                                                {(value) =>
+                                                    value === "custom_url"
+                                                        ? at(
+                                                              "custom_url",
+                                                              uiLocale,
+                                                          )
+                                                        : at(
+                                                              "existing_page",
+                                                              uiLocale,
+                                                          )
+                                                }
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="custom_url">
+                                                {at("custom_url", uiLocale)}
+                                            </SelectItem>
+                                            <SelectItem value="existing_page">
+                                                {at("existing_page", uiLocale)}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
+
+                                {linkType === "custom_url" ? (
+                                    <div className="space-y-1.5">
+                                        <Label htmlFor="url">
+                                            {at("url_field", uiLocale)}
+                                        </Label>
+                                        <Input
+                                            id="url"
+                                            value={data.url}
+                                            onChange={(e) =>
+                                                setData("url", e.target.value)
+                                            }
+                                        />
+                                        {errors.url && (
+                                            <p className="text-sm text-destructive">
+                                                {errors.url}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-1.5">
+                                        <Label>
+                                            {at("select_page", uiLocale)}
+                                        </Label>
+                                        <Select
+                                            value={data.page_id}
+                                            onValueChange={(value) =>
+                                                setData("page_id", value)
+                                            }
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue>
+                                                    {(value) =>
+                                                        value
+                                                            ? pageOptions.find(
+                                                                  (p) =>
+                                                                      String(
+                                                                          p.id,
+                                                                      ) ===
+                                                                      value,
+                                                              )?.title.en
+                                                            : at(
+                                                                  "select_page",
+                                                                  uiLocale,
+                                                              )
+                                                    }
+                                                </SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {pageOptions.map((page) => (
+                                                    <SelectItem
+                                                        key={page.id}
+                                                        value={String(page.id)}
+                                                    >
+                                                        {page.title.en}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {errors.page_id && (
+                                            <p className="text-sm text-destructive">
+                                                {errors.page_id}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+
+                                {data.location === "header" && (
+                                    <div className="space-y-1.5">
+                                        <Label>
+                                            {at(
+                                                "parent_menu_item",
+                                                uiLocale,
+                                            )}
+                                        </Label>
+                                        <Select
+                                            value={data.parent_id}
+                                            onValueChange={(value) =>
+                                                setData("parent_id", value)
+                                            }
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue>
+                                                    {(value) =>
+                                                        value
+                                                            ? availableParents.find(
+                                                                  (p) =>
+                                                                      String(
+                                                                          p.id,
+                                                                      ) ===
+                                                                      value,
+                                                              )?.label.en
+                                                            : at(
+                                                                  "select_parent",
+                                                                  uiLocale,
+                                                              )
+                                                    }
+                                                </SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {availableParents.map(
+                                                    (parent) => (
+                                                        <SelectItem
+                                                            key={parent.id}
+                                                            value={String(
+                                                                parent.id,
+                                                            )}
+                                                        >
+                                                            {parent.label.en}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                        {errors.parent_id && (
+                                            <p className="text-sm text-destructive">
+                                                {errors.parent_id}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="sort_order">

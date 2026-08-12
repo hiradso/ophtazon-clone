@@ -18,7 +18,7 @@ class PageController extends Controller
         $this->authorize('viewAny', Page::class);
 
         return Inertia::render('Admin/Pages/Index', [
-            'pages' => Page::orderBy('created_at', 'desc')->get(),
+            'pages' => Page::with('parent:id,title')->orderBy('created_at', 'desc')->get(),
         ]);
     }
 
@@ -26,7 +26,9 @@ class PageController extends Controller
     {
         $this->authorize('create', Page::class);
 
-        return Inertia::render('Admin/Pages/Create');
+        return Inertia::render('Admin/Pages/Create', [
+            'parentOptions' => Page::orderBy('title')->get(['id', 'title']),
+        ]);
     }
 
     public function store(StorePageRequest $request): RedirectResponse
@@ -44,6 +46,7 @@ class PageController extends Controller
 
         return Inertia::render('Admin/Pages/Edit', [
             'page' => $page,
+            'parentOptions' => Page::where('id', '!=', $page->id)->orderBy('title')->get(['id', 'title']),
         ]);
     }
 

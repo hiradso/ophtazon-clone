@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreMenuLinkRequest;
 use App\Http\Requests\Admin\UpdateMenuLinkRequest;
 use App\Models\MenuLink;
+use App\Models\Page;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,7 +18,10 @@ class MenuLinkController extends Controller
         $this->authorize('viewAny', MenuLink::class);
 
         return Inertia::render('Admin/MenuLinks/Index', [
-            'menuLinks' => MenuLink::orderBy('location')->orderBy('sort_order')->get(),
+            'menuLinks' => MenuLink::with('page:id,title')
+                ->orderBy('location')
+                ->orderBy('sort_order')
+                ->get(),
         ]);
     }
 
@@ -25,7 +29,10 @@ class MenuLinkController extends Controller
     {
         $this->authorize('create', MenuLink::class);
 
-        return Inertia::render('Admin/MenuLinks/Create');
+        return Inertia::render('Admin/MenuLinks/Create', [
+            'pageOptions' => Page::orderBy('title')->get(['id', 'title', 'slug']),
+            'parentOptions' => MenuLink::whereNull('parent_id')->orderBy('location')->orderBy('sort_order')->get(['id', 'label', 'location']),
+        ]);
     }
 
     public function store(StoreMenuLinkRequest $request): RedirectResponse
@@ -42,7 +49,13 @@ class MenuLinkController extends Controller
         $this->authorize('update', $menuLink);
 
         return Inertia::render('Admin/MenuLinks/Edit', [
-            'menuLink' => $menuLink,
+            'menuLink' => $menuLink->load('page:id,title,slug'),
+            'pageOptions' => Page::orderBy('title')->get(['id', 'title', 'slug']),
+            'parentOptions' => MenuLink::whereNull('parent_id')
+                ->where('id', '!=', $menuLink->id)
+                ->orderBy('location')
+                ->orderBy('sort_order')
+                ->get(['id', 'label', 'location']),
         ]);
     }
 

@@ -124,6 +124,11 @@ const adminTranslations = {
         link_details: "Link Details",
         select_location: "Select location",
         url_field: "URL",
+        link_type: "Link type",
+        custom_url: "Custom URL",
+        existing_page: "Existing page",
+        select_page: "Select a page",
+        parent_menu_item: "Parent menu item (for dropdown)",
         sort_order: "Sort order",
         group_links_hint:
             "Links with the same column name are grouped together in the footer.",
@@ -446,6 +451,11 @@ const adminTranslations = {
         link_details: "جزئیات لینک",
         select_location: "انتخاب محل نمایش",
         url_field: "آدرس URL",
+        link_type: "نوع لینک",
+        custom_url: "آدرس دستی",
+        existing_page: "صفحه‌ی موجود",
+        select_page: "انتخاب یک صفحه",
+        parent_menu_item: "آیتم والد منو (برای زیرمنو)",
         sort_order: "ترتیب نمایش",
         group_links_hint:
             "لینک‌هایی با نام ستون یکسان، در فوتر با هم گروه‌بندی می‌شوند.",

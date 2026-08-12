@@ -25,10 +25,11 @@ const LOCALE_LABELS = {
     fa: "فارسی",
 };
 
-export default function Create() {
+export default function Create({ parentOptions }) {
     const { locale: uiLocale } = usePage().props;
 
     const { data, setData, post, processing, errors } = useForm({
+        parent_id: "",
         title: { en: "", fr: "", fa: "" },
         slug: "",
         content: { en: "", fr: "", fa: "" },
@@ -219,6 +220,44 @@ export default function Create() {
                                         </TabsContent>
                                     ))}
                                 </Tabs>
+
+                                <div className="space-y-1.5">
+                                    <Label>{at("parent", uiLocale)}</Label>
+                                    <Select
+                                        value={data.parent_id}
+                                        onValueChange={(value) =>
+                                            setData("parent_id", value)
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue>
+                                                {(value) =>
+                                                    value
+                                                        ? parentOptions.find(
+                                                              (p) =>
+                                                                  String(
+                                                                      p.id,
+                                                                  ) === value,
+                                                          )?.title.en
+                                                        : at(
+                                                              "select_parent",
+                                                              uiLocale,
+                                                          )
+                                                }
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {parentOptions.map((parent) => (
+                                                <SelectItem
+                                                    key={parent.id}
+                                                    value={String(parent.id)}
+                                                >
+                                                    {parent.title.en}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="slug">

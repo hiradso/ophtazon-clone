@@ -19,6 +19,7 @@ import {
     Trash2,
     Minus,
     Plus,
+    ChevronDown,
 } from "lucide-react";
 import Footer from "@/Components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,6 +28,7 @@ import { tt } from "@/lib/i18n";
 import { switchLocale } from "@/lib/switchLocale";
 import { formatPrice } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import { menuLinkHref } from "@/lib/menuLinks";
 
 export default function PublicLayout({ children }) {
     const { auth, cartItemsCount, headerLinks, flash, siteSettings, locale } =
@@ -70,15 +72,46 @@ export default function PublicLayout({ children }) {
                         >
                             {tt("products", locale)}
                         </Link>
-                        {headerLinks.map((link) => (
-                            <a
-                                key={link.url}
-                                href={link.url}
-                                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                {t(link.label, locale)}
-                            </a>
-                        ))}
+                        {headerLinks.map((link) =>
+                            link.children.length > 0 ? (
+                                <DropdownMenu key={link.id}>
+                                    <DropdownMenuTrigger
+                                        render={
+                                            <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                                                {t(link.label, locale)}
+                                                <ChevronDown className="size-3.5" />
+                                            </button>
+                                        }
+                                    />
+                                    <DropdownMenuContent align="start">
+                                        {link.children.map((child) => (
+                                            <DropdownMenuItem
+                                                key={child.id}
+                                                nativeButton={false}
+                                                render={
+                                                    <a
+                                                        href={menuLinkHref(
+                                                            child,
+                                                            locale,
+                                                        )}
+                                                    />
+                                                }
+                                            >
+                                                {t(child.label, locale)}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            ) : (
+                                <a
+                                    key={link.id}
+                                    href={menuLinkHref(link, locale)}
+                                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                                >
+                                    {t(link.label, locale)}
+                                </a>
+                            ),
+                        )}
                     </nav>
 
                     <form

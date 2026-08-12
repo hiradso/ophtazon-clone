@@ -27,13 +27,30 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Plus, MoreHorizontal, Pencil, Trash2, CornerDownRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
+
+function orderWithChildren(menuLinks) {
+    const topLevel = menuLinks.filter((link) => !link.parent_id);
+    const ordered = [];
+
+    for (const link of topLevel) {
+        ordered.push(link);
+        for (const child of menuLinks.filter(
+            (candidate) => candidate.parent_id === link.id,
+        )) {
+            ordered.push(child);
+        }
+    }
+
+    return ordered;
+}
 
 export default function Index({ menuLinks }) {
     const { flash, locale: uiLocale } = usePage().props;
     const [linkToDelete, setLinkToDelete] = useState(null);
+    const orderedLinks = orderWithChildren(menuLinks);
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);
@@ -111,7 +128,7 @@ export default function Index({ menuLinks }) {
                                         </TableRow>
                                     )}
 
-                                    {menuLinks.map((link) => (
+                                    {orderedLinks.map((link) => (
                                         <TableRow key={link.id}>
                                             <TableCell className="align-middle">
                                                 <Badge
@@ -133,10 +150,17 @@ export default function Index({ menuLinks }) {
                                                 {link.group_label?.en ?? "—"}
                                             </TableCell>
                                             <TableCell className="align-middle font-medium text-foreground">
-                                                {link.label?.en}
+                                                <span className="flex items-center gap-1.5">
+                                                    {link.parent_id && (
+                                                        <CornerDownRight className="size-3.5 shrink-0 text-muted-foreground rtl:-scale-x-100" />
+                                                    )}
+                                                    {link.label?.en}
+                                                </span>
                                             </TableCell>
                                             <TableCell className="align-middle max-w-48 truncate text-muted-foreground">
-                                                {link.url}
+                                                {link.page
+                                                    ? `${at("existing_page", uiLocale)}: ${link.page.title?.en}`
+                                                    : link.url}
                                             </TableCell>
                                             <TableCell className="align-middle">
                                                 <Badge

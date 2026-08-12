@@ -117,6 +117,12 @@ export default function Index({ pages }) {
                                         <TableRow key={page.id}>
                                             <TableCell className="align-middle font-medium text-foreground">
                                                 {page.title.en}
+                                                {page.parent && (
+                                                    <p className="text-xs font-normal text-muted-foreground">
+                                                        {at("parent", uiLocale)}
+                                                        : {page.parent.title.en}
+                                                    </p>
+                                                )}
                                             </TableCell>
                                             <TableCell
                                                 className="align-middle text-muted-foreground"

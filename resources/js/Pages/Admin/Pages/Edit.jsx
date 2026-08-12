@@ -19,10 +19,11 @@ import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
 import { at } from "@/lib/admin-i18n";
 
-export default function Edit({ page }) {
+export default function Edit({ page, parentOptions }) {
     const { locale: uiLocale } = usePage().props;
 
     const { data, setData, put, processing, errors } = useForm({
+        parent_id: page.parent_id ? String(page.parent_id) : "",
         title: {
             en: page.title?.en ?? "",
             fr: page.title?.fr ?? "",
@@ -225,6 +226,44 @@ export default function Edit({ page }) {
                                         </TabsContent>
                                     ))}
                                 </Tabs>
+
+                                <div className="space-y-1.5">
+                                    <Label>{at("parent", uiLocale)}</Label>
+                                    <Select
+                                        value={data.parent_id}
+                                        onValueChange={(value) =>
+                                            setData("parent_id", value)
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue>
+                                                {(value) =>
+                                                    value
+                                                        ? parentOptions.find(
+                                                              (p) =>
+                                                                  String(
+                                                                      p.id,
+                                                                  ) === value,
+                                                          )?.title.en
+                                                        : at(
+                                                              "select_parent",
+                                                              uiLocale,
+                                                          )
+                                                }
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {parentOptions.map((parent) => (
+                                                <SelectItem
+                                                    key={parent.id}
+                                                    value={String(parent.id)}
+                                                >
+                                                    {parent.title.en}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="slug">
