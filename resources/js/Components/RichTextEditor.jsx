@@ -319,7 +319,14 @@ export default function RichTextEditor({
     );
 }
 
-function ToolbarButton({ icon: Icon, active, onClick, disabled, title }) {
+function ToolbarButton({
+    icon: Icon,
+    label,
+    active,
+    onClick,
+    disabled,
+    title,
+}) {
     return (
         <Button
             type="button"
@@ -329,7 +336,11 @@ function ToolbarButton({ icon: Icon, active, onClick, disabled, title }) {
             disabled={disabled}
             title={title}
         >
-            <Icon className="size-4" />
+            {Icon ? (
+                <Icon className="size-4" />
+            ) : (
+                <span className="text-sm font-bold">{label}</span>
+            )}
         </Button>
     );
 }
