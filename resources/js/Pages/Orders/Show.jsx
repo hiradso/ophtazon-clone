@@ -7,6 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { toFa } from "@/lib/toFa";
+import { countryLabel } from "@/lib/countries";
 
 export default function Show({ order }) {
     const { locale } = usePage().props;
@@ -65,8 +66,8 @@ export default function Show({ order }) {
                             <p className="text-muted-foreground">
                                 {order.shipping_address?.address_line},{" "}
                                 {order.shipping_address?.city}
-                                {order.shipping_address?.country?.name &&
-                                    `, ${order.shipping_address.country.name}`}
+                                {order.shipping_address?.country &&
+                                    `, ${countryLabel(order.shipping_address.country, locale)}`}
                             </p>
                         </div>
                     </CardContent>

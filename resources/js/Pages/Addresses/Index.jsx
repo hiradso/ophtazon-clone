@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Head, useForm, router, usePage } from "@inertiajs/react";
-import { toast } from "sonner";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +38,7 @@ import {
     Star,
 } from "lucide-react";
 import { tt } from "@/lib/i18n";
+import { countryLabel } from "@/lib/countries";
 
 const emptyForm = {
     full_name: "",
@@ -51,18 +51,13 @@ const emptyForm = {
 };
 
 export default function Index({ addresses, countries }) {
-    const { flash, locale: uiLocale } = usePage().props;
+    const { locale: uiLocale } = usePage().props;
     const [editingAddress, setEditingAddress] = useState(null);
     const [formOpen, setFormOpen] = useState(false);
     const [addressToDelete, setAddressToDelete] = useState(null);
 
     const { data, setData, post, put, processing, errors, reset, clearErrors } =
         useForm(emptyForm);
-
-    useEffect(() => {
-        if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
-    }, [flash]);
 
     const openCreate = () => {
         setEditingAddress(null);
@@ -220,8 +215,8 @@ export default function Index({ addresses, countries }) {
                                     <p className="text-sm text-muted-foreground">
                                         {address.address_line},{" "}
                                         {address.city}
-                                        {address.country?.name &&
-                                            `, ${address.country.name}`}
+                                        {address.country &&
+                                            `, ${countryLabel(address.country, uiLocale)}`}
                                         {address.postal_code &&
                                             ` — ${address.postal_code}`}
                                     </p>
@@ -300,11 +295,15 @@ export default function Index({ addresses, countries }) {
                                         <SelectValue>
                                             {(value) =>
                                                 value
-                                                    ? countries.find(
-                                                          (c) =>
-                                                              String(c.id) ===
-                                                              value,
-                                                      )?.name
+                                                    ? countryLabel(
+                                                          countries.find(
+                                                              (c) =>
+                                                                  String(
+                                                                      c.id,
+                                                                  ) === value,
+                                                          ),
+                                                          uiLocale,
+                                                      )
                                                     : tt(
                                                           "country_field",
                                                           uiLocale,
@@ -318,7 +317,10 @@ export default function Index({ addresses, countries }) {
                                                 key={country.id}
                                                 value={String(country.id)}
                                             >
-                                                {country.name}
+                                                {countryLabel(
+                                                    country,
+                                                    uiLocale,
+                                                )}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

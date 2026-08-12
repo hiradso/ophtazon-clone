@@ -16,11 +16,11 @@ class AddressController extends Controller
     {
         return Inertia::render('Addresses/Index', [
             'addresses' => Address::where('user_id', $request->user()->id)
-                ->with('country:id,name')
+                ->with('country:id,name,iso_code')
                 ->orderByDesc('is_default')
                 ->latest()
                 ->get(),
-            'countries' => Country::where('is_active', true)->get(['id', 'name']),
+            'countries' => Country::where('is_active', true)->get(['id', 'name', 'iso_code']),
         ]);
     }
 
@@ -36,7 +36,7 @@ class AddressController extends Controller
             Address::create([...$data, 'user_id' => $request->user()->id]);
         });
 
-        return back()->with('success', 'Address saved.');
+        return back()->with('success', 'address_saved');
     }
 
     public function update(Request $request, Address $address): RedirectResponse
@@ -55,7 +55,7 @@ class AddressController extends Controller
             $address->update($data);
         });
 
-        return back()->with('success', 'Address updated.');
+        return back()->with('success', 'address_updated');
     }
 
     public function destroy(Request $request, Address $address): RedirectResponse
@@ -64,7 +64,7 @@ class AddressController extends Controller
 
         $address->delete();
 
-        return back()->with('success', 'Address deleted.');
+        return back()->with('success', 'address_deleted');
     }
 
     public function setDefault(Request $request, Address $address): RedirectResponse
@@ -76,7 +76,7 @@ class AddressController extends Controller
             $address->update(['is_default' => true]);
         });
 
-        return back()->with('success', 'Default address updated.');
+        return back()->with('success', 'default_address_updated');
     }
 
     private function validated(Request $request): array

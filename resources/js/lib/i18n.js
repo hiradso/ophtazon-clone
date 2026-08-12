@@ -147,6 +147,10 @@ const translations = {
         confirm_delete_address_desc:
             "This address will be permanently removed from your account.",
         delete: "Delete",
+        address_saved: "Address saved.",
+        address_updated: "Address updated.",
+        address_deleted: "Address deleted.",
+        default_address_updated: "Default address updated.",
     },
     fr: {
         products: "Produits",
@@ -299,6 +303,10 @@ const translations = {
         confirm_delete_address_desc:
             "Cette adresse sera définitivement supprimée de votre compte.",
         delete: "Supprimer",
+        address_saved: "Adresse enregistrée.",
+        address_updated: "Adresse mise à jour.",
+        address_deleted: "Adresse supprimée.",
+        default_address_updated: "Adresse par défaut mise à jour.",
     },
     fa: {
         products: "محصولات",
@@ -445,6 +453,10 @@ const translations = {
         confirm_delete_address_desc:
             "این آدرس برای همیشه از حساب شما حذف خواهد شد.",
         delete: "حذف",
+        address_saved: "آدرس ذخیره شد.",
+        address_updated: "آدرس به‌روزرسانی شد.",
+        address_deleted: "آدرس حذف شد.",
+        default_address_updated: "آدرس پیش‌فرض به‌روزرسانی شد.",
     },
 };
 

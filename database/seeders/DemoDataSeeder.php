@@ -48,16 +48,29 @@ class DemoDataSeeder extends Seeder
             );
         });
 
-        // ۳. کشور — ایمن در برابر اجرای مجدد (بر اساس iso_code)
-        $country = Country::firstOrCreate(
-            ['iso_code' => 'FR'],
-            [
-                'name' => 'France',
-                'currency_code' => 'EUR',
-                'phone_prefix' => '+33',
-                'is_active' => true,
-            ]
-        );
+        // ۳. کشورها — ایمن در برابر اجرای مجدد (بر اساس iso_code)
+        // این‌ها نمایندگی‌های اصلی سایت نمونه (Ophtazon, Ivory Coast, Senegal, ...) هستند
+        $countriesData = [
+            ['iso_code' => 'FR', 'name' => 'France', 'currency_code' => 'EUR', 'phone_prefix' => '+33'],
+            ['iso_code' => 'CI', 'name' => 'Ivory Coast', 'currency_code' => 'XOF', 'phone_prefix' => '+225'],
+            ['iso_code' => 'SN', 'name' => 'Senegal', 'currency_code' => 'XOF', 'phone_prefix' => '+221'],
+            ['iso_code' => 'CM', 'name' => 'Cameroon', 'currency_code' => 'XAF', 'phone_prefix' => '+237'],
+            ['iso_code' => 'TG', 'name' => 'Togo', 'currency_code' => 'XOF', 'phone_prefix' => '+228'],
+        ];
+
+        $countries = collect($countriesData)->map(function ($data) {
+            return Country::firstOrCreate(
+                ['iso_code' => $data['iso_code']],
+                [
+                    'name' => $data['name'],
+                    'currency_code' => $data['currency_code'],
+                    'phone_prefix' => $data['phone_prefix'],
+                    'is_active' => true,
+                ]
+            );
+        });
+
+        $country = $countries->first();
 
         // ۴. فروشگاه — ایمن در برابر اجرای مجدد (بر اساس slug)
         $store = Store::firstOrCreate(

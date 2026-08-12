@@ -17,6 +17,7 @@ import {
 import { t } from "@/lib/translate";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import { countryLabel } from "@/lib/countries";
 
 export default function Index({ cart, countries }) {
     const { locale } = usePage().props;
@@ -113,12 +114,16 @@ export default function Index({ cart, countries }) {
                                             <SelectValue>
                                                 {(value) =>
                                                     value
-                                                        ? countries.find(
-                                                              (c) =>
-                                                                  String(
-                                                                      c.id,
-                                                                  ) === value,
-                                                          )?.name
+                                                        ? countryLabel(
+                                                              countries.find(
+                                                                  (c) =>
+                                                                      String(
+                                                                          c.id,
+                                                                      ) ===
+                                                                      value,
+                                                              ),
+                                                              locale,
+                                                          )
                                                         : "Select country"
                                                 }
                                             </SelectValue>
@@ -129,7 +134,10 @@ export default function Index({ cart, countries }) {
                                                     key={country.id}
                                                     value={String(country.id)}
                                                 >
-                                                    {country.name}
+                                                    {countryLabel(
+                                                        country,
+                                                        locale,
+                                                    )}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

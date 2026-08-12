@@ -33,8 +33,8 @@ export default function PublicLayout({ children }) {
         usePage().props;
 
     useEffect(() => {
-        if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
+        if (flash?.success) toast.success(tt(flash.success, locale));
+        if (flash?.error) toast.error(tt(flash.error, locale));
     }, [flash]);
 
     return (

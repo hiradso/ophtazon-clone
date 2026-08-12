@@ -20,7 +20,7 @@ class CheckoutController extends Controller
 
         return Inertia::render('Checkout/Index', [
             'cart' => $cart->load(['items.product.images', 'items.product.store']),
-            'countries' => Country::where('is_active', true)->get(['id', 'name']),
+            'countries' => Country::where('is_active', true)->get(['id', 'name', 'iso_code']),
         ]);
     }
 }
