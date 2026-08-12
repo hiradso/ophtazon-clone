@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
 import { at } from "@/lib/admin-i18n";
+import { stripHtml } from "@/lib/richText";
 
 const LOCALE_LABELS = {
     en: "English",
@@ -108,7 +109,7 @@ export default function Create({ parentOptions }) {
                                                 locale === "fa" ? "rtl" : "ltr"
                                             }
                                         >
-                                            <div className="space-y-1.5">
+                                            <div className="space-y-2.5">
                                                 <Label
                                                     htmlFor={`title_${locale}`}
                                                 >
@@ -120,21 +121,16 @@ export default function Create({ parentOptions }) {
                                                             uiLocale,
                                                         )}
                                                 </Label>
-                                                <Input
-                                                    id={`title_${locale}`}
-                                                    dir={
-                                                        locale === "fa"
-                                                            ? "rtl"
-                                                            : "ltr"
-                                                    }
+                                                <RichTextEditor
+                                                    compact
+                                                    headingLevels={[1, 2, 3]}
                                                     value={
                                                         data.title[locale] ?? ""
                                                     }
-                                                    onChange={(e) =>
+                                                    onChange={(html) =>
                                                         setData("title", {
                                                             ...data.title,
-                                                            [locale]:
-                                                                e.target.value,
+                                                            [locale]: html,
                                                         })
                                                     }
                                                 />
@@ -149,7 +145,7 @@ export default function Create({ parentOptions }) {
                                                 )}
                                             </div>
 
-                                            <div className="space-y-1.5">
+                                            <div className="space-y-2.5">
                                                 <Label>
                                                     {at("content", uiLocale)}{" "}
                                                     {locale !== "en" &&
@@ -183,7 +179,7 @@ export default function Create({ parentOptions }) {
                                                 )}
                                             </div>
 
-                                            <div className="space-y-1.5">
+                                            <div className="space-y-2.5">
                                                 <Label
                                                     htmlFor={`meta_${locale}`}
                                                 >
@@ -222,7 +218,7 @@ export default function Create({ parentOptions }) {
                                     ))}
                                 </Tabs>
 
-                                <div className="space-y-1.5">
+                                <div className="space-y-2.5">
                                     <Label>{at("parent", uiLocale)}</Label>
                                     <Select
                                         value={data.parent_id}
@@ -234,12 +230,15 @@ export default function Create({ parentOptions }) {
                                             <SelectValue>
                                                 {(value) =>
                                                     value
-                                                        ? parentOptions.find(
-                                                              (p) =>
-                                                                  String(
-                                                                      p.id,
-                                                                  ) === value,
-                                                          )?.title.en
+                                                        ? stripHtml(
+                                                              parentOptions.find(
+                                                                  (p) =>
+                                                                      String(
+                                                                          p.id,
+                                                                      ) ===
+                                                                      value,
+                                                              )?.title.en,
+                                                          )
                                                         : at(
                                                               "select_parent",
                                                               uiLocale,
@@ -253,14 +252,16 @@ export default function Create({ parentOptions }) {
                                                     key={parent.id}
                                                     value={String(parent.id)}
                                                 >
-                                                    {parent.title.en}
+                                                    {stripHtml(
+                                                        parent.title.en,
+                                                    )}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
 
-                                <div className="space-y-1.5">
+                                <div className="space-y-2.5">
                                     <Label htmlFor="slug">
                                         {at("slug", uiLocale)}
                                     </Label>
@@ -287,7 +288,7 @@ export default function Create({ parentOptions }) {
                                 </div>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-1.5">
+                                    <div className="space-y-2.5">
                                         <Label>
                                             {at("image_optional", uiLocale)}
                                         </Label>
@@ -304,7 +305,7 @@ export default function Create({ parentOptions }) {
                                         )}
                                     </div>
 
-                                    <div className="space-y-1.5">
+                                    <div className="space-y-2.5">
                                         <Label>
                                             {at("display_style", uiLocale)}
                                         </Label>

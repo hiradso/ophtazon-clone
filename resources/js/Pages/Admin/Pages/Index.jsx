@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { toFa } from "@/lib/toFa";
 import { at } from "@/lib/admin-i18n";
+import { stripHtml } from "@/lib/richText";
 
 export default function Index({ pages }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -116,11 +117,15 @@ export default function Index({ pages }) {
                                     {pages.map((page) => (
                                         <TableRow key={page.id}>
                                             <TableCell className="align-middle font-medium text-foreground">
-                                                {page.title.en}
+                                                {stripHtml(page.title.en)}
                                                 {page.parent && (
                                                     <p className="text-xs font-normal text-muted-foreground">
                                                         {at("parent", uiLocale)}
-                                                        : {page.parent.title.en}
+                                                        :{" "}
+                                                        {stripHtml(
+                                                            page.parent.title
+                                                                .en,
+                                                        )}
                                                     </p>
                                                 )}
                                             </TableCell>
@@ -241,7 +246,8 @@ export default function Index({ pages }) {
                             {at("delete_page_confirm_title", uiLocale)}
                         </DialogTitle>
                         <DialogDescription>
-                            {pageToDelete && `"${pageToDelete.title.en}"`}{" "}
+                            {pageToDelete &&
+                                `"${stripHtml(pageToDelete.title.en)}"`}{" "}
                             {at("delete_page_confirm_desc", uiLocale)}
                         </DialogDescription>
                     </DialogHeader>

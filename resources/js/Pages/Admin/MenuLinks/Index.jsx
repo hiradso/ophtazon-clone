@@ -30,6 +30,7 @@ import {
 import { Plus, MoreHorizontal, Pencil, Trash2, CornerDownRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
+import { stripHtml } from "@/lib/richText";
 
 function orderWithChildren(menuLinks) {
     const topLevel = menuLinks.filter((link) => !link.parent_id);
@@ -159,7 +160,7 @@ export default function Index({ menuLinks }) {
                                             </TableCell>
                                             <TableCell className="align-middle max-w-48 truncate text-muted-foreground">
                                                 {link.page
-                                                    ? `${at("existing_page", uiLocale)}: ${link.page.title?.en}`
+                                                    ? `${at("existing_page", uiLocale)}: ${stripHtml(link.page.title?.en)}`
                                                     : link.url}
                                             </TableCell>
                                             <TableCell className="align-middle">

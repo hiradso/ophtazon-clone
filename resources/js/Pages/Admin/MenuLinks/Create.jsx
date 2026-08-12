@@ -16,6 +16,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { stripHtml } from "@/lib/richText";
 
 export default function Create({ pageOptions, parentOptions }) {
     const { locale: uiLocale } = usePage().props;
@@ -326,13 +327,15 @@ export default function Create({ pageOptions, parentOptions }) {
                                                 <SelectValue>
                                                     {(value) =>
                                                         value
-                                                            ? pageOptions.find(
-                                                                  (p) =>
-                                                                      String(
-                                                                          p.id,
-                                                                      ) ===
-                                                                      value,
-                                                              )?.title.en
+                                                            ? stripHtml(
+                                                                  pageOptions.find(
+                                                                      (p) =>
+                                                                          String(
+                                                                              p.id,
+                                                                          ) ===
+                                                                          value,
+                                                                  )?.title.en,
+                                                              )
                                                             : at(
                                                                   "select_page",
                                                                   uiLocale,
@@ -346,7 +349,9 @@ export default function Create({ pageOptions, parentOptions }) {
                                                         key={page.id}
                                                         value={String(page.id)}
                                                     >
-                                                        {page.title.en}
+                                                        {stripHtml(
+                                                            page.title.en,
+                                                        )}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>

@@ -17,20 +17,9 @@ import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { HERO_ICONS } from "@/lib/heroIcons";
+import { richTextOrLegacy } from "@/lib/richText";
 
 const DEFAULT_BADGE_TEXT = "Trusted by clinics in 5 countries";
-
-/**
- * تیتر/زیرتیتر Hero حالا از ویرایشگر گرافیکی میان (HTML واقعی با تگ
- * دلخواه ادمین: h1/h2/h3/p). مقادیر قدیمی هنوز متن ساده‌ان (بدون تگ) —
- * برای سازگاری، اگه هیچ تگی توش نبود، با تگ پیش‌فرض می‌پیچیمش.
- */
-function richTextOrLegacy(value, fallbackTag) {
-    if (!value) return "";
-    return /<[a-z][\s\S]*>/i.test(value)
-        ? value
-        : `<${fallbackTag}>${value}</${fallbackTag}>`;
-}
 
 const DEFAULT_TRUST_ITEMS = [
     { icon: "shield_check", labelKey: "quality_checked" },
