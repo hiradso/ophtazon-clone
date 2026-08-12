@@ -119,6 +119,7 @@ export default function Edit({ page, parentOptions }) {
                                                     htmlFor={`title_${locale}`}
                                                 >
                                                     {at("title", uiLocale)}{" "}
+                                                    (H1){" "}
                                                     {locale !== "en" &&
                                                         at(
                                                             "optional",

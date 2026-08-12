@@ -488,9 +488,10 @@ function CustomContentSection({ content }) {
                 </h2>
             )}
             {body && (
-                <p className="whitespace-pre-line text-muted-foreground">
-                    {body}
-                </p>
+                <div
+                    className="prose prose-neutral mx-auto max-w-none text-muted-foreground dark:prose-invert"
+                    dangerouslySetInnerHTML={{ __html: body }}
+                />
             )}
         </section>
     );

@@ -113,6 +113,7 @@ export default function Create({ parentOptions }) {
                                                     htmlFor={`title_${locale}`}
                                                 >
                                                     {at("title", uiLocale)}{" "}
+                                                    (H1){" "}
                                                     {locale !== "en" &&
                                                         at(
                                                             "optional",

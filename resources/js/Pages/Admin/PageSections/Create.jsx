@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { HERO_ICON_LABELS, HERO_ICON_OPTIONS } from "@/lib/heroIcons";
+import RichTextEditor from "@/Components/RichTextEditor";
 
 const DEFAULT_CONTENT = {
     hero: {
@@ -207,6 +208,7 @@ export default function Create() {
                                                                     "title",
                                                                     uiLocale,
                                                                 )}{" "}
+                                                                (H1){" "}
                                                                 {locale !==
                                                                     "en" &&
                                                                     at(
@@ -330,6 +332,7 @@ export default function Create() {
                                                                     "heading",
                                                                     uiLocale,
                                                                 )}{" "}
+                                                                (H2){" "}
                                                                 {locale !==
                                                                     "en" &&
                                                                     at(
@@ -362,9 +365,7 @@ export default function Create() {
                                                             />
                                                         </div>
                                                         <div className="space-y-1.5">
-                                                            <Label
-                                                                htmlFor={`body_${locale}`}
-                                                            >
+                                                            <Label>
                                                                 {at(
                                                                     "body_text",
                                                                     uiLocale,
@@ -376,26 +377,20 @@ export default function Create() {
                                                                         uiLocale,
                                                                     )}
                                                             </Label>
-                                                            <Input
-                                                                id={`body_${locale}`}
-                                                                dir={
-                                                                    locale ===
-                                                                    "fa"
-                                                                        ? "rtl"
-                                                                        : "ltr"
-                                                                }
+                                                            <RichTextEditor
                                                                 value={
                                                                     data.content
                                                                         .body?.[
                                                                         locale
                                                                     ] ?? ""
                                                                 }
-                                                                onChange={(e) =>
+                                                                onChange={(
+                                                                    html,
+                                                                ) =>
                                                                     setField(
                                                                         "body",
                                                                         locale,
-                                                                        e.target
-                                                                            .value,
+                                                                        html,
                                                                     )
                                                                 }
                                                             />
