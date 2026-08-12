@@ -69,7 +69,7 @@ export default function Index({ products }) {
 
     useEffect(() => {
         if (flash?.success) {
-            toast.success(flash.success);
+            toast.success(at(flash.success, uiLocale));
         }
     }, [flash]);
 

@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Head, useForm, usePage } from "@inertiajs/react";
+import { toast } from "sonner";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +31,11 @@ const DEFAULT_ROBOTS_TXT = [
 ].join("\n");
 
 export default function Edit({ settings }) {
-    const { locale: uiLocale } = usePage().props;
+    const { flash, locale: uiLocale } = usePage().props;
+
+    useEffect(() => {
+        if (flash?.success) toast.success(at(flash.success, uiLocale));
+    }, [flash]);
 
     const { data, setData, put, processing, errors } = useForm({
         site_name: settings.site_name ?? "",

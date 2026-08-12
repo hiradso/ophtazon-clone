@@ -26,6 +26,6 @@ class NewsletterController extends Controller
             ]
         );
 
-        return back()->with('success', 'Thanks for subscribing!');
+        return back()->with('success', 'newsletter_subscribed');
     }
 }

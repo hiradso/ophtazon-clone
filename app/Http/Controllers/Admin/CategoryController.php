@@ -39,7 +39,7 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Category created successfully.');
+            ->with('success', 'category_created_success');
     }
 
     public function edit(Category $category): Response
@@ -60,7 +60,7 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Category updated successfully.');
+            ->with('success', 'category_updated_success');
     }
 
     public function destroy(Category $category): RedirectResponse
@@ -68,13 +68,13 @@ class CategoryController extends Controller
         $this->authorize('delete', $category);
 
         if ($category->products()->exists()) {
-            return back()->with('error', 'Cannot delete a category that has products.');
+            return back()->with('error', 'category_cannot_delete_has_products');
         }
 
         $category->delete();
 
         return redirect()
             ->route('admin.categories.index')
-            ->with('success', 'Category deleted.');
+            ->with('success', 'category_deleted');
     }
 }

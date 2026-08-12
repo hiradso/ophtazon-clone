@@ -46,7 +46,7 @@ class MediaController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Files uploaded successfully.');
+        return back()->with('success', 'files_uploaded_success');
     }
 
     public function update(Request $request, Media $medium): RedirectResponse
@@ -59,7 +59,7 @@ class MediaController extends Controller
 
         $medium->update(['filename' => $request->input('filename')]);
 
-        return back()->with('success', 'Renamed successfully.');
+        return back()->with('success', 'renamed_success');
     }
 
     public function destroy(Media $medium): RedirectResponse
@@ -69,7 +69,7 @@ class MediaController extends Controller
         Storage::disk('public')->delete($medium->path);
         $medium->delete();
 
-        return back()->with('success', 'File deleted.');
+        return back()->with('success', 'file_deleted');
     }
 
     public function pickerList(): JsonResponse

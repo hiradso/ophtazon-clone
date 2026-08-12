@@ -34,7 +34,7 @@ class BrandController extends Controller
 
         return redirect()
             ->route('admin.brands.index')
-            ->with('success', 'Brand created successfully.');
+            ->with('success', 'brand_created_success');
     }
 
     public function edit(Brand $brand): Response
@@ -52,7 +52,7 @@ class BrandController extends Controller
 
         return redirect()
             ->route('admin.brands.index')
-            ->with('success', 'Brand updated successfully.');
+            ->with('success', 'brand_updated_success');
     }
 
     public function destroy(Brand $brand): RedirectResponse
@@ -60,13 +60,13 @@ class BrandController extends Controller
         $this->authorize('delete', $brand);
 
         if ($brand->products()->exists()) {
-            return back()->with('error', 'Cannot delete a brand that has products.');
+            return back()->with('error', 'brand_cannot_delete_has_products');
         }
 
         $brand->delete();
 
         return redirect()
             ->route('admin.brands.index')
-            ->with('success', 'Brand deleted.');
+            ->with('success', 'brand_deleted');
     }
 }

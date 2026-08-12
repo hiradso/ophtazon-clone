@@ -65,7 +65,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('admin.products.edit', $product)
-            ->with('success', 'Product created successfully.');
+            ->with('success', 'product_created_success');
     }
 
     public function edit(Product $product): Response
@@ -87,7 +87,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('admin.products.index', $product)
-            ->with('success', 'Product updated successfully.');
+            ->with('success', 'product_updated_success');
     }
 
     public function destroy(Product $product): RedirectResponse
@@ -98,7 +98,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'Product deleted successfully.');
+            ->with('success', 'product_deleted_success');
     }
     public function storeImage(Request $request, Product $product): RedirectResponse
     {
@@ -116,7 +116,7 @@ class ProductController extends Controller
             'position' => $nextPosition,
         ]);
 
-        return back()->with('success', 'Image added.');
+        return back()->with('success', 'product_image_added');
     }
 
     public function destroyImage(Product $product, ProductImage $image): RedirectResponse
@@ -125,7 +125,7 @@ class ProductController extends Controller
 
         $image->delete();
 
-        return back()->with('success', 'Image removed.');
+        return back()->with('success', 'product_image_removed');
     }
 
     public function syncCountries(Request $request, Product $product): RedirectResponse
@@ -139,7 +139,7 @@ class ProductController extends Controller
 
         $product->allowedCountries()->sync($request->input('country_ids', []));
 
-        return back()->with('success', 'Country restrictions updated.');
+        return back()->with('success', 'product_country_restrictions_updated');
     }
 
     private function availableStores()

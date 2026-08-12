@@ -162,6 +162,13 @@ const translations = {
         select_country: "Select country",
         optional: "optional",
         cart_empty: "Your cart is empty.",
+        product_unavailable: "This product is no longer available.",
+        item_already_in_cart: "Item is already in your cart.",
+        added_to_cart: "Added to cart.",
+        quantity_updated: "Quantity updated.",
+        cart_item_removed: "Item removed.",
+        contact_message_sent: "Your message has been sent. We will contact you soon.",
+        newsletter_subscribed: "Thanks for subscribing!",
     },
     fr: {
         products: "Produits",
@@ -329,6 +336,14 @@ const translations = {
         select_country: "Sélectionner un pays",
         optional: "facultatif",
         cart_empty: "Votre panier est vide.",
+        product_unavailable: "Ce produit n'est plus disponible.",
+        item_already_in_cart: "Cet article est déjà dans votre panier.",
+        added_to_cart: "Ajouté au panier.",
+        quantity_updated: "Quantité mise à jour.",
+        cart_item_removed: "Article retiré.",
+        contact_message_sent:
+            "Votre message a été envoyé. Nous vous contacterons bientôt.",
+        newsletter_subscribed: "Merci pour votre inscription !",
     },
     fa: {
         products: "محصولات",
@@ -490,6 +505,13 @@ const translations = {
         select_country: "انتخاب کشور",
         optional: "اختیاری",
         cart_empty: "سبد خرید شما خالی است.",
+        product_unavailable: "این محصول دیگر موجود نیست.",
+        item_already_in_cart: "این کالا از قبل در سبد خرید شماست.",
+        added_to_cart: "به سبد خرید اضافه شد.",
+        quantity_updated: "تعداد به‌روزرسانی شد.",
+        cart_item_removed: "کالا حذف شد.",
+        contact_message_sent: "پیام شما ارسال شد. به‌زودی با شما تماس می‌گیریم.",
+        newsletter_subscribed: "از عضویت شما متشکریم!",
     },
 };
 

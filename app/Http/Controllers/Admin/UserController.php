@@ -40,7 +40,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', 'user_created_success');
     }
 
     public function edit(User $user): Response
@@ -66,7 +66,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', 'User updated successfully.');
+            ->with('success', 'user_updated_success');
     }
 
     public function destroy(User $user): RedirectResponse
@@ -77,6 +77,6 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', 'User deleted.');
+            ->with('success', 'user_deleted');
     }
 }

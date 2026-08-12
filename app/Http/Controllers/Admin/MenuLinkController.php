@@ -41,7 +41,7 @@ class MenuLinkController extends Controller
 
         return redirect()
             ->route('admin.menu-links.index')
-            ->with('success', 'Menu link created successfully.');
+            ->with('success', 'menu_link_created_success');
     }
 
     public function edit(MenuLink $menuLink): Response
@@ -65,7 +65,7 @@ class MenuLinkController extends Controller
 
         return redirect()
             ->route('admin.menu-links.index')
-            ->with('success', 'Menu link updated successfully.');
+            ->with('success', 'menu_link_updated_success');
     }
 
     public function destroy(MenuLink $menuLink): RedirectResponse
@@ -74,6 +74,6 @@ class MenuLinkController extends Controller
 
         $menuLink->delete();
 
-        return back()->with('success', 'Menu link deleted.');
+        return back()->with('success', 'menu_link_deleted');
     }
 }

@@ -18,6 +18,6 @@ class ContactRequestController extends Controller
             'ip_address' => $request->ip(),
         ]);
 
-        return back()->with('success', 'Your message has been sent. We will contact you soon.');
+        return back()->with('success', 'contact_message_sent');
     }
 }

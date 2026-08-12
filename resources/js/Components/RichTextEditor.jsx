@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePage } from "@inertiajs/react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -31,6 +32,7 @@ import {
     Palette,
     Ban,
 } from "lucide-react";
+import { at } from "@/lib/admin-i18n";
 
 const HEADING_ICONS = { 1: Heading1, 2: Heading2, 3: Heading3 };
 
@@ -83,6 +85,7 @@ export default function RichTextEditor({
     headingLevels = [2, 3],
     compact = false,
 }) {
+    const { locale: uiLocale } = usePage().props;
     const [recentColors, setRecentColors] = useState([]);
 
     useEffect(() => {
@@ -152,17 +155,25 @@ export default function RichTextEditor({
                     active={editor.isActive("bold")}
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     icon={Bold}
-                    title="Bold / Strong"
+                    title={at("editor_bold", uiLocale)}
+                />
+                <ToolbarButton
+                    active={editor.isActive("bold")}
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    label="S"
+                    title={at("editor_strong", uiLocale)}
                 />
                 <ToolbarButton
                     active={editor.isActive("italic")}
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                     icon={Italic}
+                    title={at("editor_italic", uiLocale)}
                 />
                 <ToolbarButton
                     active={editor.isActive("strike")}
                     onClick={() => editor.chain().focus().toggleStrike().run()}
                     icon={Strikethrough}
+                    title={at("editor_strike", uiLocale)}
                 />
 
                 <Separator orientation="vertical" className="mx-1 h-5" />
@@ -171,6 +182,7 @@ export default function RichTextEditor({
                     active={editor.isActive("paragraph")}
                     onClick={() => editor.chain().focus().setParagraph().run()}
                     icon={Pilcrow}
+                    title={at("editor_paragraph", uiLocale)}
                 />
                 {headingLevels.map((level) => (
                     <ToolbarButton
@@ -184,13 +196,18 @@ export default function RichTextEditor({
                                 .run()
                         }
                         icon={HEADING_ICONS[level]}
+                        title={`${at("editor_heading", uiLocale)} ${level}`}
                     />
                 ))}
 
                 <Separator orientation="vertical" className="mx-1 h-5" />
 
                 <Select value={currentFontSize} onValueChange={applyFontSize}>
-                    <SelectTrigger size="sm" className="h-7 w-28 text-xs">
+                    <SelectTrigger
+                        size="sm"
+                        className="h-7 w-28 text-xs"
+                        title={at("editor_font_size", uiLocale)}
+                    >
                         <SelectValue>
                             {(value) =>
                                 FONT_SIZES.find((s) => s.value === value)
@@ -215,6 +232,7 @@ export default function RichTextEditor({
                         editor.chain().focus().toggleBulletList().run()
                     }
                     icon={List}
+                    title={at("editor_bullet_list", uiLocale)}
                 />
                 <ToolbarButton
                     active={editor.isActive("orderedList")}
@@ -222,6 +240,7 @@ export default function RichTextEditor({
                         editor.chain().focus().toggleOrderedList().run()
                     }
                     icon={ListOrdered}
+                    title={at("editor_ordered_list", uiLocale)}
                 />
                 <ToolbarButton
                     active={editor.isActive("blockquote")}
@@ -229,11 +248,13 @@ export default function RichTextEditor({
                         editor.chain().focus().toggleBlockquote().run()
                     }
                     icon={Quote}
+                    title={at("editor_blockquote", uiLocale)}
                 />
                 <ToolbarButton
                     active={editor.isActive("link")}
                     onClick={addLink}
                     icon={LinkIcon}
+                    title={at("editor_link", uiLocale)}
                 />
 
                 <Separator orientation="vertical" className="mx-1 h-5" />
@@ -244,7 +265,7 @@ export default function RichTextEditor({
 
                     <button
                         type="button"
-                        title="Remove color"
+                        title={at("editor_remove_color", uiLocale)}
                         onClick={clearColor}
                         className="flex size-5 items-center justify-center rounded-full border border-border text-destructive hover:bg-destructive/10"
                     >
@@ -272,7 +293,7 @@ export default function RichTextEditor({
                         onBlur={(e) =>
                             setRecentColors(saveRecentColor(e.target.value))
                         }
-                        title="Pick a custom color"
+                        title={at("editor_pick_color", uiLocale)}
                         className="size-5 cursor-pointer rounded-full border border-border bg-transparent p-0"
                     />
                 </div>
@@ -283,11 +304,13 @@ export default function RichTextEditor({
                     onClick={() => editor.chain().focus().undo().run()}
                     icon={Undo}
                     disabled={!editor.can().undo()}
+                    title={at("editor_undo", uiLocale)}
                 />
                 <ToolbarButton
                     onClick={() => editor.chain().focus().redo().run()}
                     icon={Redo}
                     disabled={!editor.can().redo()}
+                    title={at("editor_redo", uiLocale)}
                 />
             </div>
 

@@ -37,7 +37,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Page created successfully.');
+            ->with('success', 'page_created_success');
     }
 
     public function edit(Page $page): Response
@@ -56,7 +56,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Page updated successfully.');
+            ->with('success', 'page_updated_success');
     }
 
     public function destroy(Page $page): RedirectResponse
@@ -67,6 +67,6 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Page deleted.');
+            ->with('success', 'page_deleted');
     }
 }

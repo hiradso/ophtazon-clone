@@ -44,7 +44,7 @@ class PageSectionController extends Controller
             'sort_order' => $maxOrder + 1,
         ]);
 
-        return redirect()->route('admin.page-sections.index')->with('success', 'Section created.');
+        return redirect()->route('admin.page-sections.index')->with('success', 'section_created');
     }
 
     public function edit(PageSection $pageSection): Response
@@ -67,7 +67,7 @@ class PageSectionController extends Controller
 
         $pageSection->update($request->only(['content', 'is_active']));
 
-        return redirect()->route('admin.page-sections.index')->with('success', 'Section updated.');
+        return redirect()->route('admin.page-sections.index')->with('success', 'section_updated');
     }
     public function reorder(Request $request): RedirectResponse
     {
@@ -91,7 +91,7 @@ class PageSectionController extends Controller
 
         $pageSection->delete();
 
-        return back()->with('success', 'Section deleted.');
+        return back()->with('success', 'section_deleted');
     }
 
     public function move(Request $request, PageSection $pageSection): RedirectResponse

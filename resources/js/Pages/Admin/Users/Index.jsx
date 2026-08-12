@@ -42,8 +42,8 @@ export default function Index({ users }) {
     };
 
     useEffect(() => {
-        if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
+        if (flash?.success) toast.success(at(flash.success, uiLocale));
+        if (flash?.error) toast.error(at(flash.error, uiLocale));
     }, [flash]);
 
     const confirmDelete = () => {

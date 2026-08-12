@@ -32,7 +32,7 @@ class CartController extends Controller
         $product = Product::findOrFail($request->input('product_id'));
 
         if ($product->status->value !== 'available') {
-            return back()->with('error', 'This product is no longer available.');
+            return back()->with('error', 'product_unavailable');
         }
 
         $cart = $this->currentCart($request, createIfMissing: true);
@@ -40,7 +40,7 @@ class CartController extends Controller
         $existing = $cart->items()->where('product_id', $product->id)->first();
 
         if ($existing) {
-            return back()->with('success', 'Item is already in your cart.');
+            return back()->with('success', 'item_already_in_cart');
         }
 
         $cart->items()->create([
@@ -48,7 +48,7 @@ class CartController extends Controller
             'quantity' => 1,
         ]);
 
-        return back()->with('success', 'Added to cart.');
+        return back()->with('success', 'added_to_cart');
     }
     public function preview(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -103,7 +103,7 @@ class CartController extends Controller
 
         $cartItem->update(['quantity' => $requestedQuantity]);
 
-        return back()->with('success', 'Quantity updated.');
+        return back()->with('success', 'quantity_updated');
     }
 
     public function destroy(CartItem $cartItem): RedirectResponse
@@ -114,7 +114,7 @@ class CartController extends Controller
 
         $cartItem->delete();
 
-        return back()->with('success', 'Item removed.');
+        return back()->with('success', 'cart_item_removed');
     }
 
     private function currentCart(Request $request, bool $createIfMissing = false): ?Cart

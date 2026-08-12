@@ -38,6 +38,6 @@ class ContactRequestController extends Controller
             'replied_at' => $request->filled('reply_message') ? now() : $contactRequest->replied_at,
         ]);
 
-        return back()->with('success', 'Request updated.');
+        return back()->with('success', 'contact_request_updated');
     }
 }

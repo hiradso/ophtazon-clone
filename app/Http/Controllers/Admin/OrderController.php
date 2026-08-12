@@ -71,6 +71,6 @@ class OrderController extends Controller
             ]);
         });
 
-        return back()->with('success', 'Order status updated.');
+        return back()->with('success', 'order_status_updated');
     }
 }

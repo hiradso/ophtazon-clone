@@ -26,6 +26,6 @@ class SettingController extends Controller
 
         return redirect()
             ->route('admin.settings.edit')
-            ->with('success', 'Settings updated successfully.');
+            ->with('success', 'settings_updated_success');
     }
 }

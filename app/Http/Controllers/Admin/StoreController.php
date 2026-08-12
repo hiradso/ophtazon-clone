@@ -37,7 +37,7 @@ class StoreController extends Controller
 
         return redirect()
             ->route('admin.stores.index')
-            ->with('success', 'Store created successfully.');
+            ->with('success', 'store_created_success');
     }
 
     public function edit(Store $store): Response
@@ -56,7 +56,7 @@ class StoreController extends Controller
 
         return redirect()
             ->route('admin.stores.index')
-            ->with('success', 'Store updated successfully.');
+            ->with('success', 'store_updated_success');
     }
 
     public function destroy(Store $store): RedirectResponse
@@ -64,13 +64,13 @@ class StoreController extends Controller
         $this->authorize('delete', $store);
 
         if ($store->products()->exists() || $store->staff()->exists()) {
-            return back()->with('error', 'Cannot delete a store that has products or staff members.');
+            return back()->with('error', 'store_cannot_delete_has_products_or_staff');
         }
 
         $store->delete();
 
         return redirect()
             ->route('admin.stores.index')
-            ->with('success', 'Store deleted.');
+            ->with('success', 'store_deleted');
     }
 }

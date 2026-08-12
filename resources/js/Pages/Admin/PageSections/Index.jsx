@@ -44,7 +44,7 @@ export default function Index({ sections: initialSections }) {
     }, [initialSections]);
 
     useEffect(() => {
-        if (flash?.success) toast.success(flash.success);
+        if (flash?.success) toast.success(at(flash.success, uiLocale));
     }, [flash]);
 
     const sensors = useSensors(
