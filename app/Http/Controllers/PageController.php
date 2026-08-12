@@ -8,8 +8,10 @@ use Inertia\Response;
 
 class PageController extends Controller
 {
-    public function show(Page $page): Response
+    public function show(): Response
     {
+        $page = Page::where('slug', request()->route('page'))->firstOrFail();
+
         abort_unless($page->is_published, 404);
 
         return Inertia::render('Pages/Show', [
