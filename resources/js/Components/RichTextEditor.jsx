@@ -10,8 +10,10 @@ import {
     Bold,
     Italic,
     Strikethrough,
+    Heading1,
     Heading2,
     Heading3,
+    Pilcrow,
     List,
     ListOrdered,
     Quote,
@@ -21,6 +23,8 @@ import {
     Palette,
     Ban,
 } from "lucide-react";
+
+const HEADING_ICONS = { 1: Heading1, 2: Heading2, 3: Heading3 };
 
 const RECENT_COLORS_KEY = "wysiwyg-recent-colors";
 const MAX_RECENT_COLORS = 8;
@@ -48,8 +52,19 @@ function saveRecentColor(color) {
  * props:
  * - value: محتوای فعلی (رشته‌ی HTML)
  * - onChange: تابعی که با HTML جدید صدا زده می‌شود
+ * - headingLevels: کدوم سطح‌های تیتر (۱ تا ۳) در نوار ابزار نشون داده بشه.
+ *   پیش‌فرض [2, 3] — یعنی H1 اینجا نیست، چون این ویرایشگر معمولاً برای
+ *   محتوای بدنه (نه تیتر اصلی صفحه) استفاده می‌شه و هر صفحه فقط باید
+ *   یک H1 داشته باشه (برای سئو). فقط برای فیلدهایی که واقعاً معادل تیتر
+ *   اصلی صفحه‌ان (مثل عنوان Hero) باید [1, 2, 3] پاس داده بشه.
+ * - compact: ارتفاع کمتر برای فیلدهای کوتاه یک‌خطی (تیتر، زیرتیتر)
  */
-export default function RichTextEditor({ value, onChange }) {
+export default function RichTextEditor({
+    value,
+    onChange,
+    headingLevels = [2, 3],
+    compact = false,
+}) {
     const [recentColors, setRecentColors] = useState([]);
 
     useEffect(() => {
@@ -74,7 +89,7 @@ export default function RichTextEditor({ value, onChange }) {
         },
         editorProps: {
             attributes: {
-                class: "prose prose-neutral dark:prose-invert max-w-none min-h-48 px-3 py-2 focus:outline-none",
+                class: `prose prose-neutral dark:prose-invert max-w-none px-3 py-2 focus:outline-none ${compact ? "min-h-12" : "min-h-48"}`,
             },
         },
     });
@@ -122,19 +137,24 @@ export default function RichTextEditor({ value, onChange }) {
                 <Separator orientation="vertical" className="mx-1 h-5" />
 
                 <ToolbarButton
-                    active={editor.isActive("heading", { level: 2 })}
-                    onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 2 }).run()
-                    }
-                    icon={Heading2}
+                    active={editor.isActive("paragraph")}
+                    onClick={() => editor.chain().focus().setParagraph().run()}
+                    icon={Pilcrow}
                 />
-                <ToolbarButton
-                    active={editor.isActive("heading", { level: 3 })}
-                    onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 3 }).run()
-                    }
-                    icon={Heading3}
-                />
+                {headingLevels.map((level) => (
+                    <ToolbarButton
+                        key={level}
+                        active={editor.isActive("heading", { level })}
+                        onClick={() =>
+                            editor
+                                .chain()
+                                .focus()
+                                .toggleHeading({ level })
+                                .run()
+                        }
+                        icon={HEADING_ICONS[level]}
+                    />
+                ))}
 
                 <Separator orientation="vertical" className="mx-1 h-5" />
 

@@ -166,7 +166,7 @@ export default function Edit({ section }) {
                                             >
                                                 {section.type === "hero" && (
                                                     <>
-                                                        <div className="space-y-1.5">
+                                                        <div className="space-y-2.5">
                                                             <Label
                                                                 htmlFor={`title_${locale}`}
                                                             >
@@ -182,31 +182,29 @@ export default function Edit({ section }) {
                                                                         uiLocale,
                                                                     )}
                                                             </Label>
-                                                            <Input
-                                                                id={`title_${locale}`}
-                                                                dir={
-                                                                    locale ===
-                                                                    "fa"
-                                                                        ? "rtl"
-                                                                        : "ltr"
-                                                                }
+                                                            <RichTextEditor
+                                                                compact
+                                                                headingLevels={[
+                                                                    1, 2, 3,
+                                                                ]}
                                                                 value={
                                                                     data.content
                                                                         .title?.[
                                                                         locale
                                                                     ] ?? ""
                                                                 }
-                                                                onChange={(e) =>
+                                                                onChange={(
+                                                                    html,
+                                                                ) =>
                                                                     setField(
                                                                         "title",
                                                                         locale,
-                                                                        e.target
-                                                                            .value,
+                                                                        html,
                                                                     )
                                                                 }
                                                             />
                                                         </div>
-                                                        <div className="space-y-1.5">
+                                                        <div className="space-y-2.5">
                                                             <Label
                                                                 htmlFor={`subtitle_${locale}`}
                                                             >
@@ -221,31 +219,29 @@ export default function Edit({ section }) {
                                                                         uiLocale,
                                                                     )}
                                                             </Label>
-                                                            <Input
-                                                                id={`subtitle_${locale}`}
-                                                                dir={
-                                                                    locale ===
-                                                                    "fa"
-                                                                        ? "rtl"
-                                                                        : "ltr"
-                                                                }
+                                                            <RichTextEditor
+                                                                compact
+                                                                headingLevels={[
+                                                                    2, 3,
+                                                                ]}
                                                                 value={
                                                                     data.content
                                                                         .subtitle?.[
                                                                         locale
                                                                     ] ?? ""
                                                                 }
-                                                                onChange={(e) =>
+                                                                onChange={(
+                                                                    html,
+                                                                ) =>
                                                                     setField(
                                                                         "subtitle",
                                                                         locale,
-                                                                        e.target
-                                                                            .value,
+                                                                        html,
                                                                     )
                                                                 }
                                                             />
                                                         </div>
-                                                        <div className="space-y-1.5">
+                                                        <div className="space-y-2.5">
                                                             <Label
                                                                 htmlFor={`badge_${locale}`}
                                                             >
@@ -290,7 +286,7 @@ export default function Edit({ section }) {
                                                 {section.type ===
                                                     "custom_content" && (
                                                     <>
-                                                        <div className="space-y-1.5">
+                                                        <div className="space-y-2.5">
                                                             <Label
                                                                 htmlFor={`heading_${locale}`}
                                                             >
@@ -330,7 +326,7 @@ export default function Edit({ section }) {
                                                                 }
                                                             />
                                                         </div>
-                                                        <div className="space-y-1.5">
+                                                        <div className="space-y-2.5">
                                                             <Label>
                                                                 {at(
                                                                     "body_text",
@@ -379,7 +375,7 @@ export default function Edit({ section }) {
                                                     key={index}
                                                     className="space-y-2 rounded-md border border-border p-3"
                                                 >
-                                                    <div className="space-y-1.5">
+                                                    <div className="space-y-2.5">
                                                         <Label>
                                                             {at(
                                                                 "icon",

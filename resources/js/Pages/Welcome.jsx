@@ -20,6 +20,18 @@ import { HERO_ICONS } from "@/lib/heroIcons";
 
 const DEFAULT_BADGE_TEXT = "Trusted by clinics in 5 countries";
 
+/**
+ * تیتر/زیرتیتر Hero حالا از ویرایشگر گرافیکی میان (HTML واقعی با تگ
+ * دلخواه ادمین: h1/h2/h3/p). مقادیر قدیمی هنوز متن ساده‌ان (بدون تگ) —
+ * برای سازگاری، اگه هیچ تگی توش نبود، با تگ پیش‌فرض می‌پیچیمش.
+ */
+function richTextOrLegacy(value, fallbackTag) {
+    if (!value) return "";
+    return /<[a-z][\s\S]*>/i.test(value)
+        ? value
+        : `<${fallbackTag}>${value}</${fallbackTag}>`;
+}
+
 const DEFAULT_TRUST_ITEMS = [
     { icon: "shield_check", labelKey: "quality_checked" },
     { icon: "globe", labelKey: "regional_showrooms" },
@@ -139,19 +151,26 @@ function HeroSection({ content }) {
                     </Badge>
                 </motion.div>
 
-                <motion.h1
+                <motion.div
                     variants={item}
-                    className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl"
-                >
-                    {title || tt("hero_default_title", locale)}
-                </motion.h1>
+                    className="text-3xl font-semibold tracking-tight text-primary-foreground sm:text-5xl [&>*]:m-0 [&>*]:[font:inherit]"
+                    dangerouslySetInnerHTML={{
+                        __html: richTextOrLegacy(
+                            title || tt("hero_default_title", locale),
+                            "h1",
+                        ),
+                    }}
+                />
 
-                <motion.p
-                    variants={item}
-                    className="mx-auto mt-4 max-w-2xl text-primary-foreground/80"
-                >
-                    {subtitle}
-                </motion.p>
+                {subtitle && (
+                    <motion.div
+                        variants={item}
+                        className="mx-auto mt-4 max-w-2xl text-primary-foreground/80 [&>*]:m-0 [&>*]:[font:inherit]"
+                        dangerouslySetInnerHTML={{
+                            __html: richTextOrLegacy(subtitle, "p"),
+                        }}
+                    />
+                )}
 
                 <motion.form
                     variants={item}
