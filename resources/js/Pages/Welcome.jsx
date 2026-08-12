@@ -10,21 +10,21 @@ import {
     CarouselPrevious,
     CarouselNext,
 } from "@/components/ui/carousel";
-import {
-    Eye,
-    ImageOff,
-    ArrowRight,
-    Search,
-    ShieldCheck,
-    Globe2,
-    Truck,
-    Flame,
-} from "lucide-react";
+import { Eye, ImageOff, ArrowRight, Search, ShieldCheck, Flame } from "lucide-react";
 import { motion } from "framer-motion";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import { HERO_ICONS } from "@/lib/heroIcons";
+
+const DEFAULT_BADGE_TEXT = "Trusted by clinics in 5 countries";
+
+const DEFAULT_TRUST_ITEMS = [
+    { icon: "shield_check", labelKey: "quality_checked" },
+    { icon: "globe", labelKey: "regional_showrooms" },
+    { icon: "truck", labelKey: "international_shipping" },
+];
 
 const CONDITION_LABELS = {
     new: "New",
@@ -108,6 +108,11 @@ function HeroSection({ content }) {
 
     const title = t(content?.title, locale);
     const subtitle = t(content?.subtitle, locale);
+    const badgeText = t(content?.badge, locale) || DEFAULT_BADGE_TEXT;
+    const trustItems =
+        content?.trust_items?.length > 0
+            ? content.trust_items
+            : DEFAULT_TRUST_ITEMS;
 
     return (
         <section className="relative overflow-hidden bg-primary">
@@ -130,7 +135,7 @@ function HeroSection({ content }) {
                         variant="outline"
                         className="mb-5 border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
                     >
-                        Trusted by clinics in 5 countries
+                        {badgeText}
                     </Badge>
                 </motion.div>
 
@@ -174,18 +179,22 @@ function HeroSection({ content }) {
                     variants={item}
                     className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-primary-foreground/80"
                 >
-                    <div className="flex items-center gap-1.5">
-                        <ShieldCheck className="size-4" />
-                        {tt("quality_checked", locale)}
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <Globe2 className="size-4" />
-                        {tt("regional_showrooms", locale)}
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <Truck className="size-4" />
-                        {tt("international_shipping", locale)}
-                    </div>
+                    {trustItems.map((trustItem, index) => {
+                        const Icon = HERO_ICONS[trustItem.icon] ?? ShieldCheck;
+                        const label = trustItem.labelKey
+                            ? tt(trustItem.labelKey, locale)
+                            : t(trustItem.label, locale);
+
+                        return (
+                            <div
+                                key={index}
+                                className="flex items-center gap-1.5"
+                            >
+                                <Icon className="size-4" />
+                                {label}
+                            </div>
+                        );
+                    })}
                 </motion.div>
             </motion.div>
         </section>

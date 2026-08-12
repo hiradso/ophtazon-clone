@@ -15,11 +15,18 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { HERO_ICON_LABELS, HERO_ICON_OPTIONS } from "@/lib/heroIcons";
 
 const DEFAULT_CONTENT = {
     hero: {
         title: { en: "", fr: "", fa: "" },
         subtitle: { en: "", fr: "", fa: "" },
+        badge: { en: "", fr: "", fa: "" },
+        trust_items: [
+            { icon: "shield_check", label: { en: "", fr: "", fa: "" } },
+            { icon: "globe", label: { en: "", fr: "", fa: "" } },
+            { icon: "truck", label: { en: "", fr: "", fa: "" } },
+        ],
     },
     categories: {},
     latest_products: {},
@@ -56,6 +63,21 @@ export default function Create() {
             ...data.content,
             [field]: { ...data.content[field], [locale]: value },
         });
+    };
+
+    const setTrustItemIcon = (index, icon) => {
+        const items = [...data.content.trust_items];
+        items[index] = { ...items[index], icon };
+        setData("content", { ...data.content, trust_items: items });
+    };
+
+    const setTrustItemLabel = (index, locale, value) => {
+        const items = [...data.content.trust_items];
+        items[index] = {
+            ...items[index],
+            label: { ...items[index].label, [locale]: value },
+        };
+        setData("content", { ...data.content, trust_items: items });
     };
 
     const submit = (e) => {
@@ -255,6 +277,45 @@ export default function Create() {
                                                                 }
                                                             />
                                                         </div>
+                                                        <div className="space-y-1.5">
+                                                            <Label
+                                                                htmlFor={`badge_${locale}`}
+                                                            >
+                                                                {at(
+                                                                    "badge_text",
+                                                                    uiLocale,
+                                                                )}{" "}
+                                                                {locale !==
+                                                                    "en" &&
+                                                                    at(
+                                                                        "optional",
+                                                                        uiLocale,
+                                                                    )}
+                                                            </Label>
+                                                            <Input
+                                                                id={`badge_${locale}`}
+                                                                dir={
+                                                                    locale ===
+                                                                    "fa"
+                                                                        ? "rtl"
+                                                                        : "ltr"
+                                                                }
+                                                                value={
+                                                                    data.content
+                                                                        .badge?.[
+                                                                        locale
+                                                                    ] ?? ""
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setField(
+                                                                        "badge",
+                                                                        locale,
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
                                                     </>
                                                 )}
 
@@ -344,6 +405,120 @@ export default function Create() {
                                             </TabsContent>
                                         ))}
                                     </Tabs>
+                                )}
+
+                                {data.type === "hero" && (
+                                    <div className="space-y-3 rounded-lg border border-border p-4">
+                                        <p className="text-sm font-medium text-foreground">
+                                            {at("trust_items", uiLocale)}
+                                        </p>
+                                        {data.content.trust_items.map(
+                                            (trustItem, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="space-y-2 rounded-md border border-border p-3"
+                                                >
+                                                    <div className="space-y-1.5">
+                                                        <Label>
+                                                            {at(
+                                                                "icon",
+                                                                uiLocale,
+                                                            )}
+                                                        </Label>
+                                                        <Select
+                                                            value={
+                                                                trustItem.icon
+                                                            }
+                                                            onValueChange={(
+                                                                value,
+                                                            ) =>
+                                                                setTrustItemIcon(
+                                                                    index,
+                                                                    value,
+                                                                )
+                                                            }
+                                                        >
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue>
+                                                                    {(
+                                                                        value,
+                                                                    ) =>
+                                                                        HERO_ICON_LABELS[
+                                                                            value
+                                                                        ] ??
+                                                                        value
+                                                                    }
+                                                                </SelectValue>
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {HERO_ICON_OPTIONS.map(
+                                                                    (
+                                                                        iconKey,
+                                                                    ) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                iconKey
+                                                                            }
+                                                                            value={
+                                                                                iconKey
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                HERO_ICON_LABELS[
+                                                                                    iconKey
+                                                                                ]
+                                                                            }
+                                                                        </SelectItem>
+                                                                    ),
+                                                                )}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                    <div className="grid gap-2 sm:grid-cols-3">
+                                                        {[
+                                                            "en",
+                                                            "fr",
+                                                            "fa",
+                                                        ].map((locale) => (
+                                                            <div
+                                                                key={locale}
+                                                                className="space-y-1"
+                                                            >
+                                                                <Label className="text-xs text-muted-foreground uppercase">
+                                                                    {locale}
+                                                                </Label>
+                                                                <Input
+                                                                    dir={
+                                                                        locale ===
+                                                                        "fa"
+                                                                            ? "rtl"
+                                                                            : "ltr"
+                                                                    }
+                                                                    value={
+                                                                        trustItem
+                                                                            .label?.[
+                                                                            locale
+                                                                        ] ?? ""
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        setTrustItemLabel(
+                                                                            index,
+                                                                            locale,
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
                                 )}
 
                                 {needsNoExtraFields && (

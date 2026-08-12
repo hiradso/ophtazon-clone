@@ -22,10 +22,23 @@ export default function Footer() {
         });
     };
 
+    // ستون برند + هر گروه لینک پویا + ستون خبرنامه — تعداد ستون‌های grid
+    // باید با تعداد واقعی آیتم‌ها هماهنگ باشه، وگرنه با تعداد کم گروه‌ها
+    // یک ستون خالی و فاصله‌ی عجیب توی فوتر ایجاد می‌شه
+    const totalColumns = 2 + footerLinkGroups.length;
+    const gridColsClass =
+        totalColumns <= 2
+            ? "lg:grid-cols-2"
+            : totalColumns === 3
+              ? "lg:grid-cols-3"
+              : "lg:grid-cols-4";
+
     return (
         <footer className="border-t border-border bg-card">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div
+                    className={`grid grid-cols-1 gap-8 sm:grid-cols-2 ${gridColsClass}`}
+                >
                     {/* برند */}
                     <div>
                         <div className="mb-3 flex items-center gap-2">
