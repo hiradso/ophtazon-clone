@@ -19,6 +19,8 @@
 @import "@fontsource/noto-naskh-arabic/400.css";
 @import "@fontsource/noto-naskh-arabic/700.css";
 @custom-variant dark (&:is(.dark *));
+@custom-variant ltr (&:where([dir="ltr"], [dir="ltr"] *));
+@custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
 
 @layer base {
     :root {
