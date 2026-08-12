@@ -9,6 +9,11 @@ import Color from "@tiptap/extension-color";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
+    Tooltip,
+    TooltipTrigger,
+    TooltipContent,
+} from "@/components/ui/tooltip";
+import {
     Select,
     SelectContent,
     SelectItem,
@@ -203,11 +208,7 @@ export default function RichTextEditor({
                 <Separator orientation="vertical" className="mx-1 h-5" />
 
                 <Select value={currentFontSize} onValueChange={applyFontSize}>
-                    <SelectTrigger
-                        size="sm"
-                        className="h-7 w-28 text-xs"
-                        title={at("editor_font_size", uiLocale)}
-                    >
+                    <SelectTrigger size="sm" className="h-7 w-28 text-xs">
                         <SelectValue>
                             {(value) =>
                                 FONT_SIZES.find((s) => s.value === value)
@@ -263,14 +264,22 @@ export default function RichTextEditor({
                 <div className="flex items-center gap-1.5 rounded-md px-1">
                     <Palette className="size-3.5 text-muted-foreground" />
 
-                    <button
-                        type="button"
-                        title={at("editor_remove_color", uiLocale)}
-                        onClick={clearColor}
-                        className="flex size-5 items-center justify-center rounded-full border border-border text-destructive hover:bg-destructive/10"
-                    >
-                        <Ban className="size-3" />
-                    </button>
+                    <Tooltip>
+                        <TooltipTrigger
+                            render={
+                                <button
+                                    type="button"
+                                    onClick={clearColor}
+                                    className="flex size-5 items-center justify-center rounded-full border border-border text-destructive hover:bg-destructive/10"
+                                >
+                                    <Ban className="size-3" />
+                                </button>
+                            }
+                        />
+                        <TooltipContent>
+                            {at("editor_remove_color", uiLocale)}
+                        </TooltipContent>
+                    </Tooltip>
 
                     {recentColors.map((color) => (
                         <button
@@ -328,19 +337,25 @@ function ToolbarButton({
     title,
 }) {
     return (
-        <Button
-            type="button"
-            variant={active ? "secondary" : "ghost"}
-            size="icon-sm"
-            onClick={onClick}
-            disabled={disabled}
-            title={title}
-        >
-            {Icon ? (
-                <Icon className="size-4" />
-            ) : (
-                <span className="text-sm font-bold">{label}</span>
-            )}
-        </Button>
+        <Tooltip>
+            <TooltipTrigger
+                render={
+                    <Button
+                        type="button"
+                        variant={active ? "secondary" : "ghost"}
+                        size="icon-sm"
+                        onClick={onClick}
+                        disabled={disabled}
+                    >
+                        {Icon ? (
+                            <Icon className="size-4" />
+                        ) : (
+                            <span className="text-sm font-bold">{label}</span>
+                        )}
+                    </Button>
+                }
+            />
+            <TooltipContent>{title}</TooltipContent>
+        </Tooltip>
     );
 }
