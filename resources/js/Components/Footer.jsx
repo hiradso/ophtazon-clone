@@ -22,25 +22,19 @@ export default function Footer() {
         });
     };
 
-    // ستون برند + هر گروه لینک پویا + ستون خبرنامه — تعداد ستون‌های grid
-    // باید با تعداد واقعی آیتم‌ها هماهنگ باشه، وگرنه با تعداد کم گروه‌ها
-    // یک ستون خالی و فاصله‌ی عجیب توی فوتر ایجاد می‌شه
-    const totalColumns = 2 + footerLinkGroups.length;
-    const gridColsClass =
-        totalColumns <= 2
-            ? "lg:grid-cols-2"
-            : totalColumns === 3
-              ? "lg:grid-cols-3"
-              : "lg:grid-cols-4";
-
     return (
         <footer className="border-t border-border bg-card">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <div
-                    className={`grid grid-cols-1 gap-8 sm:grid-cols-2 ${gridColsClass}`}
-                >
+                {/*
+                    flex به‌جای grid با تعداد ستون ثابت — چون تعداد گروه‌های
+                    فوتر پویا و مدیریت‌شده از ادمینه، grid-cols ثابت با تعداد
+                    کم گروه یک ستون خالی/فاصله‌ی عجیب می‌سازه. اینجا هر ستون
+                    فقط به‌اندازه‌ی محتوای خودش عرض می‌گیره و gap-x بین
+                    ستون‌های واقعی یکنواخته، مستقل از تعدادشون.
+                */}
+                <div className="flex flex-col flex-wrap gap-x-16 gap-y-8 sm:flex-row">
                     {/* برند */}
-                    <div>
+                    <div className="sm:max-w-xs">
                         <div className="mb-3 flex items-center gap-2">
                             {siteSettings.logo ? (
                                 <img
@@ -96,7 +90,7 @@ export default function Footer() {
 
                     {/* گروه‌های لینک پویا و چندزبانه (مدیریت‌شده از پنل ادمین) */}
                     {footerLinkGroups.map((group, index) => (
-                        <div key={index}>
+                        <div key={index} className="sm:min-w-32">
                             <h3 className="mb-3 text-sm font-semibold text-foreground">
                                 {t(group.group_label, locale)}
                             </h3>
@@ -116,7 +110,7 @@ export default function Footer() {
                     ))}
 
                     {/* خبرنامه */}
-                    <div>
+                    <div className="sm:max-w-xs">
                         <h3 className="mb-3 text-sm font-semibold text-foreground">
                             {tt("stay_updated", locale)}
                         </h3>

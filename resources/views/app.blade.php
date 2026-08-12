@@ -34,10 +34,32 @@
 
             $latinFontFamily = $latinFontMap[$siteSettings->font_latin] ?? $latinFontMap['Geist'];
             $persianFontFamily = $persianFontMap[$siteSettings->font_persian] ?? $persianFontMap['Vazirmatn'];
+
+            // برای رفع فلش کوتاه فونت (اول فونت پیش‌فرض مرورگر، بعد Vazirmatn)،
+            // فایل وزیر فونت فارسی انتخابی رو با preload زودتر از هر چیز دیگه
+            // دانلود می‌کنیم — موازی با بقیه‌ی صفحه، نه بعد از parse شدن CSS
+            $persianFontPreloadSource = [
+                'Vazirmatn' => 'node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2',
+                'Noto Sans Arabic' => 'node_modules/@fontsource-variable/noto-sans-arabic/files/noto-sans-arabic-arabic-wght-normal.woff2',
+                'Rubik' => 'node_modules/@fontsource-variable/rubik/files/rubik-arabic-wght-normal.woff2',
+                'Noto Naskh Arabic' => 'node_modules/@fontsource/noto-naskh-arabic/files/noto-naskh-arabic-arabic-400-normal.woff2',
+            ][$siteSettings->font_persian] ?? 'node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2';
+
+            $persianFontPreloadUrl = null;
+            try {
+                $persianFontPreloadUrl = \Illuminate\Support\Facades\Vite::asset($persianFontPreloadSource);
+            } catch (\Throwable $e) {
+                // در حالت dev بدون manifest ساخته‌شده (npm run dev) ممکنه
+                // شکست بخوره — بی‌خطره، فقط یعنی preload رو نادیده می‌گیریم
+            }
         @endphp
 
         @if ($siteSettings->logo)
             <link rel="icon" href="{{ asset('storage/' . $siteSettings->logo) }}">
+        @endif
+
+        @if ($persianFontPreloadUrl)
+            <link rel="preload" as="font" type="font/woff2" href="{{ $persianFontPreloadUrl }}" crossorigin>
         @endif
 
         <!-- Fonts -->
