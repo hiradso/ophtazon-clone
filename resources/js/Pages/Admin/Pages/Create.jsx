@@ -113,13 +113,7 @@ export default function Create({ parentOptions }) {
                                                 <Label
                                                     htmlFor={`title_${locale}`}
                                                 >
-                                                    {at("title", uiLocale)}{" "}
-                                                    (H1){" "}
-                                                    {locale !== "en" &&
-                                                        at(
-                                                            "optional",
-                                                            uiLocale,
-                                                        )}
+                                                    {at("title", uiLocale)}
                                                 </Label>
                                                 <RichTextEditor
                                                     compact

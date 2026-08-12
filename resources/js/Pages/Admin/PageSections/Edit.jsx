@@ -173,14 +173,7 @@ export default function Edit({ section }) {
                                                                 {at(
                                                                     "title",
                                                                     uiLocale,
-                                                                )}{" "}
-                                                                (H1){" "}
-                                                                {locale !==
-                                                                    "en" &&
-                                                                    at(
-                                                                        "optional",
-                                                                        uiLocale,
-                                                                    )}
+                                                                )}
                                                             </Label>
                                                             <RichTextEditor
                                                                 compact

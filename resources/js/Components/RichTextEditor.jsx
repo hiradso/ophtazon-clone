@@ -3,9 +3,17 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { TextStyle } from "@tiptap/extension-text-style";
+import { FontSize } from "@tiptap/extension-text-style/font-size";
 import Color from "@tiptap/extension-color";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import {
     Bold,
     Italic,
@@ -25,6 +33,16 @@ import {
 } from "lucide-react";
 
 const HEADING_ICONS = { 1: Heading1, 2: Heading2, 3: Heading3 };
+
+const DEFAULT_FONT_SIZE = "default";
+const FONT_SIZES = [
+    { value: DEFAULT_FONT_SIZE, label: "Default" },
+    { value: "0.875rem", label: "Small" },
+    { value: "1rem", label: "Normal" },
+    { value: "1.25rem", label: "Large" },
+    { value: "1.5rem", label: "X-Large" },
+    { value: "2rem", label: "XX-Large" },
+];
 
 const RECENT_COLORS_KEY = "wysiwyg-recent-colors";
 const MAX_RECENT_COLORS = 8;
@@ -75,6 +93,7 @@ export default function RichTextEditor({
         extensions: [
             StarterKit,
             TextStyle,
+            FontSize,
             Color,
             Link.configure({
                 openOnClick: false,
@@ -115,6 +134,17 @@ export default function RichTextEditor({
         setRecentColors(saveRecentColor(color));
     };
 
+    const applyFontSize = (size) => {
+        if (size && size !== DEFAULT_FONT_SIZE) {
+            editor.chain().focus().setFontSize(size).run();
+        } else {
+            editor.chain().focus().unsetFontSize().run();
+        }
+    };
+
+    const currentFontSize =
+        editor.getAttributes("textStyle").fontSize || DEFAULT_FONT_SIZE;
+
     return (
         <div className="rounded-md border border-input bg-background">
             <div className="flex flex-wrap items-center gap-0.5 border-b border-border p-1.5">
@@ -122,6 +152,7 @@ export default function RichTextEditor({
                     active={editor.isActive("bold")}
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     icon={Bold}
+                    title="Bold / Strong"
                 />
                 <ToolbarButton
                     active={editor.isActive("italic")}
@@ -155,6 +186,26 @@ export default function RichTextEditor({
                         icon={HEADING_ICONS[level]}
                     />
                 ))}
+
+                <Separator orientation="vertical" className="mx-1 h-5" />
+
+                <Select value={currentFontSize} onValueChange={applyFontSize}>
+                    <SelectTrigger size="sm" className="h-7 w-28 text-xs">
+                        <SelectValue>
+                            {(value) =>
+                                FONT_SIZES.find((s) => s.value === value)
+                                    ?.label ?? "Default"
+                            }
+                        </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                        {FONT_SIZES.map((size) => (
+                            <SelectItem key={size.value} value={size.value}>
+                                {size.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
 
                 <Separator orientation="vertical" className="mx-1 h-5" />
 
@@ -245,7 +296,7 @@ export default function RichTextEditor({
     );
 }
 
-function ToolbarButton({ icon: Icon, active, onClick, disabled }) {
+function ToolbarButton({ icon: Icon, active, onClick, disabled, title }) {
     return (
         <Button
             type="button"
@@ -253,6 +304,7 @@ function ToolbarButton({ icon: Icon, active, onClick, disabled }) {
             size="icon-sm"
             onClick={onClick}
             disabled={disabled}
+            title={title}
         >
             <Icon className="size-4" />
         </Button>

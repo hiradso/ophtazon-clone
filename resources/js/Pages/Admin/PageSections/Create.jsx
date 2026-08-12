@@ -207,14 +207,7 @@ export default function Create() {
                                                                 {at(
                                                                     "title",
                                                                     uiLocale,
-                                                                )}{" "}
-                                                                (H1){" "}
-                                                                {locale !==
-                                                                    "en" &&
-                                                                    at(
-                                                                        "optional",
-                                                                        uiLocale,
-                                                                    )}
+                                                                )}
                                                             </Label>
                                                             <RichTextEditor
                                                                 compact
