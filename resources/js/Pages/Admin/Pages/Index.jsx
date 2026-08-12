@@ -130,7 +130,7 @@ export default function Index({ pages }) {
                                                 )}
                                             </TableCell>
                                             <TableCell
-                                                className="align-middle text-muted-foreground"
+                                                className="align-middle text-end text-muted-foreground"
                                                 dir="ltr"
                                             >
                                                 /pages/{page.slug}
