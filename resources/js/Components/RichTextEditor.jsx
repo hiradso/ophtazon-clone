@@ -282,29 +282,48 @@ export default function RichTextEditor({
                     </Tooltip>
 
                     {recentColors.map((color) => (
-                        <button
-                            key={color}
-                            type="button"
-                            title={color}
-                            onClick={() => applyColor(color)}
-                            className={`size-5 rounded-full border transition-transform hover:scale-110 ${
-                                editor.isActive("textStyle", { color })
-                                    ? "ring-2 ring-ring ring-offset-1"
-                                    : "border-border"
-                            }`}
-                            style={{ backgroundColor: color }}
-                        />
+                        <Tooltip key={color}>
+                            <TooltipTrigger
+                                render={
+                                    <button
+                                        type="button"
+                                        onClick={() => applyColor(color)}
+                                        className={`size-5 rounded-full border transition-transform hover:scale-110 ${
+                                            editor.isActive("textStyle", {
+                                                color,
+                                            })
+                                                ? "ring-2 ring-ring ring-offset-1"
+                                                : "border-border"
+                                        }`}
+                                        style={{ backgroundColor: color }}
+                                    />
+                                }
+                            />
+                            <TooltipContent>{color}</TooltipContent>
+                        </Tooltip>
                     ))}
 
-                    <input
-                        type="color"
-                        onInput={(e) => applyColor(e.target.value)}
-                        onBlur={(e) =>
-                            setRecentColors(saveRecentColor(e.target.value))
-                        }
-                        title={at("editor_pick_color", uiLocale)}
-                        className="size-5 cursor-pointer rounded-full border border-border bg-transparent p-0"
-                    />
+                    <Tooltip>
+                        <TooltipTrigger
+                            render={
+                                <input
+                                    type="color"
+                                    onInput={(e) =>
+                                        applyColor(e.target.value)
+                                    }
+                                    onBlur={(e) =>
+                                        setRecentColors(
+                                            saveRecentColor(e.target.value),
+                                        )
+                                    }
+                                    className="size-5 cursor-pointer rounded-full border border-border bg-transparent p-0"
+                                />
+                            }
+                        />
+                        <TooltipContent>
+                            {at("editor_pick_color", uiLocale)}
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
 
                 <Separator orientation="vertical" className="mx-1 h-5" />
