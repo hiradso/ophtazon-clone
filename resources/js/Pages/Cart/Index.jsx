@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ImageOff, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
 import { t } from "@/lib/translate";
+import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 
 export default function Index({ cart }) {
@@ -27,23 +28,23 @@ export default function Index({ cart }) {
 
     return (
         <PublicLayout>
-            <Head title="Your Cart" />
+            <Head title={tt("your_cart", locale)} />
 
             <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
                 <h1 className="mb-6 text-2xl font-semibold tracking-tight text-foreground">
-                    Your Cart
+                    {tt("your_cart", locale)}
                 </h1>
 
                 {items.length === 0 ? (
                     <div className="rounded-lg border border-dashed border-border py-16 text-center">
                         <p className="mb-4 text-sm text-muted-foreground">
-                            Your cart is empty.
+                            {tt("cart_empty", locale)}
                         </p>
                         <Button
                             nativeButton={false}
                             render={<Link href={route("products.index")} />}
                         >
-                            Browse equipment
+                            {tt("browse_equipment", locale)}
                         </Button>
                     </div>
                 ) : (
@@ -126,7 +127,7 @@ export default function Index({ cart }) {
                             <CardContent className="space-y-4 p-4">
                                 <div className="flex items-center justify-between">
                                     <span className="text-muted-foreground">
-                                        Subtotal
+                                        {tt("subtotal", locale)}
                                     </span>
                                     <span className="text-xl font-semibold text-foreground">
                                         {formatPrice(total, locale)} {currency}
@@ -146,7 +147,7 @@ export default function Index({ cart }) {
                                             />
                                         }
                                     >
-                                        Proceed to checkout
+                                        {tt("proceed_to_checkout", locale)}
                                         {locale === "fa" ? (
                                             <ArrowLeft className="me-1.5 size-4" />
                                         ) : (

@@ -416,11 +416,11 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                     >
                         {loading && !preview ? (
                             <p className="py-6 text-center text-sm text-muted-foreground">
-                                Loading...
+                                {tt("loading", locale)}
                             </p>
                         ) : !preview || preview.items.length === 0 ? (
                             <p className="py-6 text-center text-sm text-muted-foreground">
-                                Your cart is empty.
+                                {tt("cart_empty", locale)}
                             </p>
                         ) : (
                             <>
@@ -437,13 +437,13 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                             <tr className="border-b border-border text-[11px] font-medium text-muted-foreground">
                                                 <th className="py-2 ps-0.5 text-start"></th>
                                                 <th className="py-2 ps-2 text-start">
-                                                    Item
+                                                    {tt("item", locale)}
                                                 </th>
                                                 <th className="py-2 text-center">
-                                                    Qty
+                                                    {tt("qty", locale)}
                                                 </th>
                                                 <th className="py-2 pe-2 text-end">
-                                                    Price
+                                                    {tt("price", locale)}
                                                 </th>
                                                 <th className="py-2 pe-0.5 text-end"></th>
                                             </tr>
@@ -587,7 +587,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
 
                                 <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-sm">
                                     <span className="text-muted-foreground">
-                                        Subtotal
+                                        {tt("subtotal", locale)}
                                     </span>
                                     <span className="font-semibold text-foreground">
                                         {formatPrice(preview.total, locale)}{" "}
@@ -607,7 +607,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                         />
                                     }
                                 >
-                                    Go to cart
+                                    {tt("go_to_cart", locale)}
                                     <ArrowRight className="ms-1.5 size-3.5" />
                                 </Button>
                             </>
