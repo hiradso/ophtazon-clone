@@ -162,7 +162,7 @@ function HeroSection({ content }) {
 
                 <motion.form
                     variants={item}
-                    action={route("products.index")}
+                    action={route("products.index", { locale })}
                     method="get"
                     className="relative mx-auto mt-8 max-w-lg"
                 >
@@ -230,6 +230,7 @@ function CategoriesSection({ categories }) {
                     >
                         <Link
                             href={route("products.index", {
+                                locale,
                                 category: category.slug,
                             })}
                         >
@@ -271,7 +272,7 @@ function LatestProductsSection({ products }) {
                         {tt("latest_listings", locale)}
                     </h2>
                     <Link
-                        href={route("products.index")}
+                        href={route("products.index", { locale })}
                         className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                     >
                         {tt("view_all", locale)}
@@ -297,7 +298,10 @@ function LatestProductsSection({ products }) {
                                 }}
                             >
                                 <Link
-                                    href={route("products.show", product.slug)}
+                                    href={route("products.show", {
+                                        locale,
+                                        product: product.slug,
+                                    })}
                                 >
                                     <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
                                         <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
@@ -416,7 +420,10 @@ function DiscountedProductsSection({ products }) {
                                 className="basis-1/2 sm:basis-1/3 lg:basis-1/4"
                             >
                                 <Link
-                                    href={route("products.show", product.slug)}
+                                    href={route("products.show", {
+                                        locale,
+                                        product: product.slug,
+                                    })}
                                 >
                                     <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
                                         <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">
