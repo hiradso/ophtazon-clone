@@ -39,7 +39,7 @@ class OrderController extends Controller
             'city' => ['required', 'string', 'max:255'],
             'address_line' => ['required', 'string'],
             'postal_code' => ['nullable', 'string', 'max:255'],
-            'payment_method' => ['required', 'in:bank_transfer,cash_on_delivery'],
+            'payment_method' => ['required', 'in:bank_transfer,cash_on_delivery,online_gateway'],
         ]);
 
         $user = $request->user();
@@ -118,10 +118,14 @@ class OrderController extends Controller
             return $order;
         });
 
+        if ($order->payment_method === 'online_gateway') {
+            return redirect()->route('gateway.show', ['locale' => app()->getLocale(), 'order' => $order]);
+        }
+
         return redirect()->route('orders.show', $order)->with('success', 'order_placed_success');
     }
 
-    public function show(Request $request, Order $order): Response
+    public function show(Request $request, string $locale, Order $order): Response
     {
         abort_unless($order->user_id === $request->user()->id, 403);
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PageSectionController;
 use App\Http\Controllers\Admin\UserController;
@@ -60,6 +61,9 @@ Route::prefix('{locale}')
             Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
             Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
             Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index');
+
+            Route::get('/checkout/gateway/{order}', [GatewayController::class, 'show'])->name('gateway.show');
+            Route::post('/checkout/gateway/{order}', [GatewayController::class, 'process'])->name('gateway.process');
 
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

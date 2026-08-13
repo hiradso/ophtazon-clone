@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
+import { toast } from "sonner";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,9 +10,15 @@ import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { toFa } from "@/lib/toFa";
 import { countryLabel } from "@/lib/countries";
+import OrderProgressBar from "@/Components/OrderProgressBar";
 
 export default function Show({ order }) {
-    const { locale } = usePage().props;
+    const { locale, flash } = usePage().props;
+
+    useEffect(() => {
+        if (flash?.success) toast.success(tt(flash.success, locale));
+        if (flash?.error) toast.error(tt(flash.error, locale));
+    }, [flash]);
 
     return (
         <PublicLayout>
@@ -26,6 +34,35 @@ export default function Show({ order }) {
                         {order.order_number}
                     </p>
                 </div>
+
+                <Card className="mb-5">
+                    <CardContent className="p-6">
+                        <OrderProgressBar
+                            status={order.status}
+                            locale={locale}
+                        />
+                        {order.status === "pending" &&
+                            order.payment_method === "online_gateway" && (
+                                <div className="mt-4 flex justify-center">
+                                    <Button
+                                        size="sm"
+                                        nativeButton={false}
+                                        render={
+                                            <Link
+                                                href={route("gateway.show", {
+                                                    locale,
+                                                    order: order.id,
+                                                })}
+                                            />
+                                        }
+                                    >
+                                        {tt("complete_payment", locale)}
+                                    </Button>
+                                </div>
+                            )}
+                    </CardContent>
+                </Card>
+
                 <Card>
                     <CardContent className="space-y-4 p-6">
                         {order.items.map((item) => (

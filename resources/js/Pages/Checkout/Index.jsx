@@ -37,7 +37,7 @@ export default function Index({ cart, countries }) {
         city: "",
         address_line: "",
         postal_code: "",
-        payment_method: "bank_transfer",
+        payment_method: "online_gateway",
     });
 
     const submit = (e) => {
@@ -233,19 +233,14 @@ export default function Index({ cart, countries }) {
                                     <SelectTrigger className="w-full">
                                         <SelectValue>
                                             {(value) =>
-                                                value === "bank_transfer"
-                                                    ? tt(
-                                                          "bank_transfer",
-                                                          locale,
-                                                      )
-                                                    : tt(
-                                                          "cash_on_delivery",
-                                                          locale,
-                                                      )
+                                                tt(value, locale)
                                             }
                                         </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
+                                        <SelectItem value="online_gateway">
+                                            {tt("online_gateway", locale)}
+                                        </SelectItem>
                                         <SelectItem value="bank_transfer">
                                             {tt("bank_transfer", locale)}
                                         </SelectItem>

@@ -39,7 +39,7 @@ class AddressController extends Controller
         return back()->with('success', 'address_saved');
     }
 
-    public function update(Request $request, Address $address): RedirectResponse
+    public function update(Request $request, string $locale, Address $address): RedirectResponse
     {
         abort_unless($address->user_id === $request->user()->id, 403);
 
@@ -58,7 +58,7 @@ class AddressController extends Controller
         return back()->with('success', 'address_updated');
     }
 
-    public function destroy(Request $request, Address $address): RedirectResponse
+    public function destroy(Request $request, string $locale, Address $address): RedirectResponse
     {
         abort_unless($address->user_id === $request->user()->id, 403);
 
@@ -67,7 +67,7 @@ class AddressController extends Controller
         return back()->with('success', 'address_deleted');
     }
 
-    public function setDefault(Request $request, Address $address): RedirectResponse
+    public function setDefault(Request $request, string $locale, Address $address): RedirectResponse
     {
         abort_unless($address->user_id === $request->user()->id, 403);
 

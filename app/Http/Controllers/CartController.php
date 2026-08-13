@@ -82,7 +82,7 @@ class CartController extends Controller
             'currency' => $items->first()?->product->currency,
         ]);
     }
-    public function update(Request $request, CartItem $cartItem): RedirectResponse
+    public function update(Request $request, string $locale, CartItem $cartItem): RedirectResponse
     {
         $cart = $this->currentCart($request);
         abort_unless($cart && $cartItem->cart_id === $cart->id, 403);
@@ -106,7 +106,7 @@ class CartController extends Controller
         return back()->with('success', 'quantity_updated');
     }
 
-    public function destroy(CartItem $cartItem): RedirectResponse
+    public function destroy(string $locale, CartItem $cartItem): RedirectResponse
     {
         $cart = $this->currentCart(request());
 
