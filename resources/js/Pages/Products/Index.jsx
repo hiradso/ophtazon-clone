@@ -13,7 +13,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ImageOff, X, Bell, Flame, CheckCircle2 } from "lucide-react";
+import { ImageOff, X, Bell } from "lucide-react";
+import StockBadge from "@/Components/StockBadge";
 import {
     Dialog,
     DialogContent,
@@ -27,8 +28,6 @@ import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
-
-const LOW_STOCK_THRESHOLD = 5;
 
 export default function Index({
     products,
@@ -309,9 +308,6 @@ export default function Index({
                         const discounted = hasDiscount(
                             product.discount_percentage,
                         );
-                        const stock = product.stock_quantity ?? 0;
-                        const isLowStock =
-                            stock > 0 && stock <= LOW_STOCK_THRESHOLD;
 
                         return (
                             <motion.div
@@ -402,29 +398,10 @@ export default function Index({
                                                     {product.currency}
                                                 </p>
                                             </div>
-                                            {stock === 0 ? (
-                                                <p className="text-xs font-medium text-muted-foreground">
-                                                    {tt(
-                                                        "out_of_stock",
-                                                        locale,
-                                                    )}
-                                                </p>
-                                            ) : isLowStock ? (
-                                                <p className="flex items-center gap-1 text-xs font-medium text-status-pending">
-                                                    <Flame className="size-3" />
-                                                    {stock === 1
-                                                        ? tt(
-                                                              "last_one_available",
-                                                              locale,
-                                                          )
-                                                        : `${tt("low_stock_prefix", locale)} ${toFa(stock, locale)} ${tt("low_stock_suffix", locale)}`}
-                                                </p>
-                                            ) : (
-                                                <p className="flex items-center gap-1 text-xs font-medium text-status-available">
-                                                    <CheckCircle2 className="size-3" />
-                                                    {tt("in_stock", locale)}
-                                                </p>
-                                            )}
+                                            <StockBadge
+                                                stock={product.stock_quantity}
+                                                locale={locale}
+                                            />
                                         </CardContent>
                                     </Card>
                                 </Link>

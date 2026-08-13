@@ -17,6 +17,7 @@ import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { HERO_ICONS } from "@/lib/heroIcons";
+import StockBadge from "@/Components/StockBadge";
 import { richTextOrLegacy } from "@/lib/richText";
 
 const DEFAULT_TRUST_ITEMS = [
@@ -376,6 +377,10 @@ function LatestProductsSection({ products }) {
                                                     {product.currency}
                                                 </p>
                                             </div>
+                                            <StockBadge
+                                                stock={product.stock_quantity}
+                                                locale={locale}
+                                            />
                                         </CardContent>
                                     </Card>
                                 </Link>
@@ -474,6 +479,11 @@ function DiscountedProductsSection({ products }) {
                                                     {product.currency}
                                                 </span>
                                             </div>
+                                            <StockBadge
+                                                stock={product.stock_quantity}
+                                                locale={locale}
+                                                compact
+                                            />
                                         </CardContent>
                                     </Card>
                                 </Link>

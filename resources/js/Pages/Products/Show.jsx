@@ -32,19 +32,18 @@ import {
     ShieldCheck,
     Flame,
 } from "lucide-react";
-import { ShoppingCart, CheckCircle2 } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import StockBadge from "@/Components/StockBadge";
 
 const CONDITION_LABELS = {
     new: "New",
     used: "Used",
     refurbished: "Refurbished",
 };
-
-const LOW_STOCK_THRESHOLD = 5;
 
 export default function Show({ product, relatedProducts }) {
     const { locale, appUrl } = usePage().props;
@@ -57,8 +56,6 @@ export default function Show({ product, relatedProducts }) {
     const productDescription = t(product.description, locale);
     const categoryName = t(product.category?.name, locale);
 
-    const stock = product.stock_quantity ?? 1;
-    const isLowStock = stock > 0 && stock <= LOW_STOCK_THRESHOLD;
     const discounted = hasDiscount(product.discount_percentage);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -264,23 +261,12 @@ export default function Show({ product, relatedProducts }) {
                             )}
                         </div>
 
-                        {stock === 0 ? (
-                            <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-sm font-medium text-muted-foreground">
-                                {tt("out_of_stock", locale)}
-                            </div>
-                        ) : isLowStock ? (
-                            <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-status-pending/15 px-2.5 py-1 text-sm font-medium text-status-pending">
-                                <Flame className="size-3.5" />
-                                {stock === 1
-                                    ? tt("last_one_available", locale)
-                                    : `${tt("low_stock_prefix", locale)} ${toFa(stock, locale)} ${tt("low_stock_suffix", locale)}`}
-                            </div>
-                        ) : (
-                            <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-status-available/15 px-2.5 py-1 text-sm font-medium text-status-available">
-                                <CheckCircle2 className="size-3.5" />
-                                {tt("in_stock", locale)}
-                            </div>
-                        )}
+                        <div className="mt-2">
+                            <StockBadge
+                                stock={product.stock_quantity}
+                                locale={locale}
+                            />
+                        </div>
 
                         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                             <motion.div
@@ -467,6 +453,13 @@ export default function Show({ product, relatedProducts }) {
                                                         )}{" "}
                                                         {related.currency}
                                                     </p>
+                                                    <StockBadge
+                                                        stock={
+                                                            related.stock_quantity
+                                                        }
+                                                        locale={locale}
+                                                        compact
+                                                    />
                                                 </CardContent>
                                             </Card>
                                         </Link>
