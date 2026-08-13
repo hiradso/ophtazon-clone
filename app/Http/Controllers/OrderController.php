@@ -115,6 +115,10 @@ class OrderController extends Controller
 
             $cart->items()->delete();
 
+            $order->statusHistories()->create([
+                'status' => OrderStatus::Pending,
+            ]);
+
             return $order;
         });
 

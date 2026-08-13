@@ -39,6 +39,10 @@ class GatewayController extends Controller
                 'paid_at' => now(),
             ]);
 
+            $order->statusHistories()->create([
+                'status' => OrderStatus::Paid,
+            ]);
+
             return redirect()
                 ->route('orders.show', ['locale' => app()->getLocale(), 'order' => $order])
                 ->with('success', 'payment_success');

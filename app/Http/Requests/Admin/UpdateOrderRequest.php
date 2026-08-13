@@ -17,6 +17,8 @@ class UpdateOrderRequest extends FormRequest
     {
         return [
             'status' => ['required', Rule::enum(OrderStatus::class)],
+            'admin_notes' => ['nullable', 'string', 'max:2000'],
+            'tracking_number' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

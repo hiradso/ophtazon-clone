@@ -34,6 +34,7 @@ import {
     Trash2,
     ImageOff,
     Tag,
+    PackageX,
 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
@@ -142,6 +143,9 @@ export default function Index({ products }) {
                                             {at("price", uiLocale)}
                                         </TableHead>
                                         <TableHead>
+                                            {at("stock", uiLocale)}
+                                        </TableHead>
+                                        <TableHead>
                                             {at("status", uiLocale)}
                                         </TableHead>
                                         <TableHead className="w-12"></TableHead>
@@ -151,7 +155,7 @@ export default function Index({ products }) {
                                     {products.data.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={8}
+                                                colSpan={9}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
                                                 No products yet. Add the first
@@ -242,6 +246,42 @@ export default function Index({ products }) {
                                                             {product.currency}
                                                         </span>
                                                     )}
+                                                </TableCell>
+                                                <TableCell className="align-middle">
+                                                    {(() => {
+                                                        const stock =
+                                                            product.stock_quantity ??
+                                                            0;
+                                                        if (stock === 0) {
+                                                            return (
+                                                                <span className="inline-flex items-center gap-1 text-sm font-medium text-destructive">
+                                                                    <PackageX className="size-3.5" />
+                                                                    {toFa(
+                                                                        0,
+                                                                        uiLocale,
+                                                                    )}
+                                                                </span>
+                                                            );
+                                                        }
+                                                        if (stock <= 5) {
+                                                            return (
+                                                                <span className="text-sm font-medium text-status-pending">
+                                                                    {toFa(
+                                                                        stock,
+                                                                        uiLocale,
+                                                                    )}
+                                                                </span>
+                                                            );
+                                                        }
+                                                        return (
+                                                            <span className="text-sm text-muted-foreground">
+                                                                {toFa(
+                                                                    stock,
+                                                                    uiLocale,
+                                                                )}
+                                                            </span>
+                                                        );
+                                                    })()}
                                                 </TableCell>
                                                 <TableCell className="align-middle">
                                                     <div className="flex flex-wrap gap-1.5">

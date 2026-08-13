@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import {
     Select,
     SelectContent,
@@ -13,12 +16,25 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Printer, History } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
 import { formatPrice } from "@/lib/pricing";
 
-export default function Show({ order }) {
+const statusColor = {
+    pending:
+        "bg-status-pending/15 text-status-pending border-status-pending/30",
+    paid: "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
+    processing:
+        "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
+    shipped:
+        "bg-status-reserved/15 text-status-reserved border-status-reserved/30",
+    delivered:
+        "bg-status-available/15 text-status-available border-status-available/30",
+    cancelled: "bg-muted text-muted-foreground border-border",
+};
+
+export default function Show({ order, customerOrderCount }) {
     const { flash, locale: uiLocale } = usePage().props;
 
     const STATUS_LABELS = {
@@ -30,8 +46,16 @@ export default function Show({ order }) {
         cancelled: at("order_status_cancelled", uiLocale),
     };
 
+    const PAYMENT_METHOD_LABELS = {
+        online_gateway: at("payment_method_online_gateway", uiLocale),
+        bank_transfer: at("payment_method_bank_transfer", uiLocale),
+        cash_on_delivery: at("payment_method_cash_on_delivery", uiLocale),
+    };
+
     const { data, setData, put, processing } = useForm({
         status: order.status,
+        admin_notes: order.admin_notes ?? "",
+        tracking_number: order.tracking_number ?? "",
     });
 
     useEffect(() => {
@@ -55,22 +79,35 @@ export default function Show({ order }) {
                 { label: order.order_number },
             ]}
             header={
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            nativeButton={false}
+                            render={
+                                <Link href={route("admin.orders.index")} />
+                            }
+                        >
+                            {uiLocale === "fa" ? (
+                                <ArrowRight className="size-4" />
+                            ) : (
+                                <ArrowLeft className="size-4" />
+                            )}
+                        </Button>
+                        <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                            {order.order_number}
+                        </h2>
+                    </div>
                     <Button
-                        variant="ghost"
-                        size="icon"
-                        nativeButton={false}
-                        render={<Link href={route("admin.orders.index")} />}
+                        variant="outline"
+                        size="sm"
+                        className="print:hidden"
+                        onClick={() => window.print()}
                     >
-                        {uiLocale === "fa" ? (
-                            <ArrowRight className="size-4" />
-                        ) : (
-                            <ArrowLeft className="size-4" />
-                        )}
+                        <Printer className="me-1.5 size-4" />
+                        {at("print_invoice", uiLocale)}
                     </Button>
-                    <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                        {order.order_number}
-                    </h2>
                 </div>
             }
         >
@@ -179,6 +216,59 @@ export default function Show({ order }) {
                                     <p className="text-muted-foreground">
                                         {order.user?.email}
                                     </p>
+                                    <Separator className="my-3" />
+                                    <p className="text-muted-foreground">
+                                        {at(
+                                            "payment_method_col",
+                                            uiLocale,
+                                        )}
+                                        :{" "}
+                                        <span className="text-foreground">
+                                            {
+                                                PAYMENT_METHOD_LABELS[
+                                                    order.payment_method
+                                                ]
+                                            }
+                                        </span>
+                                    </p>
+                                    {customerOrderCount !== undefined && (
+                                        <p className="mt-3 text-xs text-muted-foreground">
+                                            {at(
+                                                "customer_order_history_prefix",
+                                                uiLocale,
+                                            )}{" "}
+                                            {toFa(
+                                                customerOrderCount,
+                                                uiLocale,
+                                            )}{" "}
+                                            {customerOrderCount === 1
+                                                ? at(
+                                                      "order_singular",
+                                                      uiLocale,
+                                                  )
+                                                : at(
+                                                      "orders_count",
+                                                      uiLocale,
+                                                  )}{" "}
+                                            {at(
+                                                "customer_order_history_suffix",
+                                                uiLocale,
+                                            )}
+                                            <br />
+                                            <Link
+                                                href={route(
+                                                    "admin.orders.index",
+                                                    { q: order.user?.email },
+                                                )}
+                                                className="text-primary underline-offset-2 hover:underline"
+                                            >
+                                                {at(
+                                                    "view_all_customer_orders",
+                                                    uiLocale,
+                                                )}
+                                            </Link>
+                                        </p>
+                                    )}
                                 </CardContent>
                             </Card>
 
@@ -251,6 +341,56 @@ export default function Show({ order }) {
                                             </Select>
                                         </div>
 
+                                        <div className="space-y-1.5">
+                                            <Label htmlFor="tracking_number">
+                                                {at(
+                                                    "tracking_number",
+                                                    uiLocale,
+                                                )}
+                                            </Label>
+                                            <Input
+                                                id="tracking_number"
+                                                placeholder={at(
+                                                    "tracking_number_placeholder",
+                                                    uiLocale,
+                                                )}
+                                                value={data.tracking_number}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "tracking_number",
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            />
+                                        </div>
+
+                                        <div className="space-y-1.5">
+                                            <Label htmlFor="admin_notes">
+                                                {at("admin_notes", uiLocale)}
+                                            </Label>
+                                            <Textarea
+                                                id="admin_notes"
+                                                rows={3}
+                                                placeholder={at(
+                                                    "admin_notes_placeholder",
+                                                    uiLocale,
+                                                )}
+                                                value={data.admin_notes}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "admin_notes",
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <p className="text-xs text-muted-foreground">
+                                                {at(
+                                                    "admin_notes_hint",
+                                                    uiLocale,
+                                                )}
+                                            </p>
+                                        </div>
+
                                         <Button
                                             type="submit"
                                             disabled={processing}
@@ -261,6 +401,78 @@ export default function Show({ order }) {
                                                 : at("save_changes", uiLocale)}
                                         </Button>
                                     </form>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="print:hidden">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <History className="size-4" />
+                                        {at("status_history", uiLocale)}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {order.status_histories?.length ? (
+                                        <ol className="space-y-3">
+                                            {order.status_histories.map(
+                                                (entry) => (
+                                                    <li
+                                                        key={entry.id}
+                                                        className="flex items-start justify-between gap-2 text-sm"
+                                                    >
+                                                        <div>
+                                                            <Badge
+                                                                variant="outline"
+                                                                className={
+                                                                    statusColor[
+                                                                        entry
+                                                                            .status
+                                                                    ]
+                                                                }
+                                                            >
+                                                                {
+                                                                    STATUS_LABELS[
+                                                                        entry
+                                                                            .status
+                                                                    ]
+                                                                }
+                                                            </Badge>
+                                                            {entry.changed_by && (
+                                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                                    {at(
+                                                                        "changed_by",
+                                                                        uiLocale,
+                                                                    )}{" "}
+                                                                    {
+                                                                        entry
+                                                                            .changed_by
+                                                                            .name
+                                                                    }
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        <span className="shrink-0 text-xs text-muted-foreground">
+                                                            {new Date(
+                                                                entry.created_at,
+                                                            ).toLocaleString(
+                                                                uiLocale ===
+                                                                    "fa"
+                                                                    ? "fa-IR"
+                                                                    : "en-US",
+                                                            )}
+                                                        </span>
+                                                    </li>
+                                                ),
+                                            )}
+                                        </ol>
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground">
+                                            {at(
+                                                "no_status_history",
+                                                uiLocale,
+                                            )}
+                                        </p>
+                                    )}
                                 </CardContent>
                             </Card>
                         </div>

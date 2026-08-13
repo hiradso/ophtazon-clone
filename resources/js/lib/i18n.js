@@ -59,6 +59,8 @@ const translations = {
         last_one_available: "Last one available!",
         low_stock_prefix: "Only",
         low_stock_suffix: "left in stock",
+        in_stock: "In stock",
+        out_of_stock: "Out of stock",
         on_sale: "On Sale",
         error_403_title: "No entry (without the right glasses)",
         error_403_message:
@@ -280,6 +282,8 @@ const translations = {
         last_one_available: "Dernier exemplaire disponible !",
         low_stock_prefix: "Il ne reste que",
         low_stock_suffix: "en stock",
+        in_stock: "En stock",
+        out_of_stock: "Rupture de stock",
         on_sale: "En Promotion",
         error_403_title: "Accès refusé (sans les bonnes lunettes)",
         error_403_message:
@@ -501,6 +505,8 @@ const translations = {
         last_one_available: "آخرین نسخه‌ی موجود!",
         low_stock_prefix: "فقط",
         low_stock_suffix: "عدد باقی مانده",
+        in_stock: "موجود در انبار",
+        out_of_stock: "ناموجود",
         on_sale: "حراج",
         error_403_title: "ورود ممنوع (بدون عینک مناسب)",
         error_403_message:

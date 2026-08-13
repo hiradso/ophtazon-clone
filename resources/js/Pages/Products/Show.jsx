@@ -32,7 +32,7 @@ import {
     ShieldCheck,
     Flame,
 } from "lucide-react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, CheckCircle2 } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
@@ -264,12 +264,21 @@ export default function Show({ product, relatedProducts }) {
                             )}
                         </div>
 
-                        {isLowStock && (
+                        {stock === 0 ? (
+                            <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-sm font-medium text-muted-foreground">
+                                {tt("out_of_stock", locale)}
+                            </div>
+                        ) : isLowStock ? (
                             <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-status-pending/15 px-2.5 py-1 text-sm font-medium text-status-pending">
                                 <Flame className="size-3.5" />
                                 {stock === 1
                                     ? tt("last_one_available", locale)
-                                    : `${tt("low_stock_prefix", locale)} ${stock} ${tt("low_stock_suffix", locale)}`}
+                                    : `${tt("low_stock_prefix", locale)} ${toFa(stock, locale)} ${tt("low_stock_suffix", locale)}`}
+                            </div>
+                        ) : (
+                            <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-status-available/15 px-2.5 py-1 text-sm font-medium text-status-available">
+                                <CheckCircle2 className="size-3.5" />
+                                {tt("in_stock", locale)}
                             </div>
                         )}
 

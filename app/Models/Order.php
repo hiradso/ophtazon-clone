@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
     'currency',
     'payment_method',
     'paid_at',
+    'admin_notes',
+    'tracking_number',
 ])]
 class Order extends Model
 {
@@ -54,5 +56,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function statusHistories()
+    {
+        return $this->hasMany(OrderStatusHistory::class)->latest();
     }
 }
