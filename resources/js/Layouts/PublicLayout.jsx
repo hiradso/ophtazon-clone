@@ -608,7 +608,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                     }
                                 >
                                     {tt("go_to_cart", locale)}
-                                    <ArrowRight className="ms-1.5 size-3.5" />
+                                    <ArrowRight className="ms-1.5 size-3.5 rtl:rotate-180" />
                                 </Button>
                             </>
                         )}

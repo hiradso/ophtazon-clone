@@ -12,9 +12,17 @@ use Illuminate\Database\Eloquent\Model;
     'contact_phone',
     'font_latin',
     'font_persian',
+    'slogan',
 ])]
 class Setting extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'slogan' => 'array',
+        ];
+    }
+
     public static function current(): self
     {
         return static::firstOrCreate([]);

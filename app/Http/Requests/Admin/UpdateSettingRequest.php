@@ -22,6 +22,10 @@ class UpdateSettingRequest extends FormRequest
             'robots_txt' => ['nullable', 'string', 'max:2000'],
             'font_latin' => ['required', 'in:Geist,Inter,Roboto,Poppins,Nunito Sans,Playfair Display'],
             'font_persian' => ['required', 'in:Vazirmatn,Noto Sans Arabic,Rubik,Noto Naskh Arabic'],
+            'slogan' => ['nullable', 'array'],
+            'slogan.en' => ['nullable', 'string', 'max:255'],
+            'slogan.fr' => ['nullable', 'string', 'max:255'],
+            'slogan.fa' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

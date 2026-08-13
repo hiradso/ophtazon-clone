@@ -19,8 +19,6 @@ import { toFa } from "@/lib/toFa";
 import { HERO_ICONS } from "@/lib/heroIcons";
 import { richTextOrLegacy } from "@/lib/richText";
 
-const DEFAULT_BADGE_TEXT = "Trusted by clinics in 5 countries";
-
 const DEFAULT_TRUST_ITEMS = [
     { icon: "shield_check", labelKey: "quality_checked" },
     { icon: "globe", labelKey: "regional_showrooms" },
@@ -109,7 +107,8 @@ function HeroSection({ content }) {
 
     const title = t(content?.title, locale);
     const subtitle = t(content?.subtitle, locale);
-    const badgeText = t(content?.badge, locale) || DEFAULT_BADGE_TEXT;
+    const badgeText =
+        t(content?.badge, locale) || tt("hero_default_badge", locale);
     const trustItems =
         content?.trust_items?.length > 0
             ? content.trust_items
@@ -276,7 +275,7 @@ function LatestProductsSection({ products }) {
                         className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                     >
                         {tt("view_all", locale)}
-                        <ArrowRight className="size-3.5" />
+                        <ArrowRight className="size-3.5 rtl:rotate-180" />
                     </Link>
                 </div>
 

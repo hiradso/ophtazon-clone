@@ -304,6 +304,9 @@ const adminTranslations = {
         fonts_title: "Fonts",
         latin_font_label: "Latin font (English / Français)",
         persian_font_label: "فارسی (Persian)",
+        slogan_title: "Slogan",
+        slogan_hint:
+            "Shown site-wide — homepage loading screen, and as a fallback wherever a slogan/tagline is used. Leave a language empty to use the built-in default text.",
         uploading: "Uploading...",
         files_selected: "file(s) selected",
         no_media_yet: "No images uploaded yet.",
@@ -684,6 +687,9 @@ const adminTranslations = {
         fonts_title: "فونت‌ها",
         latin_font_label: "فونت لاتین (انگلیسی / فرانسه)",
         persian_font_label: "فارسی (Persian)",
+        slogan_title: "شعار",
+        slogan_hint:
+            "در سراسر سایت نمایش داده می‌شود — صفحه‌ی بارگذاری اولیه، و هرجا که شعار سایت لازم باشد. اگر زبانی را خالی بگذارید، متن پیش‌فرض داخلی استفاده می‌شود.",
         uploading: "در حال آپلود...",
         files_selected: "فایل انتخاب شد",
         no_media_yet: "هنوز تصویری آپلود نشده است.",

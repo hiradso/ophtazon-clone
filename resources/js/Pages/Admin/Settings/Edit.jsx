@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MediaPicker from "@/Components/MediaPicker";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Select,
     SelectContent,
@@ -45,7 +46,16 @@ export default function Edit({ settings }) {
         robots_txt: settings.robots_txt ?? "",
         font_latin: settings.font_latin ?? "Geist",
         font_persian: settings.font_persian ?? "Vazirmatn",
+        slogan: {
+            en: settings.slogan?.en ?? "",
+            fr: settings.slogan?.fr ?? "",
+            fa: settings.slogan?.fa ?? "",
+        },
     });
+
+    const setSlogan = (locale, value) => {
+        setData("slogan", { ...data.slogan, [locale]: value });
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -110,6 +120,76 @@ export default function Edit({ settings }) {
                                         {at("logo_fallback_hint", uiLocale)}
                                     </p>
                                 </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* slogan */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>
+                                    {at("slogan_title", uiLocale)}
+                                </CardTitle>
+                                <p className="text-xs text-muted-foreground">
+                                    {at("slogan_hint", uiLocale)}
+                                </p>
+                            </CardHeader>
+                            <CardContent>
+                                <Tabs defaultValue="en">
+                                    <TabsList>
+                                        <TabsTrigger value="en">
+                                            English
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fr">
+                                            Français
+                                        </TabsTrigger>
+                                        <TabsTrigger value="fa">
+                                            فارسی
+                                        </TabsTrigger>
+                                    </TabsList>
+
+                                    {["en", "fr", "fa"].map((loc) => (
+                                        <TabsContent
+                                            key={loc}
+                                            value={loc}
+                                            dir={
+                                                loc === "fa" ? "rtl" : "ltr"
+                                            }
+                                        >
+                                            <div className="space-y-1.5">
+                                                <Label
+                                                    htmlFor={`slogan_${loc}`}
+                                                >
+                                                    {at("slogan_title", uiLocale)}{" "}
+                                                    {loc !== "en" &&
+                                                        at(
+                                                            "optional",
+                                                            uiLocale,
+                                                        )}
+                                                </Label>
+                                                <Input
+                                                    id={`slogan_${loc}`}
+                                                    dir={
+                                                        loc === "fa"
+                                                            ? "rtl"
+                                                            : "ltr"
+                                                    }
+                                                    value={data.slogan[loc]}
+                                                    onChange={(e) =>
+                                                        setSlogan(
+                                                            loc,
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
+                                {errors["slogan.en"] && (
+                                    <p className="mt-1.5 text-sm text-destructive">
+                                        {errors["slogan.en"]}
+                                    </p>
+                                )}
                             </CardContent>
                         </Card>
 

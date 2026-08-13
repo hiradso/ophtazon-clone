@@ -9,11 +9,15 @@
         @php
             $siteSettings = \App\Models\Setting::current();
             $currentLocale = app()->getLocale();
-            $slogan = $currentLocale === 'fr'
+            $defaultSlogan = $currentLocale === 'fr'
                 ? 'Le marché de confiance pour le matériel ophtalmique'
                 : ($currentLocale === 'fa'
                     ? 'بازار قابل‌اعتماد تجهیزات چشم‌پزشکی'
                     : 'Trusted marketplace for ophthalmic equipment');
+            // اگر ادمین از پنل شعار سفارشی برای این زبان تنظیم کرده باشد،
+            // همان استفاده می‌شود — در غیر این صورت متن پیش‌فرض بالا.
+            $slogan = $siteSettings->slogan[$currentLocale] ?? null;
+            $slogan = filled($slogan) ? $slogan : $defaultSlogan;
 
             // نگاشت اسم انتخابی ادمین (که در دیتابیس ذخیره شده) به اسم واقعی
             // family که پکیج‌های fontsource آن را ثبت می‌کنند
