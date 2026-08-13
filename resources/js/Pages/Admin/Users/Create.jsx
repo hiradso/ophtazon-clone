@@ -3,6 +3,7 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import PasswordStrengthMeter from "@/Components/PasswordStrengthMeter";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { getPasswordStrength } from "@/lib/passwordStrength";
 
 export default function Create({ stores, countries }) {
     const { locale: uiLocale } = usePage().props;
@@ -23,6 +25,17 @@ export default function Create({ stores, countries }) {
         admin: at("role_admin", uiLocale),
         staff: at("role_staff", uiLocale),
         customer: at("role_customer", uiLocale),
+    };
+
+    const passwordLabels = {
+        weak: at("password_strength_weak", uiLocale),
+        medium: at("password_strength_medium", uiLocale),
+        strong: at("password_strength_strong", uiLocale),
+        length: at("password_criteria_length", uiLocale),
+        lower: at("password_criteria_lower", uiLocale),
+        upper: at("password_criteria_upper", uiLocale),
+        number: at("password_criteria_number", uiLocale),
+        special: at("password_criteria_special", uiLocale),
     };
 
     const { data, setData, post, processing, errors } = useForm({
@@ -34,6 +47,9 @@ export default function Create({ stores, countries }) {
         country_id: "",
         is_active: true,
     });
+
+    const isPasswordWeak =
+        getPasswordStrength(data.password).strength === "weak";
 
     const submit = (e) => {
         e.preventDefault();
@@ -135,6 +151,10 @@ export default function Create({ stores, countries }) {
                                             {errors.password}
                                         </p>
                                     )}
+                                    <PasswordStrengthMeter
+                                        password={data.password}
+                                        labels={passwordLabels}
+                                    />
                                 </div>
 
                                 <div className="space-y-1.5">
@@ -274,7 +294,10 @@ export default function Create({ stores, countries }) {
                             >
                                 {at("cancel", uiLocale)}
                             </Button>
-                            <Button type="submit" disabled={processing}>
+                            <Button
+                                type="submit"
+                                disabled={processing || isPasswordWeak}
+                            >
                                 {processing
                                     ? at("saving", uiLocale)
                                     : at("save_changes", uiLocale)}

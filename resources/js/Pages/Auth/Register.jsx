@@ -3,9 +3,11 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import PasswordInput from "@/Components/PasswordInput";
+import PasswordStrengthMeter from "@/Components/PasswordStrengthMeter";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { tt } from "@/lib/i18n";
+import { getPasswordStrength } from "@/lib/passwordStrength";
 
 export default function Register() {
     const { locale } = usePage().props;
@@ -23,6 +25,19 @@ export default function Register() {
             onFinish: () => reset("password", "password_confirmation"),
         });
     };
+
+    const passwordLabels = {
+        weak: tt("password_strength_weak", locale),
+        medium: tt("password_strength_medium", locale),
+        strong: tt("password_strength_strong", locale),
+        length: tt("password_criteria_length", locale),
+        lower: tt("password_criteria_lower", locale),
+        upper: tt("password_criteria_upper", locale),
+        number: tt("password_criteria_number", locale),
+        special: tt("password_criteria_special", locale),
+    };
+    const isPasswordWeak =
+        getPasswordStrength(data.password).strength === "weak";
 
     return (
         <GuestLayout>
@@ -77,6 +92,13 @@ export default function Register() {
                     />
 
                     <InputError message={errors.password} className="mt-2" />
+
+                    <div className="mt-2">
+                        <PasswordStrengthMeter
+                            password={data.password}
+                            labels={passwordLabels}
+                        />
+                    </div>
                 </div>
 
                 <div className="mt-4">
@@ -111,7 +133,10 @@ export default function Register() {
                         {tt("already_registered", locale)}
                     </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <PrimaryButton
+                        className="ms-4"
+                        disabled={processing || isPasswordWeak}
+                    >
                         {tt("register", locale)}
                     </PrimaryButton>
                 </div>

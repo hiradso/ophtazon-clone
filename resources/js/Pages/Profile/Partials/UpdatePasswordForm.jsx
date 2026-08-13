@@ -3,10 +3,12 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import PasswordInput from "@/Components/PasswordInput";
+import PasswordStrengthMeter from "@/Components/PasswordStrengthMeter";
 import { Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
 import { useRef } from "react";
 import { tt } from "@/lib/i18n";
+import { getPasswordStrength } from "@/lib/passwordStrength";
 import { KeyRound } from "lucide-react";
 
 export default function UpdatePasswordForm({ className = "" }) {
@@ -47,6 +49,19 @@ export default function UpdatePasswordForm({ className = "" }) {
             },
         });
     };
+
+    const passwordLabels = {
+        weak: tt("password_strength_weak", uiLocale),
+        medium: tt("password_strength_medium", uiLocale),
+        strong: tt("password_strength_strong", uiLocale),
+        length: tt("password_criteria_length", uiLocale),
+        lower: tt("password_criteria_lower", uiLocale),
+        upper: tt("password_criteria_upper", uiLocale),
+        number: tt("password_criteria_number", uiLocale),
+        special: tt("password_criteria_special", uiLocale),
+    };
+    const isPasswordWeak =
+        getPasswordStrength(data.password).strength === "weak";
 
     return (
         <section className={className}>
@@ -101,6 +116,13 @@ export default function UpdatePasswordForm({ className = "" }) {
                     />
 
                     <InputError message={errors.password} className="mt-2" />
+
+                    <div className="mt-2">
+                        <PasswordStrengthMeter
+                            password={data.password}
+                            labels={passwordLabels}
+                        />
+                    </div>
                 </div>
 
                 <div>
@@ -126,7 +148,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>
+                    <PrimaryButton disabled={processing || isPasswordWeak}>
                         {tt("save", uiLocale)}
                     </PrimaryButton>
 
