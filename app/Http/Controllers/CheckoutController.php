@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\Country;
 use Illuminate\Http\Request;
@@ -18,9 +19,23 @@ class CheckoutController extends Controller
 
         abort_if(! $cart || $cart->items()->count() === 0, 404);
 
+        $defaultAddress = $request->user()
+            ? Address::where('user_id', $request->user()->id)
+                ->orderByDesc('is_default')
+                ->latest()
+                ->first()
+            : null;
+
         return Inertia::render('Checkout/Index', [
             'cart' => $cart->load(['items.product.images', 'items.product.store']),
             'countries' => Country::where('is_active', true)->get(['id', 'name', 'iso_code']),
+            'addresses' => $request->user()
+                ? Address::where('user_id', $request->user()->id)
+                    ->orderByDesc('is_default')
+                    ->latest()
+                    ->get()
+                : [],
+            'defaultAddress' => $defaultAddress,
         ]);
     }
 }

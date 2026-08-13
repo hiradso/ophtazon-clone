@@ -120,7 +120,7 @@ export default function Index({ addresses, countries }) {
         );
     };
 
-    const setDefault = (address) => {
+    const toggleDefault = (address) => {
         router.post(
             route("addresses.setDefault", {
                 locale: uiLocale,
@@ -176,7 +176,10 @@ export default function Index({ addresses, countries }) {
                                                     </Button>
                                                 }
                                             />
-                                            <DropdownMenuContent align="end">
+                                            <DropdownMenuContent
+                                                align="end"
+                                                className="w-auto min-w-56"
+                                            >
                                                 <DropdownMenuItem
                                                     onClick={() =>
                                                         openEdit(address)
@@ -185,19 +188,22 @@ export default function Index({ addresses, countries }) {
                                                     <Pencil className="me-2 size-4" />
                                                     {tt("edit_address", uiLocale)}
                                                 </DropdownMenuItem>
-                                                {!address.is_default && (
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            setDefault(address)
-                                                        }
-                                                    >
-                                                        <Star className="me-2 size-4" />
-                                                        {tt(
-                                                            "set_as_default",
-                                                            uiLocale,
-                                                        )}
-                                                    </DropdownMenuItem>
-                                                )}
+                                                <DropdownMenuItem
+                                                    onClick={() =>
+                                                        toggleDefault(address)
+                                                    }
+                                                >
+                                                    <Star className="me-2 size-4" />
+                                                    {address.is_default
+                                                        ? tt(
+                                                              "unset_default",
+                                                              uiLocale,
+                                                          )
+                                                        : tt(
+                                                              "set_as_default",
+                                                              uiLocale,
+                                                          )}
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem
                                                     variant="destructive"
                                                     onClick={() =>

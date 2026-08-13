@@ -73,7 +73,10 @@ class AddressController extends Controller
 
         DB::transaction(function () use ($request, $address) {
             Address::where('user_id', $request->user()->id)->update(['is_default' => false]);
-            $address->update(['is_default' => true]);
+
+            if (! $address->is_default) {
+                $address->update(['is_default' => true]);
+            }
         });
 
         return back()->with('success', 'default_address_updated');

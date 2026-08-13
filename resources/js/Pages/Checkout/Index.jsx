@@ -20,7 +20,7 @@ import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { countryLabel } from "@/lib/countries";
 
-export default function Index({ cart, countries }) {
+export default function Index({ cart, countries, addresses = [], defaultAddress }) {
     const { locale } = usePage().props;
     const items = cart.items;
     const total = items.reduce(
@@ -31,14 +31,28 @@ export default function Index({ cart, countries }) {
     const currency = items[0]?.product.currency ?? "EUR";
 
     const { data, setData, post, processing, errors } = useForm({
-        full_name: "",
-        phone: "",
-        country_id: "",
-        city: "",
-        address_line: "",
-        postal_code: "",
+        full_name: defaultAddress?.full_name ?? "",
+        phone: defaultAddress?.phone ?? "",
+        country_id: defaultAddress ? String(defaultAddress.country_id) : "",
+        city: defaultAddress?.city ?? "",
+        address_line: defaultAddress?.address_line ?? "",
+        postal_code: defaultAddress?.postal_code ?? "",
         payment_method: "online_gateway",
     });
+
+    const fillFromAddress = (addressId) => {
+        const address = addresses.find((a) => String(a.id) === addressId);
+        if (!address) return;
+        setData({
+            ...data,
+            full_name: address.full_name,
+            phone: address.phone,
+            country_id: String(address.country_id),
+            city: address.city,
+            address_line: address.address_line,
+            postal_code: address.postal_code ?? "",
+        });
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -67,6 +81,47 @@ export default function Index({ cart, countries }) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                {addresses.length > 0 && (
+                                    <div className="space-y-1.5">
+                                        <Label>
+                                            {tt(
+                                                "use_saved_address",
+                                                locale,
+                                            )}
+                                        </Label>
+                                        <Select
+                                            onValueChange={fillFromAddress}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue>
+                                                    {() =>
+                                                        tt(
+                                                            "select_saved_address",
+                                                            locale,
+                                                        )
+                                                    }
+                                                </SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {addresses.map((address) => (
+                                                    <SelectItem
+                                                        key={address.id}
+                                                        value={String(
+                                                            address.id,
+                                                        )}
+                                                    >
+                                                        {address.full_name} —{" "}
+                                                        {address.city}
+                                                        {address.is_default
+                                                            ? ` (${tt("default_address", locale)})`
+                                                            : ""}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                )}
+
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="space-y-1.5">
                                         <Label htmlFor="full_name">
