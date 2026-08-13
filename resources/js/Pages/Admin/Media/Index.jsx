@@ -32,6 +32,7 @@ export default function Index({ media }) {
 
     useEffect(() => {
         if (flash?.success) toast.success(at(flash.success, uiLocale));
+        if (flash?.error) toast.error(at(flash.error, uiLocale));
     }, [flash]);
 
     const handleFilesChange = (e) => {

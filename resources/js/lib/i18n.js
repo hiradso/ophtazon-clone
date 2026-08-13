@@ -199,6 +199,7 @@ const translations = {
         password_criteria_upper: "An uppercase letter",
         password_criteria_number: "A number",
         password_criteria_special: "A symbol (!@#$...)",
+        password_changed_success: "Password changed successfully.",
     },
     fr: {
         products: "Produits",
@@ -404,6 +405,7 @@ const translations = {
         password_criteria_upper: "Une lettre majuscule",
         password_criteria_number: "Un chiffre",
         password_criteria_special: "Un symbole (!@#$...)",
+        password_changed_success: "Mot de passe modifié avec succès.",
     },
     fa: {
         products: "محصولات",
@@ -602,6 +604,7 @@ const translations = {
         password_criteria_upper: "یک حرف بزرگ انگلیسی",
         password_criteria_number: "یک عدد",
         password_criteria_special: "یک نماد (!@#$...)",
+        password_changed_success: "رمز عبور با موفقیت تغییر کرد.",
     },
 };
 

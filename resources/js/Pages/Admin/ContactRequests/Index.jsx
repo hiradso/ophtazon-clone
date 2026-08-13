@@ -58,6 +58,7 @@ export default function Index({ contactRequests }) {
 
     useEffect(() => {
         if (flash?.success) toast.success(at(flash.success, uiLocale));
+        if (flash?.error) toast.error(at(flash.error, uiLocale));
     }, [flash]);
 
     const { data, setData, put, processing } = useForm({

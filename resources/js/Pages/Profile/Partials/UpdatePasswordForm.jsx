@@ -7,6 +7,7 @@ import PasswordStrengthMeter from "@/Components/PasswordStrengthMeter";
 import { Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
 import { useRef } from "react";
+import { toast } from "sonner";
 import { tt } from "@/lib/i18n";
 import { getPasswordStrength } from "@/lib/passwordStrength";
 import { KeyRound } from "lucide-react";
@@ -35,7 +36,10 @@ export default function UpdatePasswordForm({ className = "" }) {
 
         put(route("password.update"), {
             preserveScroll: true,
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                reset();
+                toast.success(tt("password_changed_success", uiLocale));
+            },
             onError: (errors) => {
                 if (errors.password) {
                     reset("password", "password_confirmation");

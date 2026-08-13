@@ -93,6 +93,9 @@ export default function Edit({
         if (flash?.success) {
             toast.success(at(flash.success, uiLocale));
         }
+        if (flash?.error) {
+            toast.error(at(flash.error, uiLocale));
+        }
     }, [flash]);
 
     const submit = (e) => {
