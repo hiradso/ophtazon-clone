@@ -178,6 +178,10 @@ const translations = {
         qty: "Qty",
         price: "Price",
         go_to_cart: "Go to cart",
+        toggle_theme: "Toggle theme",
+        theme_light: "Light",
+        theme_dark: "Dark",
+        theme_system: "System",
     },
     fr: {
         products: "Produits",
@@ -362,6 +366,10 @@ const translations = {
         qty: "Qté",
         price: "Prix",
         go_to_cart: "Aller au panier",
+        toggle_theme: "Changer de thème",
+        theme_light: "Clair",
+        theme_dark: "Sombre",
+        theme_system: "Système",
     },
     fa: {
         products: "محصولات",
@@ -539,6 +547,10 @@ const translations = {
         qty: "تعداد",
         price: "قیمت",
         go_to_cart: "رفتن به سبد خرید",
+        toggle_theme: "تغییر پوسته",
+        theme_light: "روشن",
+        theme_dark: "تیره",
+        theme_system: "سیستم",
     },
 };
 
