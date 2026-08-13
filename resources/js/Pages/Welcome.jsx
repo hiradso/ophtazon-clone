@@ -42,7 +42,7 @@ export default function Welcome({
     const { locale, appUrl } = usePage().props;
     return (
         <PublicLayout>
-            <Head title="Ophtazon — Ophthalmic Equipment Marketplace"></Head>
+            <Head title="Ophthalmic Equipment Marketplace"></Head>
 
             {sections.map((section) => {
                 switch (section.type) {

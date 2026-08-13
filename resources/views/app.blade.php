@@ -56,6 +56,29 @@
 
         @if ($siteSettings->logo)
             <link rel="icon" href="{{ asset('storage/' . $siteSettings->logo) }}">
+            <link rel="apple-touch-icon" href="{{ asset('storage/' . $siteSettings->logo) }}">
+        @endif
+
+        @php
+            // توضیحات پیش‌فرض متا/OG برای صفحاتی که خودشون override نکردن
+            // (مثل صفحه‌ی اصلی). صفحات محصول/CMS همچنان با <Head> خودشون
+            // این تگ رو (بر اساس name="description" / property مشابه)
+            // override می‌کنن — رفتار استاندارد Inertia برای این تگ‌ها.
+            $defaultMetaDescription = $currentLocale === 'fr'
+                ? "Achetez et vendez du matériel ophtalmique d'occasion, reconditionné et neuf — lampes à fente, OCT, tonomètres, autoréfractomètres et plus."
+                : ($currentLocale === 'fa'
+                    ? 'خرید و فروش تجهیزات چشم‌پزشکی دست‌دوم، بازسازی‌شده و نو — اسلیت لمپ، OCT، تونومتر، اتورفرکتومتر و موارد دیگر.'
+                    : 'Buy and sell used, refurbished, and new ophthalmic equipment — slit lamps, OCT devices, tonometers, autorefractors, and more.');
+        @endphp
+
+        <meta name="description" content="{{ $defaultMetaDescription }}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="{{ $siteSettings->site_name ?? 'Ophtazon' }}">
+        <meta property="og:title" content="{{ $siteSettings->site_name ?? 'Ophtazon' }} — {{ $slogan }}">
+        <meta property="og:description" content="{{ $defaultMetaDescription }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+        @if ($siteSettings->logo)
+            <meta property="og:image" content="{{ asset('storage/' . $siteSettings->logo) }}">
         @endif
 
         @if ($persianFontPreloadUrl)
