@@ -39,6 +39,11 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // این آبجکت تنها جایی است که رنگ هر وضعیت به کلاس Tailwind وصل می‌شود.
 const statusColor = {
@@ -164,13 +169,31 @@ export default function Index({ products }) {
                                             <TableRow key={product.id}>
                                                 <TableCell className="align-middle">
                                                     {product.images?.[0] ? (
-                                                        <img
-                                                            src={`/storage/${product.images[0].url}`}
-                                                            alt=""
-                                                            className="size-14 rounded-md object-cover"
-                                                        />
+                                                        <Tooltip>
+                                                            <TooltipTrigger
+                                                                render={
+                                                                    <div className="relative h-16 w-16 shrink-0 cursor-zoom-in overflow-hidden rounded-md ring-1 ring-border transition-transform duration-200 ease-out hover:z-10 hover:scale-110 hover:shadow-lg">
+                                                                        <img
+                                                                            src={`/storage/${product.images[0].url}`}
+                                                                            alt=""
+                                                                            className="absolute inset-0 h-full w-full object-cover"
+                                                                        />
+                                                                    </div>
+                                                                }
+                                                            />
+                                                            <TooltipContent
+                                                                side="right"
+                                                                className="rounded-lg border border-border bg-popover p-1.5 shadow-2xl"
+                                                            >
+                                                                <img
+                                                                    src={`/storage/${product.images[0].url}`}
+                                                                    alt=""
+                                                                    className="max-h-72 max-w-72 rounded-md object-cover"
+                                                                />
+                                                            </TooltipContent>
+                                                        </Tooltip>
                                                     ) : (
-                                                        <div className="flex size-14 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                                                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
                                                             <ImageOff className="size-5" />
                                                         </div>
                                                     )}

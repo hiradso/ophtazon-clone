@@ -16,6 +16,7 @@ import {
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
+import { formatPrice } from "@/lib/pricing";
 
 export default function Show({ order }) {
     const { flash, locale: uiLocale } = usePage().props;
@@ -113,10 +114,11 @@ export default function Show({ order }) {
                                                 </p>
                                             </div>
                                             <p className="text-foreground">
-                                                {(
+                                                {formatPrice(
                                                     item.unit_price *
-                                                    item.quantity
-                                                ).toFixed(2)}{" "}
+                                                        item.quantity,
+                                                    uiLocale,
+                                                )}{" "}
                                                 {order.currency}
                                             </p>
                                         </div>
@@ -129,7 +131,11 @@ export default function Show({ order }) {
                                             {at("order_total", uiLocale)}
                                         </span>
                                         <span>
-                                            {order.total} {order.currency}
+                                            {formatPrice(
+                                                order.total,
+                                                uiLocale,
+                                            )}{" "}
+                                            {order.currency}
                                         </span>
                                     </div>
                                 </CardContent>

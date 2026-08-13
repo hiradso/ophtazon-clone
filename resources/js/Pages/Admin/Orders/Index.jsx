@@ -12,6 +12,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { at } from "@/lib/admin-i18n";
+import { formatPrice } from "@/lib/pricing";
+import { toFa } from "@/lib/toFa";
 
 const statusColor = {
     pending:
@@ -55,7 +57,7 @@ export default function Index({ orders }) {
             <div className="py-8">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                     <p className="mb-6 text-sm text-muted-foreground">
-                        {orders.total}{" "}
+                        {toFa(orders.total, uiLocale)}{" "}
                         {orders.total === 1
                             ? at("order_singular", uiLocale)
                             : at("orders_count", uiLocale)}
@@ -116,7 +118,11 @@ export default function Index({ orders }) {
                                                 {order.store?.name}
                                             </TableCell>
                                             <TableCell className="align-middle text-foreground">
-                                                {order.total} {order.currency}
+                                                {formatPrice(
+                                                    order.total,
+                                                    uiLocale,
+                                                )}{" "}
+                                                {order.currency}
                                             </TableCell>
                                             <TableCell className="align-middle">
                                                 <Badge

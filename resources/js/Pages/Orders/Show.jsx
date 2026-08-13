@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { toast } from "sonner";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,21 @@ export default function Show({ order }) {
         if (flash?.success) toast.success(tt(flash.success, locale));
         if (flash?.error) toast.error(tt(flash.error, locale));
     }, [flash]);
+
+    // در حالی که سفارش هنوز به مرحله‌ی نهایی (تحویل‌شده/لغوشده) نرسیده،
+    // هر چند ثانیه فقط prop سفارش را دوباره می‌گیریم تا اگر ادمین وضعیتش
+    // را عوض کرد، کاربر بدون رفرش دستی ببیندش.
+    useEffect(() => {
+        if (order.status === "delivered" || order.status === "cancelled") {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            router.reload({ only: ["order"] });
+        }, 8000);
+
+        return () => clearInterval(interval);
+    }, [order.status]);
 
     return (
         <PublicLayout>
