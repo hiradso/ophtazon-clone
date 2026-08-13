@@ -4,9 +4,11 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import PasswordInput from '@/Components/PasswordInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { tt } from '@/lib/i18n';
 
 export default function ResetPassword({ token, email }) {
+    const { locale } = usePage().props;
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
         email: email,
@@ -24,11 +26,11 @@ export default function ResetPassword({ token, email }) {
 
     return (
         <GuestLayout>
-            <Head title="Reset Password" />
+            <Head title={tt('reset_password_title', locale)} />
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value={tt('email', locale)} />
 
                     <TextInput
                         id="email"
@@ -44,7 +46,7 @@ export default function ResetPassword({ token, email }) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value={tt('password', locale)} />
 
                     <PasswordInput
                         id="password"
@@ -62,7 +64,7 @@ export default function ResetPassword({ token, email }) {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value={tt('confirm_password', locale)}
                     />
 
                     <PasswordInput
@@ -82,9 +84,9 @@ export default function ResetPassword({ token, email }) {
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-4 flex items-center justify-end rtl:justify-start">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Reset Password
+                        {tt('reset_password_title', locale)}
                     </PrimaryButton>
                 </div>
             </form>

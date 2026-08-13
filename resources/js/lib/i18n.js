@@ -182,6 +182,14 @@ const translations = {
         theme_light: "Light",
         theme_dark: "Dark",
         theme_system: "System",
+        remember_me: "Remember me",
+        forgot_your_password: "Forgot your password?",
+        already_registered: "Already registered?",
+        forgot_password_title: "Forgot Password",
+        forgot_password_desc:
+            "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
+        email_password_reset_link: "Email Password Reset Link",
+        reset_password_title: "Reset Password",
     },
     fr: {
         products: "Produits",
@@ -370,6 +378,14 @@ const translations = {
         theme_light: "Clair",
         theme_dark: "Sombre",
         theme_system: "Système",
+        remember_me: "Se souvenir de moi",
+        forgot_your_password: "Mot de passe oublié ?",
+        already_registered: "Déjà inscrit ?",
+        forgot_password_title: "Mot de passe oublié",
+        forgot_password_desc:
+            "Mot de passe oublié ? Pas de problème. Indiquez-nous votre adresse e-mail et nous vous enverrons un lien pour en choisir un nouveau.",
+        email_password_reset_link: "Envoyer le lien de réinitialisation",
+        reset_password_title: "Réinitialiser le mot de passe",
     },
     fa: {
         products: "محصولات",
@@ -551,6 +567,14 @@ const translations = {
         theme_light: "روشن",
         theme_dark: "تیره",
         theme_system: "سیستم",
+        remember_me: "مرا به خاطر بسپار",
+        forgot_your_password: "رمز عبور خود را فراموش کرده‌اید؟",
+        already_registered: "قبلاً ثبت‌نام کرده‌اید؟",
+        forgot_password_title: "فراموشی رمز عبور",
+        forgot_password_desc:
+            "رمز عبور خود را فراموش کرده‌اید؟ مشکلی نیست. فقط ایمیل خود را وارد کنید تا لینک بازیابی رمز عبور برایتان ارسال شود.",
+        email_password_reset_link: "ارسال لینک بازیابی رمز عبور",
+        reset_password_title: "بازنشانی رمز عبور",
     },
 };
 
