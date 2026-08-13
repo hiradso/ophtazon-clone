@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,6 +28,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);
+
+        // مسیر 'dashboard' فقط برای admin/staff قابل دسترسیه؛ اگر یک
+        // مشتری عادی از قبل لاگین باشد و بخواهد به /login یا /register
+        // برود، میدل‌ور guest به‌طور پیش‌فرض او را به route('dashboard')
+        // هدایت می‌کند که برایش ۴۰۳ می‌شود. اینجا مقصد را بر اساس نقش
+        // کاربر تعیین می‌کنیم.
+        $middleware->redirectUsersTo(function (Request $request) {
+            $user = $request->user();
+
+            if ($user && in_array($user->role, [UserRole::Admin, UserRole::Staff], true)) {
+                return route('dashboard', absolute: false);
+            }
+
+            return route('welcome', ['locale' => App::getLocale()], absolute: false);
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -238,6 +238,13 @@
                 function hideLoader() {
                     if (!domReady || !pageLoaded) return;
 
+                    // اول از همه، بلافاصله جلوی مسدود شدن کلیک‌ها را می‌گیریم —
+                    // مستقل از انیمیشن fade. اگر requestAnimationFrame به هر
+                    // دلیلی دیر اجرا شود یا اصلاً اجرا نشود (مثلاً تب در پس‌زمینه
+                    // باشد)، کاربر همچنان می‌تواند فوراً با صفحه تعامل کند؛
+                    // فقط جلوه‌ی محو شدن ممکن است کمی دیرتر نمایش داده شود.
+                    loader.style.pointerEvents = 'none';
+
                     requestAnimationFrame(function () {
                         requestAnimationFrame(function () {
                             loader.classList.add('fade-out');
@@ -250,9 +257,20 @@
                     });
                 }
 
+                // سیگنال اصلی و قابل‌اعتماد: خود اپ ری‌اکت بعد از mount شدن
+                // این ایونت را dispatch می‌کند (در app.jsx). MutationObserver
+                // به‌تنهایی قابل اعتماد نیست — در محیط‌هایی که SSR غیرفعال است
+                // (یا کند است)، مشاهده شد که ایونت mutation گاهی هرگز detect
+                // نمی‌شود و لودر برای همیشه روی صفحه می‌ماند و کلیک‌ها را
+                // مسدود می‌کند. اینجا چند راه موازی برای اطمینان بیشتر داریم.
+                window.addEventListener('app:mounted', function () {
+                    domReady = true;
+                    hideLoader();
+                });
+
                 if (appRoot && appRoot.children.length > 0) {
                     domReady = true;
-                } else {
+                } else if (appRoot) {
                     var observer = new MutationObserver(function () {
                         if (appRoot && appRoot.children.length > 0) {
                             domReady = true;
@@ -260,9 +278,7 @@
                             hideLoader();
                         }
                     });
-                    if (appRoot) {
-                        observer.observe(appRoot, { childList: true });
-                    }
+                    observer.observe(appRoot, { childList: true });
                 }
 
                 if (document.readyState === 'complete') {

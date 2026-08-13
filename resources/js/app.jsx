@@ -26,6 +26,7 @@ createInertiaApp({
                 </TooltipProvider>
             </ThemeProvider>,
         );
+        window.dispatchEvent(new Event("app:mounted"));
     },
     progress: {
         color: "#0f766e",
