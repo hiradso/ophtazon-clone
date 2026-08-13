@@ -66,9 +66,24 @@ return Application::configure(basePath: dirname(__DIR__))
                 App::setLocale($locale);
                 URL::defaults(['locale' => $locale]);
 
+                // همین دلیل که prop اشتراکی locale ممکنه پر نشده باشه، prop
+                // اشتراکی ziggy (تنظیمات مسیرها که Ziggy توی جاوااسکریپت
+                // بهش نیاز داره) هم ممکنه پر نشده باشه — اگه این مسیر قبل از
+                // اجرای میدل‌ور HandleInertiaRequests به این exception
+                // handler برسه (مثلاً یک استثنا زودتر از آن در پایپ‌لاین رخ
+                // بده)، prop اشتراکی ziggy هرگز ثبت نمی‌شه. بدون آن، رندر
+                // SSR خودِ صفحه‌ی Error با خطای
+                // «Cannot read properties of undefined» کرش می‌کنه و Nginx
+                // به‌جای صفحه‌ی زیبای خطا، یک ۵۰۲ خام نشون می‌ده — دقیقاً
+                // همون چیزی که این را ثابت می‌کند. اینجا دستی همان کاری را
+                // می‌کنیم که آن میدل‌ور می‌کرد.
                 return Inertia::render('Error', [
                     'status' => $response->getStatusCode(),
                     'locale' => $locale,
+                    'ziggy' => fn() => [
+                        ...(new \Tighten\Ziggy\Ziggy)->toArray(),
+                        'location' => $request->url(),
+                    ],
                 ])
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());
