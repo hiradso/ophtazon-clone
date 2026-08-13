@@ -30,4 +30,13 @@ class UpdateUserRequest extends FormRequest
             'is_active' => ['boolean'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'store_id.required' => app()->getLocale() === 'fa'
+                ? 'برای نقش کارمند، انتخاب فروشگاه الزامی است.'
+                : 'A store is required for the staff role.',
+        ];
+    }
 }
