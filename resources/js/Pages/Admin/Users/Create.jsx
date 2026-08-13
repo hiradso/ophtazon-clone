@@ -228,6 +228,11 @@ export default function Create({ stores, countries }) {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    {errors.store_id && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.store_id}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="space-y-1.5">
@@ -266,6 +271,11 @@ export default function Create({ stores, countries }) {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    {errors.country_id && (
+                                        <p className="text-sm text-destructive">
+                                            {errors.country_id}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="flex items-center gap-2">
