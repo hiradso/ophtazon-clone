@@ -65,7 +65,7 @@ export default function Edit({ mustVerifyEmail, status, ordersCount }) {
                     {/* کارت‌های آماری و دسترسی سریع */}
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                         <Link
-                            href={route("orders.index")}
+                            href={route("orders.index", { locale: uiLocale })}
                             className="group block"
                         >
                             <Card className="h-full transition-colors group-hover:border-primary/40">
@@ -87,7 +87,7 @@ export default function Edit({ mustVerifyEmail, status, ordersCount }) {
                         </Link>
 
                         <Link
-                            href={route("addresses.index")}
+                            href={route("addresses.index", { locale: uiLocale })}
                             className="group block"
                         >
                             <Card className="h-full transition-colors group-hover:border-primary/40">

@@ -14,9 +14,12 @@ export default function Index({ cart }) {
     const items = cart?.items ?? [];
 
     const removeItem = (cartItemId) => {
-        router.delete(route("cart.destroy", cartItemId), {
-            preserveScroll: true,
-        });
+        router.delete(
+            route("cart.destroy", { locale, cartItem: cartItemId }),
+            {
+                preserveScroll: true,
+            },
+        );
     };
 
     const total = items.reduce(
@@ -42,7 +45,7 @@ export default function Index({ cart }) {
                         </p>
                         <Button
                             nativeButton={false}
-                            render={<Link href={route("products.index")} />}
+                            render={<Link href={route("products.index", { locale })} />}
                         >
                             {tt("browse_equipment", locale)}
                         </Button>
@@ -143,7 +146,7 @@ export default function Index({ cart }) {
                                         nativeButton={false}
                                         render={
                                             <Link
-                                                href={route("checkout.index")}
+                                                href={route("checkout.index", { locale })}
                                             />
                                         }
                                     >

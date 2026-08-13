@@ -50,7 +50,7 @@ export default function Index({ orders }) {
                         </p>
                         <Button
                             nativeButton={false}
-                            render={<Link href={route("products.index")} />}
+                            render={<Link href={route("products.index", { locale: uiLocale })} />}
                         >
                             {tt("browse_equipment", uiLocale)}
                         </Button>

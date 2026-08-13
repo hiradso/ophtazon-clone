@@ -75,7 +75,7 @@ export default function Show({ order }) {
                 <div className="mt-6 text-center">
                     <Button
                         nativeButton={false}
-                        render={<Link href={route("products.index")} />}
+                        render={<Link href={route("products.index", { locale })} />}
                     >
                         {tt("continue_shopping", locale)}
                     </Button>

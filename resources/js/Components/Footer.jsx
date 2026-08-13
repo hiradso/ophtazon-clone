@@ -16,7 +16,7 @@ export default function Footer() {
 
     const subscribe = (e) => {
         e.preventDefault();
-        post(route("newsletter.store"), {
+        post(route("newsletter.store", { locale }), {
             preserveScroll: true,
             onSuccess: () => reset("email"),
         });

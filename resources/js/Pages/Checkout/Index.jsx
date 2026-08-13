@@ -42,7 +42,7 @@ export default function Index({ cart, countries }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("orders.store"));
+        post(route("orders.store", { locale }));
     };
 
     return (

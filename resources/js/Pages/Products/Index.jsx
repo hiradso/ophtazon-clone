@@ -72,7 +72,7 @@ export default function Index({
     const applyFilters = (overrides = {}) => {
         const next = { ...localFilters, ...overrides };
         setLocalFilters(next);
-        router.get(route("products.index"), next, {
+        router.get(route("products.index", { locale }), next, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -89,14 +89,14 @@ export default function Index({
             q: "",
         };
         setLocalFilters(empty);
-        router.get(route("products.index"), {}, { preserveState: true });
+        router.get(route("products.index", { locale }), {}, { preserveState: true });
     };
 
     const hasActiveFilters = Object.values(filters).some((value) => value);
 
     const submitAlert = (e) => {
         e.preventDefault();
-        postAlert(route("alerts.store"), {
+        postAlert(route("alerts.store", { locale }), {
             preserveScroll: true,
             onSuccess: () => {
                 setAlertOpen(false);
@@ -320,7 +320,10 @@ export default function Index({
                                 }}
                             >
                                 <Link
-                                    href={route("products.show", product.slug)}
+                                    href={route("products.show", {
+                                        locale,
+                                        product: product.slug,
+                                    })}
                                 >
                                     <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
                                         <div className="relative flex h-48 items-center justify-center overflow-hidden bg-muted">

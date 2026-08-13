@@ -92,24 +92,41 @@ export default function Index({ addresses, countries }) {
         e.preventDefault();
 
         if (editingAddress) {
-            put(route("addresses.update", editingAddress.id), {
-                onSuccess: () => closeForm(),
-            });
+            put(
+                route("addresses.update", {
+                    locale: uiLocale,
+                    address: editingAddress.id,
+                }),
+                {
+                    onSuccess: () => closeForm(),
+                },
+            );
         } else {
-            post(route("addresses.store"), {
+            post(route("addresses.store", { locale: uiLocale }), {
                 onSuccess: () => closeForm(),
             });
         }
     };
 
     const confirmDelete = () => {
-        router.delete(route("addresses.destroy", addressToDelete.id), {
-            onSuccess: () => setAddressToDelete(null),
-        });
+        router.delete(
+            route("addresses.destroy", {
+                locale: uiLocale,
+                address: addressToDelete.id,
+            }),
+            {
+                onSuccess: () => setAddressToDelete(null),
+            },
+        );
     };
 
     const setDefault = (address) => {
-        router.post(route("addresses.setDefault", address.id));
+        router.post(
+            route("addresses.setDefault", {
+                locale: uiLocale,
+                address: address.id,
+            }),
+        );
     };
 
     return (

@@ -34,7 +34,7 @@ export default function DeleteUserForm({ className = "" }) {
     const deleteUser = (e) => {
         e.preventDefault();
 
-        destroy(route("profile.destroy"), {
+        destroy(route("profile.destroy", { locale: uiLocale }), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: () => passwordInput.current.focus(),

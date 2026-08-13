@@ -73,7 +73,7 @@ export default function Show({ product, relatedProducts }) {
 
     const submitContact = (e) => {
         e.preventDefault();
-        post(route("contact-requests.store"), {
+        post(route("contact-requests.store", { locale }), {
             preserveScroll: true,
             onSuccess: () => {
                 setContactOpen(false);
@@ -159,7 +159,7 @@ export default function Show({ product, relatedProducts }) {
                     variant="ghost"
                     size="sm"
                     nativeButton={false}
-                    render={<Link href={route("products.index")} />}
+                    render={<Link href={route("products.index", { locale })} />}
                     className="mb-6"
                 >
                     {locale === "fa" ? (
@@ -283,7 +283,7 @@ export default function Show({ product, relatedProducts }) {
                                     className="w-full sm:w-auto"
                                     onClick={() => {
                                         router.post(
-                                            route("cart.store"),
+                                            route("cart.store", { locale }),
                                             { product_id: product.id },
                                             {
                                                 preserveScroll: true,
