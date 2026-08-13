@@ -2,6 +2,7 @@ import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -122,9 +123,8 @@ export default function Edit({ targetUser, stores, countries }) {
                                     <Label htmlFor="password">
                                         {at("password", uiLocale)}
                                     </Label>
-                                    <Input
+                                    <PasswordInput
                                         id="password"
-                                        type="password"
                                         value={data.password}
                                         onChange={(e) =>
                                             setData("password", e.target.value)
