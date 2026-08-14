@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ImageOff, X, Bell } from "lucide-react";
 import StockBadge from "@/Components/StockBadge";
+import Price from "@/Components/Price";
 import {
     Dialog,
     DialogContent,
@@ -26,7 +27,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
-import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 
 export default function Index({
@@ -383,20 +384,25 @@ export default function Index({
                                             </h3>
                                             <div className="flex items-baseline gap-2">
                                                 {discounted && (
-                                                    <span className="text-sm text-muted-foreground line-through">
-                                                        {formatPrice(
-                                                            product.price,
-                                                            locale,
-                                                        )}
-                                                    </span>
+                                                    <Price
+                                                        amount={product.price}
+                                                        currency={
+                                                            product.currency
+                                                        }
+                                                        locale={locale}
+                                                        className="text-sm text-muted-foreground line-through"
+                                                    />
                                                 )}
-                                                <p className="text-lg font-semibold text-foreground">
-                                                    {formatPrice(
-                                                        product.effective_price,
-                                                        locale,
-                                                    )}{" "}
-                                                    {product.currency}
-                                                </p>
+                                                <Price
+                                                    amount={
+                                                        product.effective_price
+                                                    }
+                                                    currency={
+                                                        product.currency
+                                                    }
+                                                    locale={locale}
+                                                    className="text-lg font-semibold text-foreground"
+                                                />
                                             </div>
                                             <StockBadge
                                                 stock={product.stock_quantity}

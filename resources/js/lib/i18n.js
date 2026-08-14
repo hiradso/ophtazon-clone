@@ -68,6 +68,7 @@ const translations = {
         low_stock_suffix: "left in stock",
         in_stock: "In stock",
         out_of_stock: "Out of stock",
+        charged_in_currency_note: "Your order will actually be charged in",
         on_sale: "On Sale",
         error_403_title: "No entry (without the right glasses)",
         error_403_message:
@@ -301,6 +302,7 @@ const translations = {
         low_stock_suffix: "en stock",
         in_stock: "En stock",
         out_of_stock: "Rupture de stock",
+        charged_in_currency_note: "Votre commande sera en réalité facturée en",
         on_sale: "En Promotion",
         error_403_title: "Accès refusé (sans les bonnes lunettes)",
         error_403_message:
@@ -534,6 +536,7 @@ const translations = {
         low_stock_suffix: "عدد باقی مانده",
         in_stock: "موجود در انبار",
         out_of_stock: "ناموجود",
+        charged_in_currency_note: "مبلغ نهایی سفارش شما در واقع به این ارز ثبت می‌شود:",
         on_sale: "حراج",
         error_403_title: "ورود ممنوع (بدون عینک مناسب)",
         error_403_message:

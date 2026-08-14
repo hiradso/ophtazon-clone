@@ -29,10 +29,12 @@ import { switchLocale } from "@/lib/switchLocale";
 import { formatPrice } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { menuLinkHref } from "@/lib/menuLinks";
+import { useCurrency } from "@/lib/currency-provider";
 
 export default function PublicLayout({ children }) {
     const { auth, cartItemsCount, headerLinks, flash, siteSettings, locale } =
         usePage().props;
+    const { currency, setCurrency, availableCurrencies } = useCurrency();
 
     useEffect(() => {
         if (flash?.success) toast.success(tt(flash.success, locale));
@@ -160,6 +162,30 @@ export default function PublicLayout({ children }) {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
+
+                        {availableCurrencies.length > 1 && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger
+                                    render={
+                                        <Button variant="ghost" size="sm">
+                                            {currency}
+                                        </Button>
+                                    }
+                                />
+                                <DropdownMenuContent align="end">
+                                    {availableCurrencies.map((code) => (
+                                        <DropdownMenuItem
+                                            key={code}
+                                            onClick={() =>
+                                                setCurrency(code)
+                                            }
+                                        >
+                                            {code}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
 
                         <CartHoverPreview
                             cartItemsCount={cartItemsCount}
@@ -323,6 +349,7 @@ function CartHoverPreview({ cartItemsCount, locale }) {
     const [loading, setLoading] = useState(false);
     const [busyId, setBusyId] = useState(null);
     const closeTimeout = useRef(null);
+    const { convert } = useCurrency();
 
     const fetchPreview = async () => {
         setLoading(true);
@@ -551,16 +578,22 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                                             </div>
                                                         </td>
                                                         <td className="py-2 pe-2 text-end text-xs font-normal whitespace-nowrap text-foreground">
-                                                            {formatPrice(
-                                                                item.product
-                                                                    .price *
-                                                                    item.quantity,
-                                                                locale,
-                                                            )}{" "}
-                                                            {
-                                                                item.product
-                                                                    .currency
-                                                            }
+                                                            <Price
+                                                                amount={
+                                                                    item
+                                                                        .product
+                                                                        .price *
+                                                                    item.quantity
+                                                                }
+                                                                currency={
+                                                                    item
+                                                                        .product
+                                                                        .currency
+                                                                }
+                                                                locale={
+                                                                    locale
+                                                                }
+                                                            />
                                                         </td>
                                                         <td className="py-2 pe-0.5 text-end">
                                                             <button
@@ -590,8 +623,37 @@ function CartHoverPreview({ cartItemsCount, locale }) {
                                         {tt("subtotal", locale)}
                                     </span>
                                     <span className="font-semibold text-foreground">
-                                        {formatPrice(preview.total, locale)}{" "}
-                                        {preview.currency}
+                                        {(() => {
+                                            const {
+                                                amount,
+                                                currency: convertedCurrency,
+                                            } = preview.items.reduce(
+                                                (acc, item) => {
+                                                    const converted = convert(
+                                                        item.product.price *
+                                                            item.quantity,
+                                                        item.product.currency,
+                                                    );
+                                                    return {
+                                                        amount:
+                                                            acc.amount +
+                                                            converted.amount,
+                                                        currency:
+                                                            converted.currency,
+                                                    };
+                                                },
+                                                { amount: 0, currency: "USD" },
+                                            );
+                                            return (
+                                                <>
+                                                    {formatPrice(
+                                                        amount,
+                                                        locale,
+                                                    )}{" "}
+                                                    {convertedCurrency}
+                                                </>
+                                            );
+                                        })()}
                                     </span>
                                 </div>
 

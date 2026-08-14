@@ -6,6 +6,7 @@ use App\Enums\ContactRequestStatus;
 use App\Enums\UserRole;
 use App\Models\Cart;
 use App\Models\ContactRequest;
+use App\Models\ExchangeRate;
 use App\Models\MenuLink;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -88,6 +89,11 @@ class HandleInertiaRequests extends Middleware
             },
             'siteSettings' => function () {
                 return \App\Models\Setting::current();
+            },
+            'exchangeRates' => function () {
+                return ExchangeRate::query()
+                    ->pluck('rate_per_usd', 'currency')
+                    ->map(fn($rate) => (float) $rate);
             },
         ];
     }

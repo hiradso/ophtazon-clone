@@ -19,16 +19,26 @@ import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { countryLabel } from "@/lib/countries";
+import { useCurrency } from "@/lib/currency-provider";
+import Price from "@/Components/Price";
 
 export default function Index({ cart, countries, addresses = [], defaultAddress }) {
     const { locale } = usePage().props;
     const items = cart.items;
+    const { convert, currency: displayCurrency } = useCurrency();
+
+    // این جمع به ارز واقعی سفارش (همون ارز محصولات) است — دقیقاً
+    // همون چیزی که هنگام ثبت سفارش در OrderController ذخیره می‌شود.
+    // نمایش زیر آن با ارز انتخابی کاربر تبدیل‌شده، فقط برای راحتی
+    // دیدن است، نه مبلغ واقعی سفارش.
     const total = items.reduce(
         (sum, item) =>
             sum + Number(item.product.effective_price) * item.quantity,
         0,
     );
     const currency = items[0]?.product.currency ?? "EUR";
+    const convertedTotal = convert(total, currency);
+    const showsDifferentCurrency = displayCurrency !== currency;
 
     const { data, setData, post, processing, errors } = useForm({
         full_name: defaultAddress?.full_name ?? "",
@@ -343,24 +353,33 @@ export default function Index({ cart, countries, addresses = [], defaultAddress 
                                                 </span>
                                                 <span className="shrink-0 text-right whitespace-nowrap">
                                                     {discounted && (
-                                                        <span className="me-1.5 text-xs text-muted-foreground line-through">
-                                                            {formatPrice(
+                                                        <Price
+                                                            amount={
                                                                 item.product
                                                                     .price *
-                                                                    item.quantity,
-                                                                locale,
-                                                            )}
-                                                        </span>
+                                                                item.quantity
+                                                            }
+                                                            currency={
+                                                                item.product
+                                                                    .currency
+                                                            }
+                                                            locale={locale}
+                                                            className="me-1.5 text-xs text-muted-foreground line-through"
+                                                        />
                                                     )}
-                                                    <span className="text-foreground">
-                                                        {formatPrice(
+                                                    <Price
+                                                        amount={
                                                             item.product
                                                                 .effective_price *
-                                                                item.quantity,
-                                                            locale,
-                                                        )}{" "}
-                                                        {item.product.currency}
-                                                    </span>
+                                                            item.quantity
+                                                        }
+                                                        currency={
+                                                            item.product
+                                                                .currency
+                                                        }
+                                                        locale={locale}
+                                                        className="text-foreground"
+                                                    />
                                                 </span>
                                             </div>
                                         );
@@ -372,9 +391,19 @@ export default function Index({ cart, countries, addresses = [], defaultAddress 
                                 <div className="flex justify-between text-base font-semibold text-foreground">
                                     <span>{tt("total_label", locale)}</span>
                                     <span>
-                                        {formatPrice(total, locale)} {currency}
+                                        {formatPrice(
+                                            convertedTotal.amount,
+                                            locale,
+                                        )}{" "}
+                                        {convertedTotal.currency}
                                     </span>
                                 </div>
+                                {showsDifferentCurrency && (
+                                    <p className="text-xs text-muted-foreground">
+                                        {tt("charged_in_currency_note", locale)}{" "}
+                                        {formatPrice(total, locale)} {currency}
+                                    </p>
+                                )}
 
                                 <motion.div whileTap={{ scale: 0.97 }}>
                                     <Button

@@ -8,10 +8,13 @@ import { ImageOff, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { useCurrency } from "@/lib/currency-provider";
+import Price from "@/Components/Price";
 
 export default function Index({ cart }) {
     const { locale } = usePage().props;
     const items = cart?.items ?? [];
+    const { convert } = useCurrency();
 
     const removeItem = (cartItemId) => {
         router.delete(
@@ -22,12 +25,22 @@ export default function Index({ cart }) {
         );
     };
 
-    const total = items.reduce(
-        (sum, item) =>
-            sum + Number(item.product.effective_price) * item.quantity,
-        0,
+    // چون آیتم‌های سبد می‌تونن ارزهای مبدأ متفاوت داشته باشن (مثلاً
+    // محصولات فروشگاه‌های مختلف)، هر آیتم اول به ارز نمایشی فعلی
+    // تبدیل می‌شه و بعد جمع زده می‌شه — نه جمع خام مبالغ ارزهای مختلف.
+    const { total, currency } = items.reduce(
+        (acc, item) => {
+            const converted = convert(
+                item.product.effective_price * item.quantity,
+                item.product.currency,
+            );
+            return {
+                total: acc.total + converted.amount,
+                currency: converted.currency,
+            };
+        },
+        { total: 0, currency: "USD" },
     );
-    const currency = items[0]?.product.currency ?? "EUR";
 
     return (
         <PublicLayout>
@@ -93,22 +106,29 @@ export default function Index({ cart }) {
 
                                             <div className="shrink-0 text-right">
                                                 {discounted && (
-                                                    <p className="text-xs text-muted-foreground line-through">
-                                                        {formatPrice(
-                                                            item.product.price,
-                                                            locale,
-                                                        )}{" "}
-                                                        {item.product.currency}
-                                                    </p>
+                                                    <Price
+                                                        amount={
+                                                            item.product.price
+                                                        }
+                                                        currency={
+                                                            item.product
+                                                                .currency
+                                                        }
+                                                        locale={locale}
+                                                        className="block text-xs text-muted-foreground line-through"
+                                                    />
                                                 )}
-                                                <p className="font-semibold text-foreground">
-                                                    {formatPrice(
+                                                <Price
+                                                    amount={
                                                         item.product
-                                                            .effective_price,
-                                                        locale,
-                                                    )}{" "}
-                                                    {item.product.currency}
-                                                </p>
+                                                            .effective_price
+                                                    }
+                                                    currency={
+                                                        item.product.currency
+                                                    }
+                                                    locale={locale}
+                                                    className="font-semibold text-foreground"
+                                                />
                                             </div>
 
                                             <Button

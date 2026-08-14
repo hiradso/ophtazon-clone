@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { CurrencyProvider } from "@/lib/currency-provider";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -20,10 +21,16 @@ createInertiaApp({
         const root = createRoot(el);
         root.render(
             <ThemeProvider>
-                <TooltipProvider>
-                    <App {...props} />
-                    <Toaster position="top-right" richColors />
-                </TooltipProvider>
+                <CurrencyProvider
+                    initialExchangeRates={
+                        props.initialPage.props.exchangeRates
+                    }
+                >
+                    <TooltipProvider>
+                        <App {...props} />
+                        <Toaster position="top-right" richColors />
+                    </TooltipProvider>
+                </CurrencyProvider>
             </ThemeProvider>,
         );
         window.dispatchEvent(new Event("app:mounted"));

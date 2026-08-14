@@ -14,10 +14,11 @@ import { Eye, ImageOff, ArrowRight, Search, ShieldCheck, Flame } from "lucide-re
 import { motion } from "framer-motion";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
-import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { HERO_ICONS } from "@/lib/heroIcons";
 import StockBadge from "@/Components/StockBadge";
+import Price from "@/Components/Price";
 import { richTextOrLegacy } from "@/lib/richText";
 
 const DEFAULT_TRUST_ITEMS = [
@@ -362,20 +363,25 @@ function LatestProductsSection({ products }) {
                                             </h3>
                                             <div className="flex items-baseline gap-2">
                                                 {discounted && (
-                                                    <span className="text-sm text-muted-foreground line-through">
-                                                        {formatPrice(
-                                                            product.price,
-                                                            locale,
-                                                        )}
-                                                    </span>
+                                                    <Price
+                                                        amount={product.price}
+                                                        currency={
+                                                            product.currency
+                                                        }
+                                                        locale={locale}
+                                                        className="text-sm text-muted-foreground line-through"
+                                                    />
                                                 )}
-                                                <p className="text-lg font-semibold text-foreground">
-                                                    {formatPrice(
-                                                        product.effective_price,
-                                                        locale,
-                                                    )}{" "}
-                                                    {product.currency}
-                                                </p>
+                                                <Price
+                                                    amount={
+                                                        product.effective_price
+                                                    }
+                                                    currency={
+                                                        product.currency
+                                                    }
+                                                    locale={locale}
+                                                    className="text-lg font-semibold text-foreground"
+                                                />
                                             </div>
                                             <StockBadge
                                                 stock={product.stock_quantity}
@@ -468,16 +474,24 @@ function DiscountedProductsSection({ products }) {
                                                 {t(product.title, locale)}
                                             </h3>
                                             <div className="flex items-baseline gap-1.5">
-                                                <span className="text-xs text-muted-foreground line-through">
-                                                    {formatPrice(product.price)}
-                                                </span>
-                                                <span className="font-semibold text-foreground">
-                                                    {formatPrice(
-                                                        product.effective_price,
-                                                        locale,
-                                                    )}{" "}
-                                                    {product.currency}
-                                                </span>
+                                                <Price
+                                                    amount={product.price}
+                                                    currency={
+                                                        product.currency
+                                                    }
+                                                    locale={locale}
+                                                    className="text-xs text-muted-foreground line-through"
+                                                />
+                                                <Price
+                                                    amount={
+                                                        product.effective_price
+                                                    }
+                                                    currency={
+                                                        product.currency
+                                                    }
+                                                    locale={locale}
+                                                    className="font-semibold text-foreground"
+                                                />
                                             </div>
                                             <StockBadge
                                                 stock={product.stock_quantity}

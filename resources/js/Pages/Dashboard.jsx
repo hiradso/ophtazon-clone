@@ -269,6 +269,9 @@ export default function Dashboard({
                                                 tickLine={false}
                                                 axisLine={false}
                                                 width={50}
+                                                tickFormatter={(value) =>
+                                                    toFa(value, uiLocale)
+                                                }
                                             />
                                             <Tooltip
                                                 contentStyle={{
@@ -345,6 +348,14 @@ export default function Dashboard({
                                                         axisLine={{
                                                             stroke: "var(--color-border)",
                                                         }}
+                                                        tickFormatter={(
+                                                            value,
+                                                        ) =>
+                                                            toFa(
+                                                                value,
+                                                                uiLocale,
+                                                            )
+                                                        }
                                                     />
                                                     <YAxis
                                                         type="category"
@@ -456,6 +467,14 @@ export default function Dashboard({
                                                         axisLine={{
                                                             stroke: "var(--color-border)",
                                                         }}
+                                                        tickFormatter={(
+                                                            value,
+                                                        ) =>
+                                                            toFa(
+                                                                value,
+                                                                uiLocale,
+                                                            )
+                                                        }
                                                     />
                                                     <YAxis
                                                         type="category"

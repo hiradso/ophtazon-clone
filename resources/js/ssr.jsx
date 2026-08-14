@@ -5,6 +5,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { route } from "ziggy-js";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { CurrencyProvider } from "@/lib/currency-provider";
 
 const appName = "Ophtazon";
 
@@ -28,9 +29,15 @@ createServer((page) =>
 
             return (
                 <ThemeProvider>
-                    <TooltipProvider>
-                        <App {...props} />
-                    </TooltipProvider>
+                    <CurrencyProvider
+                        initialExchangeRates={
+                            props.initialPage.props.exchangeRates
+                        }
+                    >
+                        <TooltipProvider>
+                            <App {...props} />
+                        </TooltipProvider>
+                    </CurrencyProvider>
                 </ThemeProvider>
             );
         },

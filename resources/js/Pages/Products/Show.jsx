@@ -35,9 +35,10 @@ import {
 import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
-import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import StockBadge from "@/Components/StockBadge";
+import Price from "@/Components/Price";
 
 export default function Show({ product, relatedProducts }) {
     const { locale, appUrl } = usePage().props;
@@ -241,15 +242,19 @@ export default function Show({ product, relatedProducts }) {
 
                         <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
                             {discounted && (
-                                <span className="text-lg text-muted-foreground line-through">
-                                    {formatPrice(product.price, locale)}{" "}
-                                    {product.currency}
-                                </span>
+                                <Price
+                                    amount={product.price}
+                                    currency={product.currency}
+                                    locale={locale}
+                                    className="text-lg text-muted-foreground line-through"
+                                />
                             )}
-                            <span className="text-3xl font-bold text-foreground">
-                                {formatPrice(product.effective_price, locale)}{" "}
-                                {product.currency}
-                            </span>
+                            <Price
+                                amount={product.effective_price}
+                                currency={product.currency}
+                                locale={locale}
+                                className="text-3xl font-bold text-foreground"
+                            />
                             {discounted && (
                                 <Badge
                                     dir="ltr"
@@ -448,13 +453,16 @@ export default function Show({ product, relatedProducts }) {
                                                             locale,
                                                         )}
                                                     </h3>
-                                                    <p className="font-semibold text-foreground">
-                                                        {formatPrice(
-                                                            related.effective_price,
-                                                            locale,
-                                                        )}{" "}
-                                                        {related.currency}
-                                                    </p>
+                                                    <Price
+                                                        amount={
+                                                            related.effective_price
+                                                        }
+                                                        currency={
+                                                            related.currency
+                                                        }
+                                                        locale={locale}
+                                                        className="font-semibold text-foreground"
+                                                    />
                                                     <StockBadge
                                                         stock={
                                                             related.stock_quantity
