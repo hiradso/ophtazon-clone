@@ -133,7 +133,17 @@ export default function DatePicker({ value, onChange, locale, placeholder }) {
                 className="w-72 rounded-xl shadow-2xl"
                 dir={isFa ? "rtl" : "ltr"}
             >
-                <div className="mb-3 flex items-center justify-between">
+                {/*
+                  این ردیف عمداً همیشه LTR می‌مونه، حتی تو پاپ‌آور RTI فارسی —
+                  چون تو تقویم‌های واقعی (فارسی یا غیرفارسی) «ماه بعد» همیشه
+                  سمت راسته و «ماه قبل» سمت چپ، برخلاف بقیه‌ی محتوای RTL که
+                  جهتش برعکس میشه. اگه این dir="ltr" رو برداری، فلش‌ها به‌خاطر
+                  ارث‌بری جهت از کانتینر بیرونی جابه‌جا میشن.
+                */}
+                <div
+                    dir="ltr"
+                    className="mb-3 flex items-center justify-between"
+                >
                     <Tooltip>
                         <TooltipTrigger
                             render={
