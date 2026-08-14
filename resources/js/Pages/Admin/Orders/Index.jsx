@@ -24,6 +24,7 @@ import { X } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { formatPrice } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import DatePicker from "@/Components/DatePicker";
 
 const statusColor = {
     pending:
@@ -179,30 +180,22 @@ export default function Index({ orders, filters }) {
                         </Select>
 
                         <div className="flex items-center gap-1.5">
-                            <Input
-                                type="date"
-                                className="w-40"
+                            <DatePicker
+                                locale={uiLocale}
+                                placeholder={at("from_date", uiLocale)}
                                 value={localFilters.date_from}
-                                onChange={(e) =>
-                                    setLocalFilters({
-                                        ...localFilters,
-                                        date_from: e.target.value,
-                                    })
+                                onChange={(date) =>
+                                    applyFilters({ date_from: date })
                                 }
-                                onBlur={() => applyFilters()}
                             />
                             <span className="text-muted-foreground">–</span>
-                            <Input
-                                type="date"
-                                className="w-40"
+                            <DatePicker
+                                locale={uiLocale}
+                                placeholder={at("to_date", uiLocale)}
                                 value={localFilters.date_to}
-                                onChange={(e) =>
-                                    setLocalFilters({
-                                        ...localFilters,
-                                        date_to: e.target.value,
-                                    })
+                                onChange={(date) =>
+                                    applyFilters({ date_to: date })
                                 }
-                                onBlur={() => applyFilters()}
                             />
                         </div>
 
