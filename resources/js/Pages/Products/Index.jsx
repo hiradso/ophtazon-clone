@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Head, Link, router, usePage, useForm } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/Layouts/PublicLayout";
@@ -27,8 +27,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
-import { hasDiscount } from "@/lib/pricing";
+import { hasDiscount, currencySymbol } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import { useCurrency } from "@/lib/currency-provider";
+
+// همه‌ی محصولات با ارز پایه‌ی یورو ذخیره می‌شن؛ فیلتر قیمت سمت بک‌اند
+// هم دقیقاً روی همین ارز فیلتر می‌کنه — پس هر عددی که کاربر با ارز
+// نمایشی دیگه‌ای وارد کنه، قبل از ارسال به سرور باید به یورو تبدیل بشه.
+const BASE_CURRENCY = "EUR";
 
 export default function Index({
     products,
@@ -38,6 +44,7 @@ export default function Index({
     filters,
 }) {
     const { locale, appUrl } = usePage().props;
+    const { currency, convertBetween } = useCurrency();
 
     const CONDITION_LABELS = {
         new: tt("condition_new", locale),
@@ -45,15 +52,36 @@ export default function Index({
         refurbished: tt("condition_refurbished", locale),
     };
 
+    // filters.min_price/max_price همیشه به یورو از سرور برمی‌گردن (چون
+    // بک‌اند باهاشون فیلتر کرده) — برای نمایش تو input باید به ارز
+    // انتخابی فعلی کاربر تبدیل بشن.
+    const toDisplayPrice = (eurValue) => {
+        if (!eurValue) return "";
+        const converted = convertBetween(eurValue, BASE_CURRENCY, currency);
+        return String(Math.round(converted.amount * 100) / 100);
+    };
+
     const [localFilters, setLocalFilters] = useState({
         category: filters.category ?? "",
         brand: filters.brand ?? "",
         store: filters.store ?? "",
         condition: filters.condition ?? "",
-        min_price: filters.min_price ?? "",
-        max_price: filters.max_price ?? "",
+        min_price: toDisplayPrice(filters.min_price),
+        max_price: toDisplayPrice(filters.max_price),
         q: filters.q ?? "",
     });
+
+    // اگه کاربر ارز نمایشی رو عوض کرد، مقدار فیلترهای از قبل اعمال‌شده
+    // (که سرور تاییدشون کرده) رو دوباره با ارز جدید نشون بده — مقادیری
+    // که هنوز submit نشدن مبنای تبدیل مشخصی ندارن، پس دست‌نخورده می‌مونن.
+    useEffect(() => {
+        setLocalFilters((prev) => ({
+            ...prev,
+            min_price: toDisplayPrice(filters.min_price),
+            max_price: toDisplayPrice(filters.max_price),
+        }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currency]);
     const [alertOpen, setAlertOpen] = useState(false);
     const {
         data: alertData,
@@ -74,7 +102,26 @@ export default function Index({
     const applyFilters = (overrides = {}) => {
         const next = { ...localFilters, ...overrides };
         setLocalFilters(next);
-        router.get(route("products.index", { locale }), next, {
+
+        // مقادیر قیمت رو، که کاربر با ارز نمایشی فعلی وارد کرده، قبل
+        // از ارسال به سرور به یورو (ارز پایه‌ی فیلتر بک‌اند) برمی‌گردونیم.
+        const queryParams = {
+            ...next,
+            min_price: next.min_price
+                ? String(
+                      convertBetween(next.min_price, currency, BASE_CURRENCY)
+                          .amount,
+                  )
+                : "",
+            max_price: next.max_price
+                ? String(
+                      convertBetween(next.max_price, currency, BASE_CURRENCY)
+                          .amount,
+                  )
+                : "",
+        };
+
+        router.get(route("products.index", { locale }), queryParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -239,7 +286,7 @@ export default function Index({
                     <div className="flex items-center gap-1.5">
                         <Input
                             type="number"
-                            placeholder={tt("min_price_short", locale)}
+                            placeholder={`${tt("min_price_short", locale)} ${currencySymbol(currency, locale)}`}
                             className="w-24"
                             value={localFilters.min_price}
                             onChange={(e) =>
@@ -253,7 +300,7 @@ export default function Index({
                         <span className="text-muted-foreground">–</span>
                         <Input
                             type="number"
-                            placeholder={tt("max_price_short", locale)}
+                            placeholder={`${tt("max_price_short", locale)} ${currencySymbol(currency, locale)}`}
                             className="w-24"
                             value={localFilters.max_price}
                             onChange={(e) =>

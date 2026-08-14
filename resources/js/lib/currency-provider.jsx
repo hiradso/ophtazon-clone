@@ -51,14 +51,15 @@ export function CurrencyProvider({ initialExchangeRates, children }) {
     };
 
     /**
-     * مبلغی به ارز مبدأ محصول را به ارز نمایشی انتخاب‌شده‌ی کاربر
-     * تبدیل می‌کند. اگر نرخ یکی از دو ارز در دسترس نباشد، همان مبلغ
-     * اصلی بدون تبدیل برگردانده می‌شود (بهتر از کرش یا NaN).
+     * تبدیل عمومی بین هر دو ارزی که نرخشان موجود باشد (نه فقط به ارز
+     * نمایشی فعلی) — برای مواردی مثل فیلتر قیمت لازم است که باید
+     * برعکس تبدیل بشه: از ارز نمایشی کاربر به ارز پایه‌ی محصولات (EUR)
+     * که بک‌اند باهاش فیلتر می‌کنه.
      */
-    const convert = (amount, fromCurrency) => {
+    const convertBetween = (amount, fromCurrency, toCurrency) => {
         const rates = exchangeRates ?? {};
         const from = rates[fromCurrency];
-        const to = rates[effectiveCurrency];
+        const to = rates[toCurrency];
 
         if (!from || !to || !amount) {
             return { amount: Number(amount) || 0, currency: fromCurrency };
@@ -67,16 +68,20 @@ export function CurrencyProvider({ initialExchangeRates, children }) {
         const amountInUsd = Number(amount) / from;
         const converted = amountInUsd * to;
 
-        // تومان همیشه به‌صورت عدد صحیح نمایش داده می‌شود — کسری از
-        // تومان در هیچ‌جای واقعی استفاده نمی‌شود.
+        // تومان همیشه به‌صورت عدد صحیح — کسری از تومان جایی استفاده نمی‌شه.
         return {
-            amount:
-                effectiveCurrency === "IRT"
-                    ? Math.round(converted)
-                    : converted,
-            currency: effectiveCurrency,
+            amount: toCurrency === "IRT" ? Math.round(converted) : converted,
+            currency: toCurrency,
         };
     };
+
+    /**
+     * مبلغی به ارز مبدأ محصول را به ارز نمایشی انتخاب‌شده‌ی کاربر
+     * تبدیل می‌کند. اگر نرخ یکی از دو ارز در دسترس نباشد، همان مبلغ
+     * اصلی بدون تبدیل برگردانده می‌شود (بهتر از کرش یا NaN).
+     */
+    const convert = (amount, fromCurrency) =>
+        convertBetween(amount, fromCurrency, effectiveCurrency);
 
     return (
         <CurrencyContext.Provider
@@ -85,6 +90,7 @@ export function CurrencyProvider({ initialExchangeRates, children }) {
                 setCurrency,
                 availableCurrencies,
                 convert,
+                convertBetween,
             }}
         >
             {children}
