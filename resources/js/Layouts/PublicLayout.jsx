@@ -7,12 +7,12 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
     Search,
     ShoppingCart,
-    UserRound,
     ImageOff,
     ArrowRight,
     ArrowUp,
@@ -30,6 +30,16 @@ import { formatPrice } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { menuLinkHref } from "@/lib/menuLinks";
 import { useCurrency } from "@/lib/currency-provider";
+
+function userInitials(name) {
+    if (!name) return "";
+    const parts = name.trim().split(/\s+/);
+    const initials =
+        parts.length > 1
+            ? parts[0][0] + parts[parts.length - 1][0]
+            : parts[0].slice(0, 2);
+    return initials.toUpperCase();
+}
 
 export default function PublicLayout({ children }) {
     const { auth, cartItemsCount, headerLinks, flash, siteSettings, locale } =
@@ -196,12 +206,29 @@ export default function PublicLayout({ children }) {
                             <DropdownMenu>
                                 <DropdownMenuTrigger
                                     render={
-                                        <Button variant="ghost" size="icon">
-                                            <UserRound className="size-4" />
+                                        <Button
+                                            variant="ghost"
+                                            className="h-9 gap-2 rounded-full pl-1.5 pr-3"
+                                        >
+                                            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/70 text-[11px] font-semibold text-primary-foreground">
+                                                {userInitials(auth.user.name)}
+                                            </span>
+                                            <span className="hidden max-w-28 truncate text-sm font-medium text-foreground sm:inline">
+                                                {auth.user.name}
+                                            </span>
                                         </Button>
                                     }
                                 />
-                                <DropdownMenuContent align="end">
+                                <DropdownMenuContent align="end" className="min-w-56">
+                                    <div className="flex flex-col gap-0.5 px-2 py-1.5">
+                                        <span className="truncate text-sm font-medium text-foreground">
+                                            {auth.user.name}
+                                        </span>
+                                        <span className="truncate text-xs font-normal text-muted-foreground">
+                                            {auth.user.email}
+                                        </span>
+                                    </div>
+                                    <DropdownMenuSeparator />
                                     {(auth.user.role === "admin" ||
                                         auth.user.role === "staff") && (
                                         <DropdownMenuItem
