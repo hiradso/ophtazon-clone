@@ -59,18 +59,49 @@ class ProductController extends Controller
 
         abort_unless($product->status === ProductStatus::Available, 404);
 
-        $relatedProducts = Product::query()
-            ->where('status', ProductStatus::Available)
-            ->where('id', '!=', $product->id)
-            ->where('category_id', $product->category_id)
-            ->with(['images'])
-            ->latest('published_at')
-            ->limit(8)
-            ->get();
+        $relatedProducts = $this->findRelatedProducts($product);
 
         return Inertia::render('Products/Show', [
             'product' => $product->load(['category', 'brand', 'store.country', 'images']),
             'relatedProducts' => $relatedProducts,
         ]);
+    }
+
+    /**
+     * دنبال محصولات مشابه می‌گردد — اول هم‌دسته، اگر چیزی نبود
+     * هم‌برند، اگر بازهم چیزی نبود هم‌فروشگاه. هدف این است که
+     * کاروسل «محصولات مرتبط» فقط وقتی کاملاً خالی بماند که واقعاً
+     * هیچ محصول قابل‌مقایسه‌ای در کل سایت نباشد.
+     */
+    private function findRelatedProducts(Product $product)
+    {
+        $base = fn() => Product::query()
+            ->where('status', ProductStatus::Available)
+            ->where('id', '!=', $product->id)
+            ->with(['images']);
+
+        $related = $base()
+            ->where('category_id', $product->category_id)
+            ->latest('published_at')
+            ->limit(8)
+            ->get();
+
+        if ($related->isEmpty() && $product->brand_id) {
+            $related = $base()
+                ->where('brand_id', $product->brand_id)
+                ->latest('published_at')
+                ->limit(8)
+                ->get();
+        }
+
+        if ($related->isEmpty()) {
+            $related = $base()
+                ->where('store_id', $product->store_id)
+                ->latest('published_at')
+                ->limit(8)
+                ->get();
+        }
+
+        return $related;
     }
 }
