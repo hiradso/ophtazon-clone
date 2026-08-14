@@ -8,10 +8,14 @@ import { ArrowLeft, ArrowRight, Pencil, ImageOff, Tag } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { formatPrice, hasDiscount, currencySymbol } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import Price from "@/Components/Price";
+import { useCurrency } from "@/lib/currency-provider";
 
 export default function Show({ product }) {
     const { locale: uiLocale } = usePage().props;
     const discounted = hasDiscount(product.discount_percentage);
+    const { currency: displayCurrency } = useCurrency();
+    const showsConvertedPrice = displayCurrency !== product.currency;
 
     const CONDITION_LABELS = {
         new: at("condition_new", uiLocale),
@@ -176,34 +180,42 @@ export default function Show({ product }) {
                                 </p>
                                 {discounted ? (
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-muted-foreground line-through">
-                                            {formatPrice(
-                                                product.price,
-                                                uiLocale,
-                                            )}
-                                        </span>
-                                        <span className="font-medium text-foreground">
-                                            {formatPrice(
-                                                product.effective_price,
-                                                uiLocale,
-                                            )}{" "}
-                                            {currencySymbol(
-                                                product.currency,
-                                                uiLocale,
-                                            )}
-                                        </span>
+                                        <Price
+                                            amount={product.price}
+                                            currency={product.currency}
+                                            locale={uiLocale}
+                                            className="text-sm text-muted-foreground line-through"
+                                        />
+                                        <Price
+                                            amount={product.effective_price}
+                                            currency={product.currency}
+                                            locale={uiLocale}
+                                            className="font-medium text-foreground"
+                                        />
                                         <Badge className="bg-destructive text-white">
                                             <Tag className="me-1 size-3" />
                                             {product.discount_percentage}%
                                         </Badge>
                                     </div>
                                 ) : (
-                                    <p className="font-medium text-foreground">
-                                        {formatPrice(product.price, uiLocale)}{" "}
+                                    <Price
+                                        amount={product.price}
+                                        currency={product.currency}
+                                        locale={uiLocale}
+                                        className="font-medium text-foreground"
+                                    />
+                                )}
+                                {showsConvertedPrice && (
+                                    <p className="text-xs text-muted-foreground">
+                                        {formatPrice(
+                                            product.price,
+                                            uiLocale,
+                                        )}{" "}
                                         {currencySymbol(
                                             product.currency,
                                             uiLocale,
-                                        )}
+                                        )}{" "}
+                                        ({at("original_price_hint", uiLocale)})
                                     </p>
                                 )}
                             </div>
