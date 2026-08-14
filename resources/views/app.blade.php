@@ -6,6 +6,20 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- Google Analytics (GA4) — فقط وقتی GOOGLE_ANALYTICS_ID تو .env
+             ست شده باشه لود می‌شه؛ توجه: دامنه‌های googletagmanager.com و
+             google-analytics.com باید تو CSP سرور (script-src/connect-src)
+             هم اجازه داشته باشن، وگرنه مرورگر خودش بلاکش می‌کنه. --}}
+        @if (config('services.google_analytics.measurement_id'))
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google_analytics.measurement_id') }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', '{{ config('services.google_analytics.measurement_id') }}');
+            </script>
+        @endif
+
         @php
             $siteSettings = \App\Models\Setting::current();
             $currentLocale = app()->getLocale();
