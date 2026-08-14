@@ -39,14 +39,14 @@ import { formatPrice, hasDiscount } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import StockBadge from "@/Components/StockBadge";
 
-const CONDITION_LABELS = {
-    new: "New",
-    used: "Used",
-    refurbished: "Refurbished",
-};
-
 export default function Show({ product, relatedProducts }) {
     const { locale, appUrl } = usePage().props;
+
+    const CONDITION_LABELS = {
+        new: tt("condition_new", locale),
+        used: tt("condition_used", locale),
+        refurbished: tt("condition_refurbished", locale),
+    };
 
     const images = product.images ?? [];
     const [activeImage, setActiveImage] = useState(images[0] ?? null);
@@ -226,7 +226,7 @@ export default function Show({ product, relatedProducts }) {
                                     className="bg-status-available/15 text-status-available border-status-available/30"
                                 >
                                     <ShieldCheck className="me-1 size-3" />
-                                    Checked by Ophtazon
+                                    {tt("checked_by_ophtazon", locale)}
                                 </Badge>
                             )}
                         </div>
@@ -236,7 +236,7 @@ export default function Show({ product, relatedProducts }) {
                         </h1>
 
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Ref: {product.reference}
+                            {tt("reference_label", locale)} {product.reference}
                         </p>
 
                         <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
@@ -310,21 +310,23 @@ export default function Show({ product, relatedProducts }) {
                         <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
                                 <p className="text-muted-foreground">
-                                    Category
+                                    {tt("category", locale)}
                                 </p>
                                 <p className="font-medium text-foreground">
                                     {categoryName || "—"}
                                 </p>
                             </div>
                             <div>
-                                <p className="text-muted-foreground">Brand</p>
+                                <p className="text-muted-foreground">
+                                    {tt("brand", locale)}
+                                </p>
                                 <p className="font-medium text-foreground">
                                     {product.brand?.name ?? "—"}
                                 </p>
                             </div>
                             <div>
                                 <p className="text-muted-foreground">
-                                    Manufacture year
+                                    {tt("manufacture_year", locale)}
                                 </p>
                                 <p className="font-medium text-foreground">
                                     {product.manufacture_year
@@ -367,7 +369,7 @@ export default function Show({ product, relatedProducts }) {
                 {productDescription && (
                     <div className="mt-10 max-w-3xl">
                         <h2 className="mb-3 text-lg font-semibold text-foreground">
-                            Description
+                            {tt("description_title", locale)}
                         </h2>
                         <p className="whitespace-pre-line text-muted-foreground">
                             {productDescription}
@@ -379,7 +381,7 @@ export default function Show({ product, relatedProducts }) {
                 {relatedProducts?.length > 0 && (
                     <div className="mt-16">
                         <h2 className="mb-4 text-lg font-semibold text-foreground">
-                            Related Equipment
+                            {tt("related_equipment", locale)}
                         </h2>
 
                         <Carousel
