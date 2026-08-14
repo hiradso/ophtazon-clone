@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, usePage, router } from "@inertiajs/react";
 import ThemeToggle from "@/Components/ThemeToggle";
+import CurrencyToggle from "@/Components/CurrencyToggle";
 import { buttonVariants } from "@/components/ui/button";
 import {
     Sidebar,
@@ -473,6 +474,7 @@ export default function AdminLayout({ header, breadcrumbs, children }) {
                         </DropdownMenu>
 
                         <ThemeToggle />
+                        <CurrencyToggle />
                         <Tooltip>
                             <TooltipTrigger
                                 render={

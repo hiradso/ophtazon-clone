@@ -37,7 +37,8 @@ import {
     PackageX,
 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { hasDiscount } from "@/lib/pricing";
+import Price from "@/Components/Price";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
 import {
@@ -210,33 +211,42 @@ export default function Index({ products }) {
                                                 <TableCell className="align-middle">
                                                     {discounted ? (
                                                         <div className="flex flex-col text-sm">
-                                                            <span className="text-xs text-muted-foreground line-through">
-                                                                {formatPrice(
-                                                                    product.price,
-                                                                    uiLocale,
-                                                                )}{" "}
-                                                                {
+                                                            <Price
+                                                                amount={
+                                                                    product.price
+                                                                }
+                                                                currency={
                                                                     product.currency
                                                                 }
-                                                            </span>
-                                                            <span className="font-medium text-foreground">
-                                                                {formatPrice(
-                                                                    product.effective_price,
-                                                                    uiLocale,
-                                                                )}{" "}
-                                                                {
+                                                                locale={
+                                                                    uiLocale
+                                                                }
+                                                                className="text-xs text-muted-foreground line-through"
+                                                            />
+                                                            <Price
+                                                                amount={
+                                                                    product.effective_price
+                                                                }
+                                                                currency={
                                                                     product.currency
                                                                 }
-                                                            </span>
+                                                                locale={
+                                                                    uiLocale
+                                                                }
+                                                                className="font-medium text-foreground"
+                                                            />
                                                         </div>
                                                     ) : (
-                                                        <span className="text-muted-foreground">
-                                                            {formatPrice(
-                                                                product.price,
-                                                                uiLocale,
-                                                            )}{" "}
-                                                            {product.currency}
-                                                        </span>
+                                                        <Price
+                                                            amount={
+                                                                product.price
+                                                            }
+                                                            currency={
+                                                                product.currency
+                                                            }
+                                                            locale={uiLocale}
+                                                            className="text-muted-foreground"
+                                                        />
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="align-middle">

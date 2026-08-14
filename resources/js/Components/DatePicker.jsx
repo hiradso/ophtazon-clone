@@ -6,8 +6,14 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { toFa } from "@/lib/toFa";
+import { at } from "@/lib/admin-i18n";
 
 const PERSIAN_MONTHS = [
     "فروردین",
@@ -128,27 +134,45 @@ export default function DatePicker({ value, onChange, locale, placeholder }) {
                 dir={isFa ? "rtl" : "ltr"}
             >
                 <div className="mb-3 flex items-center justify-between">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="size-7"
-                        onClick={() => goToAdjacentMonth(isFa ? 1 : -1)}
-                    >
-                        <ChevronLeft className="size-4" />
-                    </Button>
+                    <Tooltip>
+                        <TooltipTrigger
+                            render={
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-7"
+                                    onClick={() => goToAdjacentMonth(-1)}
+                                >
+                                    <ChevronLeft className="size-4" />
+                                </Button>
+                            }
+                        />
+                        <TooltipContent side="top">
+                            {at("previous_month", locale)}
+                        </TooltipContent>
+                    </Tooltip>
                     <span className="text-sm font-medium text-foreground">
                         {monthLabel}
                     </span>
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="size-7"
-                        onClick={() => goToAdjacentMonth(isFa ? -1 : 1)}
-                    >
-                        <ChevronRight className="size-4" />
-                    </Button>
+                    <Tooltip>
+                        <TooltipTrigger
+                            render={
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-7"
+                                    onClick={() => goToAdjacentMonth(1)}
+                                >
+                                    <ChevronRight className="size-4" />
+                                </Button>
+                            }
+                        />
+                        <TooltipContent side="top">
+                            {at("next_month", locale)}
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
 
                 <div className="grid grid-cols-7 gap-1 text-center">

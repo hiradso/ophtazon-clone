@@ -26,15 +26,22 @@ import {
 import { at } from "@/lib/admin-i18n";
 import { formatPrice } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
+import { useCurrency } from "@/lib/currency-provider";
 
 export default function Dashboard({
     stats,
     salesChart,
     topProducts,
     salesByStore,
-    currency,
+    currency: baseCurrency,
 }) {
     const { locale: uiLocale } = usePage().props;
+    const { convert } = useCurrency();
+
+    const displayPrice = (amount) => {
+        const converted = convert(amount, baseCurrency);
+        return `${formatPrice(converted.amount, uiLocale)} ${converted.currency}`;
+    };
 
     const TrendBadge = ({ percent }) => {
         if (percent === null || percent === undefined) return null;
@@ -56,7 +63,7 @@ export default function Dashboard({
         {
             key: "totalRevenue",
             label: at("total_revenue", uiLocale),
-            value: `${formatPrice(stats.totalRevenue, uiLocale)} ${currency}`,
+            value: displayPrice(stats.totalRevenue),
             icon: TrendingUp,
             color: "text-status-available",
             bg: "bg-status-available/10",
@@ -74,7 +81,7 @@ export default function Dashboard({
         {
             key: "averageOrderValue",
             label: at("average_order_value", uiLocale),
-            value: `${formatPrice(stats.averageOrderValue, uiLocale)} ${currency}`,
+            value: displayPrice(stats.averageOrderValue),
             icon: Receipt,
             color: "text-status-pending",
             bg: "bg-status-pending/10",
@@ -285,7 +292,7 @@ export default function Dashboard({
                                                     color: "var(--color-foreground)",
                                                 }}
                                                 formatter={(value) => [
-                                                    `${formatPrice(value)} ${currency}`,
+                                                    displayPrice(value),
                                                     at("revenue", uiLocale),
                                                 ]}
                                             />
@@ -380,7 +387,7 @@ export default function Dashboard({
                                                             color: "var(--color-foreground)",
                                                         }}
                                                         formatter={(value) => [
-                                                            `${formatPrice(value)} ${currency}`,
+                                                            displayPrice(value),
                                                             at(
                                                                 "revenue",
                                                                 uiLocale,
@@ -499,7 +506,7 @@ export default function Dashboard({
                                                             color: "var(--color-foreground)",
                                                         }}
                                                         formatter={(value) => [
-                                                            `${formatPrice(value)} ${currency}`,
+                                                            displayPrice(value),
                                                             at(
                                                                 "revenue",
                                                                 uiLocale,
