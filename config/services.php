@@ -39,4 +39,8 @@ return [
         'measurement_id' => env('GOOGLE_ANALYTICS_ID'),
     ],
 
+    'clarity' => [
+        'project_id' => env('CLARITY_PROJECT_ID'),
+    ],
+
 ];
