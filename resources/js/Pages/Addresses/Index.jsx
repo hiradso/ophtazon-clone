@@ -256,7 +256,7 @@ export default function Index({ addresses, countries }) {
                 onOpenChange={(open) => !open && closeForm()}
             >
                 <DialogContent>
-                    <form onSubmit={submit}>
+                    <form onSubmit={submit} noValidate>
                         <DialogHeader>
                             <DialogTitle>
                                 {editingAddress

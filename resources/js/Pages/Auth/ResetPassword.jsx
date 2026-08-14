@@ -43,7 +43,7 @@ export default function ResetPassword({ token, email }) {
         <GuestLayout>
             <Head title={tt('reset_password_title', locale)} />
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} noValidate>
                 <div>
                     <InputLabel htmlFor="email" value={tt('email', locale)} />
 

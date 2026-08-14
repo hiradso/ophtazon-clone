@@ -28,7 +28,7 @@ export default function ConfirmPassword() {
                 password before continuing.
             </div>
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} noValidate>
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 

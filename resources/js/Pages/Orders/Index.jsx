@@ -14,6 +14,7 @@ import {
 import { PackageOpen } from "lucide-react";
 import { tt } from "@/lib/i18n";
 import { toFa } from "@/lib/toFa";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
 
 const statusColor = {
     pending:
@@ -105,11 +106,14 @@ export default function Index({ orders }) {
                                                           )}
                                                 </TableCell>
                                                 <TableCell className="text-foreground">
-                                                    {toFa(
+                                                    {formatPrice(
                                                         order.total,
                                                         uiLocale,
                                                     )}{" "}
-                                                    {order.currency}
+                                                    {currencySymbol(
+                                                        order.currency,
+                                                        uiLocale,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge

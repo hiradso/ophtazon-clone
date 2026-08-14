@@ -43,7 +43,7 @@ export default function Register() {
         <GuestLayout>
             <Head title={tt("register", locale)} />
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} noValidate>
                 <div>
                     <InputLabel htmlFor="name" value={tt("name_field", locale)} />
 

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, ArrowRight, Pencil, ImageOff, Tag } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
-import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { formatPrice, hasDiscount, currencySymbol } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 
 export default function Show({ product }) {
@@ -187,7 +187,10 @@ export default function Show({ product }) {
                                                 product.effective_price,
                                                 uiLocale,
                                             )}{" "}
-                                            {product.currency}
+                                            {currencySymbol(
+                                                product.currency,
+                                                uiLocale,
+                                            )}
                                         </span>
                                         <Badge className="bg-destructive text-white">
                                             <Tag className="me-1 size-3" />
@@ -197,7 +200,10 @@ export default function Show({ product }) {
                                 ) : (
                                     <p className="font-medium text-foreground">
                                         {formatPrice(product.price, uiLocale)}{" "}
-                                        {product.currency}
+                                        {currencySymbol(
+                                            product.currency,
+                                            uiLocale,
+                                        )}
                                     </p>
                                 )}
                             </div>

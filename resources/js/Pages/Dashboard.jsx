@@ -24,8 +24,8 @@ import {
     Download,
 } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
-import { formatPrice } from "@/lib/pricing";
-import { toFa } from "@/lib/toFa";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
+import { toFa, groupNumber } from "@/lib/toFa";
 import { useCurrency } from "@/lib/currency-provider";
 
 export default function Dashboard({
@@ -40,7 +40,7 @@ export default function Dashboard({
 
     const displayPrice = (amount) => {
         const converted = convert(amount, baseCurrency);
-        return `${formatPrice(converted.amount, uiLocale)} ${converted.currency}`;
+        return `${formatPrice(converted.amount, uiLocale)} ${currencySymbol(converted.currency, uiLocale)}`;
     };
 
     const TrendBadge = ({ percent }) => {
@@ -277,7 +277,10 @@ export default function Dashboard({
                                                 axisLine={false}
                                                 width={50}
                                                 tickFormatter={(value) =>
-                                                    toFa(value, uiLocale)
+                                                    groupNumber(
+                                                        value,
+                                                        uiLocale,
+                                                    )
                                                 }
                                             />
                                             <Tooltip
@@ -358,7 +361,7 @@ export default function Dashboard({
                                                         tickFormatter={(
                                                             value,
                                                         ) =>
-                                                            toFa(
+                                                            groupNumber(
                                                                 value,
                                                                 uiLocale,
                                                             )
@@ -477,7 +480,7 @@ export default function Dashboard({
                                                         tickFormatter={(
                                                             value,
                                                         ) =>
-                                                            toFa(
+                                                            groupNumber(
                                                                 value,
                                                                 uiLocale,
                                                             )

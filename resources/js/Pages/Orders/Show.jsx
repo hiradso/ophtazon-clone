@@ -9,6 +9,7 @@ import { CheckCircle2 } from "lucide-react";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
 import { toFa } from "@/lib/toFa";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
 import { countryLabel } from "@/lib/countries";
 import OrderProgressBar from "@/Components/OrderProgressBar";
 
@@ -90,13 +91,11 @@ export default function Show({ order }) {
                                     {toFa(item.quantity, locale)}
                                 </span>
                                 <span className="text-foreground">
-                                    {toFa(
-                                        (
-                                            item.unit_price * item.quantity
-                                        ).toFixed(2),
+                                    {formatPrice(
+                                        item.unit_price * item.quantity,
                                         locale,
                                     )}{" "}
-                                    {order.currency}
+                                    {currencySymbol(order.currency, locale)}
                                 </span>
                             </div>
                         ))}
@@ -104,7 +103,8 @@ export default function Show({ order }) {
                         <div className="flex justify-between font-semibold text-foreground">
                             <span>{tt("total_label", locale)}</span>
                             <span>
-                                {toFa(order.total, locale)} {order.currency}
+                                {formatPrice(order.total, locale)}{" "}
+                                {currencySymbol(order.currency, locale)}
                             </span>
                         </div>
                         <Separator />

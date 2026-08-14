@@ -19,7 +19,7 @@ import {
 import { ArrowLeft, ArrowRight, Printer, History } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
 import { toFa } from "@/lib/toFa";
-import { formatPrice } from "@/lib/pricing";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
 
 const statusColor = {
     pending:
@@ -156,7 +156,10 @@ export default function Show({ order, customerOrderCount }) {
                                                         item.quantity,
                                                     uiLocale,
                                                 )}{" "}
-                                                {order.currency}
+                                                {currencySymbol(
+                                                    order.currency,
+                                                    uiLocale,
+                                                )}
                                             </p>
                                         </div>
                                     ))}
@@ -172,7 +175,10 @@ export default function Show({ order, customerOrderCount }) {
                                                 order.total,
                                                 uiLocale,
                                             )}{" "}
-                                            {order.currency}
+                                            {currencySymbol(
+                                                order.currency,
+                                                uiLocale,
+                                            )}
                                         </span>
                                     </div>
                                 </CardContent>
@@ -281,6 +287,7 @@ export default function Show({ order, customerOrderCount }) {
                                 <CardContent>
                                     <form
                                         onSubmit={submit}
+                                        noValidate
                                         className="space-y-4"
                                     >
                                         <div className="space-y-1.5">

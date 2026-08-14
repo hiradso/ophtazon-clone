@@ -266,7 +266,7 @@ export default function Index({ contactRequests }) {
                                 )}
                             </div>
 
-                            <form onSubmit={submitReply} className="space-y-4">
+                            <form onSubmit={submitReply} noValidate className="space-y-4">
                                 <div className="space-y-1.5">
                                     <Label>{at("status", uiLocale)}</Label>
                                     <Select

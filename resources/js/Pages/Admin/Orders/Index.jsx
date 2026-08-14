@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { X } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
-import { formatPrice } from "@/lib/pricing";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import DatePicker from "@/Components/DatePicker";
 
@@ -283,7 +283,10 @@ export default function Index({ orders, filters }) {
                                                     order.total,
                                                     uiLocale,
                                                 )}{" "}
-                                                {order.currency}
+                                                {currencySymbol(
+                                                    order.currency,
+                                                    uiLocale,
+                                                )}
                                             </TableCell>
                                             <TableCell className="align-middle text-muted-foreground">
                                                 {

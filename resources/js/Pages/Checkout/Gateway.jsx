@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ShieldCheck, Lock, XCircle } from "lucide-react";
 import { tt } from "@/lib/i18n";
-import { toFa } from "@/lib/toFa";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
 
 function formatCardNumber(value) {
     const digits = value.replace(/\D/g, "").slice(0, 16);
@@ -62,7 +62,8 @@ export default function Gateway({ order }) {
                                 {tt("gateway_amount_label", locale)}
                             </p>
                             <p className="mt-1 text-2xl font-bold tracking-tight text-foreground">
-                                {toFa(order.total, locale)} {order.currency}
+                                {formatPrice(order.total, locale)}{" "}
+                                {currencySymbol(order.currency, locale)}
                             </p>
                             <p className="mt-1 text-xs text-muted-foreground">
                                 {tt("order_number_label", locale)}{" "}

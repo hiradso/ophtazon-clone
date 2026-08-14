@@ -57,7 +57,7 @@ export default function Edit({ brand }) {
 
             <div className="py-8">
                 <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
-                    <form onSubmit={submit} className="space-y-6">
+                    <form onSubmit={submit} noValidate className="space-y-6">
                         <Card>
                             <CardHeader>
                                 <CardTitle>

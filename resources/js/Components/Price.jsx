@@ -1,5 +1,5 @@
 import { useCurrency } from "@/lib/currency-provider";
-import { formatPrice } from "@/lib/pricing";
+import { formatPrice, currencySymbol } from "@/lib/pricing";
 
 /**
  * قیمت یک محصول را با نرخ ارز زنده به ارز انتخاب‌شده‌ی کاربر تبدیل
@@ -12,7 +12,8 @@ export default function Price({ amount, currency, locale, className }) {
 
     return (
         <span className={className}>
-            {formatPrice(converted.amount, locale)} {converted.currency}
+            {formatPrice(converted.amount, locale)}{" "}
+            {currencySymbol(converted.currency, locale)}
         </span>
     );
 }

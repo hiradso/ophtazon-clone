@@ -18,3 +18,17 @@ export function toFa(value, locale) {
 
     return str.replace(/[0-9]/g, (digit) => PERSIAN_DIGITS[digit]);
 }
+
+const NUMBER_LOCALE_TAGS = { en: "en-US", fr: "fr-FR", fa: "fa-IR" };
+
+/**
+ * برای اعداد درشتی که خودشون پول نیستن ولی همچنان خوانا بودنشون به
+ * جداکننده‌ی هزارگان نیاز داره (مثلاً محورهای عددی نمودار) — بر خلاف
+ * toFa فقط رقم عوض نمی‌کنه، با جداکننده‌ی هر زبان هم گروه‌بندی می‌کنه.
+ */
+export function groupNumber(value, locale) {
+    const num = Number(value);
+    if (Number.isNaN(num)) return String(value);
+    const tag = NUMBER_LOCALE_TAGS[locale] ?? "en-US";
+    return new Intl.NumberFormat(tag).format(num);
+}

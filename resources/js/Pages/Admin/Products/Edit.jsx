@@ -19,7 +19,13 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, ArrowRight, Trash2, Tag } from "lucide-react";
 import MediaPicker from "@/Components/MediaPicker";
-import { getDiscountedPrice, hasDiscount, formatPrice } from "@/lib/pricing";
+import {
+    getDiscountedPrice,
+    hasDiscount,
+    formatPrice,
+    currencySymbol,
+} from "@/lib/pricing";
+import { useCurrency } from "@/lib/currency-provider";
 import { at } from "@/lib/admin-i18n";
 
 const LOCALE_LABELS = {
@@ -108,6 +114,12 @@ export default function Edit({
         ? getDiscountedPrice(data.price || 0, Number(data.discount_percentage))
         : null;
 
+    const { convert, currency: displayCurrency } = useCurrency();
+    const rawFinalPrice = previewFinalPrice ?? (Number(data.price) || 0);
+    const convertedPreview = convert(rawFinalPrice, data.currency);
+    const showsConvertedPreview =
+        displayCurrency !== data.currency && rawFinalPrice > 0;
+
     return (
         <AdminLayout
             breadcrumbs={[
@@ -152,6 +164,7 @@ export default function Edit({
                     <form
                         id="product-form"
                         onSubmit={submit}
+                        noValidate
                         className="space-y-6"
                     >
                         {/* اطلاعات پایه چندزبانه */}
@@ -576,7 +589,10 @@ export default function Edit({
                                                     previewFinalPrice,
                                                     uiLocale,
                                                 )}{" "}
-                                                {data.currency}
+                                                {currencySymbol(
+                                                    data.currency,
+                                                    uiLocale,
+                                                )}
                                             </span>
                                         ) : (
                                             <span className="text-muted-foreground">
@@ -584,10 +600,27 @@ export default function Edit({
                                                     data.price || 0,
                                                     uiLocale,
                                                 )}{" "}
-                                                {data.currency}
+                                                {currencySymbol(
+                                                    data.currency,
+                                                    uiLocale,
+                                                )}
                                             </span>
                                         )}
                                     </div>
+                                    {showsConvertedPreview && (
+                                        <p className="text-xs text-muted-foreground">
+                                            ≈{" "}
+                                            {formatPrice(
+                                                convertedPreview.amount,
+                                                uiLocale,
+                                            )}{" "}
+                                            {currencySymbol(
+                                                convertedPreview.currency,
+                                                uiLocale,
+                                            )}{" "}
+                                            ({at("live_rate_hint", uiLocale)})
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="space-y-2.5">

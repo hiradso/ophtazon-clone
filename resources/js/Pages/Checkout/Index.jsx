@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { t } from "@/lib/translate";
 import { tt } from "@/lib/i18n";
-import { formatPrice, hasDiscount } from "@/lib/pricing";
+import { formatPrice, hasDiscount, currencySymbol } from "@/lib/pricing";
 import { toFa } from "@/lib/toFa";
 import { countryLabel } from "@/lib/countries";
 import { useCurrency } from "@/lib/currency-provider";
@@ -80,6 +80,7 @@ export default function Index({ cart, countries, addresses = [], defaultAddress 
 
                 <form
                     onSubmit={submit}
+                    noValidate
                     className="grid grid-cols-1 gap-8 lg:grid-cols-3"
                 >
                     {/* ستون چپ: فرم آدرس و پرداخت */}
@@ -395,13 +396,17 @@ export default function Index({ cart, countries, addresses = [], defaultAddress 
                                             convertedTotal.amount,
                                             locale,
                                         )}{" "}
-                                        {convertedTotal.currency}
+                                        {currencySymbol(
+                                            convertedTotal.currency,
+                                            locale,
+                                        )}
                                     </span>
                                 </div>
                                 {showsDifferentCurrency && (
                                     <p className="text-xs text-muted-foreground">
                                         {tt("charged_in_currency_note", locale)}{" "}
-                                        {formatPrice(total, locale)} {currency}
+                                        {formatPrice(total, locale)}{" "}
+                                        {currencySymbol(currency, locale)}
                                     </p>
                                 )}
 

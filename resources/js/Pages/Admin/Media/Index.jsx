@@ -118,6 +118,7 @@ export default function Index({ media }) {
                         <CardContent className="space-y-3 p-4">
                             <form
                                 onSubmit={submitUpload}
+                                noValidate
                                 className="flex flex-wrap items-center gap-3"
                             >
                                 <input

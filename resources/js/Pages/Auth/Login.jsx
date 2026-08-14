@@ -34,7 +34,7 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} noValidate>
                 <div>
                     <InputLabel htmlFor="email" value={tt("email", locale)} />
 

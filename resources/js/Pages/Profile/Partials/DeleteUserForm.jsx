@@ -67,7 +67,7 @@ export default function DeleteUserForm({ className = "" }) {
             </DangerButton>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
-                <form onSubmit={deleteUser} className="p-6">
+                <form onSubmit={deleteUser} noValidate className="p-6">
                     <h2 className="text-lg font-medium text-foreground">
                         {tt("confirm_delete_account_title", uiLocale)}
                     </h2>

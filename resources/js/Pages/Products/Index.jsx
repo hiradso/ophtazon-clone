@@ -454,7 +454,7 @@ export default function Index({
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={submitAlert} className="space-y-4">
+                    <form onSubmit={submitAlert} noValidate className="space-y-4">
                         <div className="space-y-1.5">
                             <Label htmlFor="alert_email">
                                 {tt("email", locale)}

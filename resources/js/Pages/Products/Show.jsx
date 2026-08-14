@@ -497,7 +497,7 @@ export default function Show({ product, relatedProducts }) {
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={submitContact} className="space-y-4">
+                    <form onSubmit={submitContact} noValidate className="space-y-4">
                         <div className="space-y-1.5">
                             <Label htmlFor="contact_name">
                                 {tt("your_name", locale)}
