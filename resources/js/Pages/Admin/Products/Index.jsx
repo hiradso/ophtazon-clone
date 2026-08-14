@@ -128,16 +128,7 @@ export default function Index({ products }) {
                                     <TableRow>
                                         <TableHead className="w-20"></TableHead>
                                         <TableHead>
-                                            {at("reference", uiLocale)}
-                                        </TableHead>
-                                        <TableHead>
                                             {at("title", uiLocale)}
-                                        </TableHead>
-                                        <TableHead>
-                                            {at("category", uiLocale)}
-                                        </TableHead>
-                                        <TableHead>
-                                            {at("store", uiLocale)}
                                         </TableHead>
                                         <TableHead>
                                             {at("price", uiLocale)}
@@ -155,7 +146,7 @@ export default function Index({ products }) {
                                     {products.data.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={9}
+                                                colSpan={7}
                                                 className="h-32 text-center text-sm text-muted-foreground"
                                             >
                                                 No products yet. Add the first
@@ -202,18 +193,19 @@ export default function Index({ products }) {
                                                         </div>
                                                     )}
                                                 </TableCell>
-                                                <TableCell className="align-middle text-muted-foreground">
-                                                    {product.reference}
-                                                </TableCell>
-                                                <TableCell className="align-middle font-medium">
-                                                    {product.title.en}
-                                                </TableCell>
-                                                <TableCell className="align-middle text-muted-foreground">
-                                                    {product.category?.name
-                                                        ?.en ?? "—"}
-                                                </TableCell>
-                                                <TableCell className="align-middle text-muted-foreground">
-                                                    {product.store?.name ?? "—"}
+                                                <TableCell className="max-w-64 align-middle">
+                                                    <p className="truncate font-medium text-foreground">
+                                                        {product.title.en}
+                                                    </p>
+                                                    <p className="truncate text-xs text-muted-foreground">
+                                                        {product.reference}
+                                                        {product.category
+                                                            ?.name?.en &&
+                                                            ` · ${product.category.name.en}`}
+                                                        {product.store
+                                                            ?.name &&
+                                                            ` · ${product.store.name}`}
+                                                    </p>
                                                 </TableCell>
                                                 <TableCell className="align-middle">
                                                     {discounted ? (
