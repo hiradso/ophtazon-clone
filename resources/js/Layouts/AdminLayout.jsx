@@ -42,6 +42,7 @@ import {
     Package,
     FolderTree,
     Award,
+    ShieldCheck,
     Building2,
     ChevronsUpDown,
     ChevronRight,
@@ -104,6 +105,12 @@ const navItems = [
         icon: Building2,
         routeName: "admin.stores.index",
         pattern: "admin.stores.*",
+    },
+    {
+        labelKey: "certifications",
+        icon: ShieldCheck,
+        routeName: "admin.certifications.index",
+        pattern: "admin.certifications.*",
     },
     {
         labelKey: "messages",

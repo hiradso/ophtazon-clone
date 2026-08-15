@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CertificationController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\ContactRequestController;
@@ -131,6 +132,7 @@ Route::middleware(['auth', 'role:admin,staff'])
             ->name('products.brochure.destroy');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('brands', BrandController::class)->except(['show']);
+        Route::resource('certifications', CertificationController::class)->except(['show']);
         Route::resource('stores', StoreController::class)->except(['show']);
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::resource('users', UserController::class)->except(['show']);

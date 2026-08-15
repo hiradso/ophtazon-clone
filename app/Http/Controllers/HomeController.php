@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProductStatus;
 use App\Models\Category;
+use App\Models\Certification;
 use App\Models\PageSection;
 use App\Models\Product;
 use Inertia\Inertia;
@@ -35,6 +36,9 @@ class HomeController extends Controller
                 ->orderByDesc('discount_percentage')
                 ->limit(10)
                 ->get(),
+            'certifications' => Certification::where('is_active', true)
+                ->orderBy('sort_order')
+                ->get(['id', 'name', 'issuing_body', 'image']),
         ]);
     }
 }

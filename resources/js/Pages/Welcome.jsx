@@ -38,6 +38,7 @@ export default function Welcome({
     categories,
     latestProducts,
     discountedProducts,
+    certifications,
 }) {
     const { locale, appUrl } = usePage().props;
     return (
@@ -85,7 +86,51 @@ export default function Welcome({
                         return null;
                 }
             })}
+
+            {certifications?.length > 0 && (
+                <CertificationsSection certifications={certifications} />
+            )}
         </PublicLayout>
+    );
+}
+
+function CertificationsSection({ certifications }) {
+    const { locale } = usePage().props;
+
+    return (
+        <section className="border-t border-border bg-card py-10">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <h2 className="mb-6 text-center text-sm font-medium text-muted-foreground">
+                    {tt("certified_and_licensed", locale)}
+                </h2>
+                <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
+                    {certifications.map((certification) => (
+                        <div
+                            key={certification.id}
+                            className="flex items-center gap-2.5"
+                            title={
+                                t(certification.issuing_body, locale) ||
+                                undefined
+                            }
+                        >
+                            {certification.image ? (
+                                <img
+                                    src={`/storage/${certification.image}`}
+                                    alt={t(certification.name, locale)}
+                                    loading="lazy"
+                                    className="h-10 w-auto object-contain grayscale transition-[filter] hover:grayscale-0"
+                                />
+                            ) : (
+                                <ShieldCheck className="size-6 text-muted-foreground" />
+                            )}
+                            <span className="text-sm font-medium text-foreground">
+                                {t(certification.name, locale)}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
     );
 }
 

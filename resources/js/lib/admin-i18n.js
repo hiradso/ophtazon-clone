@@ -191,6 +191,15 @@ const adminTranslations = {
         select_parent: "No parent (top-level)",
         category_hierarchy_hint:
             "Categories can be nested up to 3 levels: Category → Subcategory → Device Type.",
+        certifications: "Certifications",
+        certification_singular: "certification",
+        add_certification: "Add certification",
+        issuing_body: "Issuing body",
+        badge_image: "Badge / logo image (optional)",
+        no_certifications_yet:
+            "No certifications yet. Add the first one to get started.",
+        delete_certification_confirm_title: "Delete this certification?",
+        delete_certification_confirm_desc: "This action cannot be undone.",
         editor_bold: "Bold",
         editor_strong: "Strong",
         editor_italic: "Italic",
@@ -631,6 +640,15 @@ const adminTranslations = {
         select_parent: "بدون والد (سطح اصلی)",
         category_hierarchy_hint:
             "دسته‌بندی‌ها می‌تونن تا ۳ سطح تودرتو بشن: دسته → زیردسته → نوع دستگاه.",
+        certifications: "گواهینامه‌ها",
+        certification_singular: "گواهینامه",
+        add_certification: "افزودن گواهینامه",
+        issuing_body: "صادرکننده",
+        badge_image: "تصویر نشان/لوگو (اختیاری)",
+        no_certifications_yet:
+            "هنوز گواهینامه‌ای وجود ندارد. اولین مورد را اضافه کنید.",
+        delete_certification_confirm_title: "این گواهینامه حذف شود؟",
+        delete_certification_confirm_desc: "این عمل قابل بازگشت نیست.",
         editor_bold: "درشت",
         editor_strong: "تأکید (Strong)",
         editor_italic: "کج",
