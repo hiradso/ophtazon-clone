@@ -353,7 +353,7 @@ export default function Create({ categories, brands, stores }) {
                                                                             c.id,
                                                                         ) ===
                                                                         value,
-                                                                )?.name.en
+                                                                )?.name
                                                             }
                                                         </span>
                                                     ) : (
@@ -400,7 +400,7 @@ export default function Create({ categories, brands, stores }) {
                                                                             c.id,
                                                                         ) ===
                                                                         value,
-                                                                )?.name.en
+                                                                )?.name
                                                             }
                                                         </span>
                                                     ) : (

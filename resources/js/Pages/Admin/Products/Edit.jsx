@@ -398,7 +398,7 @@ export default function Edit({
                                                                             c.id,
                                                                         ) ===
                                                                         value,
-                                                                )?.name.en
+                                                                )?.name
                                                             }
                                                         </span>
                                                     ) : (
@@ -445,7 +445,7 @@ export default function Edit({
                                                                             c.id,
                                                                         ) ===
                                                                         value,
-                                                                )?.name.en
+                                                                )?.name
                                                             }
                                                         </span>
                                                     ) : (
