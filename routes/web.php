@@ -38,31 +38,6 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 // آدرس ریشه بدون زبان (/) به نسخه‌ی انگلیسی هدایت می‌شود
 Route::redirect('/', '/en', 301);
 
-// موقتی — فقط برای تست دستی فرآیند خرید با یه اکانت مشتری واقعی، بدون
-// نیاز به وارد کردن پسورد. بعد از تست حتماً حذف می‌شود.
-Route::get('/__dev-login-customer', function () {
-    $user = \App\Models\User::firstOrCreate(
-        ['email' => 'test-customer@example.com'],
-        [
-            'name' => 'Test Customer',
-            'password' => bcrypt(str()->random(32)),
-            'role' => \App\Enums\UserRole::Customer,
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ],
-    );
-    \Illuminate\Support\Facades\Auth::login($user);
-    return redirect('/en');
-});
-
-// موقتی — فقط برای تایید اینکه سفارش تستی تو پنل ادمین درست نمایش داده
-// می‌شه. بعد از تست حتماً حذف می‌شود.
-Route::get('/__dev-login-admin', function () {
-    $admin = \App\Models\User::where('role', \App\Enums\UserRole::Admin)->firstOrFail();
-    \Illuminate\Support\Facades\Auth::login($admin);
-    return redirect('/admin/orders');
-});
-
 /*
 |--------------------------------------------------------------------------
 | سایت عمومی — همه با پیشوند زبان (/en, /fr, /fa)
