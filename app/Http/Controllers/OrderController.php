@@ -64,12 +64,17 @@ class OrderController extends Controller
             $cartItems = $cart->items()->with('product')->lockForUpdate()->get();
 
             foreach ($cartItems as $item) {
+                // نکته: $item->product->title از طریق getter جادویی همین الان
+                // به رشته‌ی locale فعلی resolve شده — پس ['en'] زدن روش باعث
+                // خطای «Cannot access offset of type string on string» می‌شه.
+                // برای گرفتن ترجمه‌ی انگلیسی صریح باید از getTranslation
+                // استفاده کرد.
                 if ($item->product->status !== ProductStatus::Available) {
-                    throw new \RuntimeException("\"{$item->product->title['en']}\" is no longer available.");
+                    throw new \RuntimeException("\"{$item->product->getTranslation('title', 'en')}\" is no longer available.");
                 }
 
                 if ($item->product->stock_quantity < $item->quantity) {
-                    throw new \RuntimeException("\"{$item->product->title['en']}\" only has {$item->product->stock_quantity} unit(s) left.");
+                    throw new \RuntimeException("\"{$item->product->getTranslation('title', 'en')}\" only has {$item->product->stock_quantity} unit(s) left.");
                 }
             }
 
@@ -97,8 +102,12 @@ class OrderController extends Controller
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'product_reference_snapshot' => $product->reference,
-                    'product_title_snapshot' => $product->title,
-                    'product_description_snapshot' => $product->description,
+                    // مشابه نکته‌ی بالا: product_title_snapshot/description
+                    // روی OrderItem خودشون translatable-اند (JSON چندزبانه)،
+                    // پس باید آبجکت کامل ترجمه‌ها ذخیره بشه، نه رشته‌ی
+                    // resolve‌شده‌ی locale فعلی.
+                    'product_title_snapshot' => $product->getTranslations('title'),
+                    'product_description_snapshot' => $product->getTranslations('description'),
                     'product_image_snapshot' => $product->images->first()?->url,
                     'product_condition_snapshot' => $product->condition->value,
                     'unit_price' => $product->effective_price,

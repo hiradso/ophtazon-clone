@@ -97,7 +97,7 @@ class CartController extends Controller
         if ($requestedQuantity > $product->stock_quantity) {
             return back()->with(
                 'error',
-                "Only {$product->stock_quantity} unit(s) of \"{$product->title['en']}\" are available."
+                "Only {$product->stock_quantity} unit(s) of \"{$product->getTranslation('title', 'en')}\" are available."
             );
         }
 

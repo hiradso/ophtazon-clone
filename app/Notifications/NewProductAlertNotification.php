@@ -23,9 +23,9 @@ class NewProductAlertNotification extends Notification
         return (new MailMessage)
             ->subject('New listing matches your alert')
             ->greeting('A new item just went live!')
-            ->line($this->product->title['en'] ?? $this->product->reference)
+            ->line($this->product->getTranslation('title', 'en') ?: $this->product->reference)
             ->line("Price: {$this->product->price} {$this->product->currency}")
-            ->action('View listing', route('products.show', $this->product->slug))
+            ->action('View listing', route('products.show', ['locale' => 'en', 'product' => $this->product->slug]))
             ->line('You are receiving this because you set up a product alert on Ophtazon.');
     }
 }
