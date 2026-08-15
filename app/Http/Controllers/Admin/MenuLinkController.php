@@ -32,6 +32,7 @@ class MenuLinkController extends Controller
         return Inertia::render('Admin/MenuLinks/Create', [
             'pageOptions' => Page::orderBy('title')->get(['id', 'title', 'slug']),
             'parentOptions' => MenuLink::whereNull('parent_id')->orderBy('location')->orderBy('sort_order')->get(['id', 'label', 'location']),
+            'footerGroupOptions' => $this->footerGroupOptions(),
         ]);
     }
 
@@ -56,7 +57,23 @@ class MenuLinkController extends Controller
                 ->orderBy('location')
                 ->orderBy('sort_order')
                 ->get(['id', 'label', 'location']),
+            'footerGroupOptions' => $this->footerGroupOptions(),
         ]);
+    }
+
+    /**
+     * نام ستون‌های فوتری که همین الان توی دیتابیس استفاده شدن — برای اینکه
+     * تو فرم به‌جای تایپ آزاد و مستعد اشتباه‌تایپی، از یه دراپ‌داون انتخاب
+     * بشن (به‌علاوه‌ی گزینه‌ی «افزودن ستون جدید» که تو فرانت‌اند اضافه می‌شه).
+     */
+    private function footerGroupOptions()
+    {
+        return MenuLink::where('location', 'footer')
+            ->whereNull('parent_id')
+            ->get()
+            ->groupBy(fn ($link) => $link->getTranslation('group_label', 'en'))
+            ->map(fn ($links) => $links->first()->getTranslations('group_label'))
+            ->values();
     }
 
     public function update(UpdateMenuLinkRequest $request, MenuLink $menuLink): RedirectResponse

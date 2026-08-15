@@ -14,14 +14,26 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { at } from "@/lib/admin-i18n";
+import { t } from "@/lib/translate";
 import { stripHtml } from "@/lib/richText";
 
-export default function Edit({ menuLink, pageOptions, parentOptions }) {
+export default function Edit({
+    menuLink,
+    pageOptions,
+    parentOptions,
+    footerGroupOptions,
+}) {
     const { locale: uiLocale } = usePage().props;
     const [linkType, setLinkType] = useState(
         menuLink.page_id ? "existing_page" : "custom_url",
+    );
+    const [footerColumnMode, setFooterColumnMode] = useState(
+        menuLink.group_label?.en &&
+            footerGroupOptions.some((g) => g.en === menuLink.group_label.en)
+            ? "existing"
+            : "new",
     );
 
     const { data, setData, put, processing, errors } = useForm({
@@ -127,6 +139,102 @@ export default function Edit({ menuLink, pageOptions, parentOptions }) {
                                     </Select>
                                 </div>
 
+                                {data.location === "footer" && (
+                                    <div className="space-y-1.5">
+                                        <Label>
+                                            {at(
+                                                "footer_column_select",
+                                                uiLocale,
+                                            )}
+                                        </Label>
+                                        <Select
+                                            value={
+                                                footerColumnMode === "new"
+                                                    ? "__new__"
+                                                    : (data.group_label.en ??
+                                                      "")
+                                            }
+                                            onValueChange={(value) => {
+                                                if (value === "__new__") {
+                                                    setFooterColumnMode(
+                                                        "new",
+                                                    );
+                                                    setData("group_label", {
+                                                        en: "",
+                                                        fr: "",
+                                                        fa: "",
+                                                    });
+                                                    return;
+                                                }
+                                                setFooterColumnMode(
+                                                    "existing",
+                                                );
+                                                const match =
+                                                    footerGroupOptions.find(
+                                                        (g) => g.en === value,
+                                                    );
+                                                setData("group_label", {
+                                                    en: match?.en ?? "",
+                                                    fr: match?.fr ?? "",
+                                                    fa: match?.fa ?? "",
+                                                });
+                                            }}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue>
+                                                    {(value) =>
+                                                        value === "__new__"
+                                                            ? at(
+                                                                  "footer_column_new_option",
+                                                                  uiLocale,
+                                                              )
+                                                            : value
+                                                              ? t(
+                                                                    footerGroupOptions.find(
+                                                                        (g) =>
+                                                                            g.en ===
+                                                                            value,
+                                                                    ) ?? {},
+                                                                    uiLocale,
+                                                                )
+                                                              : at(
+                                                                    "footer_column_select",
+                                                                    uiLocale,
+                                                                )
+                                                    }
+                                                </SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {footerGroupOptions.map(
+                                                    (group) => (
+                                                        <SelectItem
+                                                            key={group.en}
+                                                            value={group.en}
+                                                        >
+                                                            {t(
+                                                                group,
+                                                                uiLocale,
+                                                            )}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
+                                                <SelectItem value="__new__">
+                                                    {at(
+                                                        "footer_column_new_option",
+                                                        uiLocale,
+                                                    )}
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <p className="text-xs text-muted-foreground">
+                                            {at(
+                                                "footer_column_select_hint",
+                                                uiLocale,
+                                            )}
+                                        </p>
+                                    </div>
+                                )}
+
                                 <Tabs defaultValue="en">
                                     <TabsList>
                                         <TabsTrigger value="en">
@@ -149,13 +257,14 @@ export default function Edit({ menuLink, pageOptions, parentOptions }) {
                                                 locale === "fa" ? "rtl" : "ltr"
                                             }
                                         >
-                                            {data.location === "footer" && (
+                                            {data.location === "footer" &&
+                                                footerColumnMode === "new" && (
                                                 <div className="space-y-1.5">
                                                     <Label
                                                         htmlFor={`group_label_${locale}`}
                                                     >
                                                         {at(
-                                                            "footer_column",
+                                                            "footer_column_new_name",
                                                             uiLocale,
                                                         )}{" "}
                                                         {locale !== "en" &&
@@ -247,41 +356,72 @@ export default function Edit({ menuLink, pageOptions, parentOptions }) {
 
                                 <div className="space-y-1.5">
                                     <Label>{at("link_type", uiLocale)}</Label>
-                                    <Select
-                                        value={linkType}
-                                        onValueChange={(value) => {
-                                            setLinkType(value);
-                                            setData({
-                                                ...data,
-                                                url: "",
-                                                page_id: "",
-                                            });
-                                        }}
-                                    >
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue>
-                                                {(value) =>
-                                                    value === "custom_url"
-                                                        ? at(
-                                                              "custom_url",
-                                                              uiLocale,
-                                                          )
-                                                        : at(
-                                                              "existing_page",
-                                                              uiLocale,
-                                                          )
-                                                }
-                                            </SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="custom_url">
-                                                {at("custom_url", uiLocale)}
-                                            </SelectItem>
-                                            <SelectItem value="existing_page">
-                                                {at("existing_page", uiLocale)}
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="grid gap-2 sm:grid-cols-2">
+                                        {[
+                                            {
+                                                value: "existing_page",
+                                                title: at(
+                                                    "existing_page",
+                                                    uiLocale,
+                                                ),
+                                                desc: at(
+                                                    "existing_page_desc",
+                                                    uiLocale,
+                                                ),
+                                            },
+                                            {
+                                                value: "custom_url",
+                                                title: at(
+                                                    "custom_url",
+                                                    uiLocale,
+                                                ),
+                                                desc: at(
+                                                    "custom_url_desc",
+                                                    uiLocale,
+                                                ),
+                                            },
+                                        ].map((option) => (
+                                            <button
+                                                key={option.value}
+                                                type="button"
+                                                onClick={() => {
+                                                    setLinkType(option.value);
+                                                    setData({
+                                                        ...data,
+                                                        url: "",
+                                                        page_id: "",
+                                                    });
+                                                }}
+                                                className={`flex items-start gap-2 rounded-lg border p-3 text-start transition-colors ${
+                                                    linkType === option.value
+                                                        ? "border-primary bg-primary/5"
+                                                        : "border-border hover:bg-accent"
+                                                }`}
+                                            >
+                                                <div
+                                                    className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border ${
+                                                        linkType ===
+                                                        option.value
+                                                            ? "border-primary bg-primary text-primary-foreground"
+                                                            : "border-muted-foreground"
+                                                    }`}
+                                                >
+                                                    {linkType ===
+                                                        option.value && (
+                                                        <Check className="size-3" />
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-medium text-foreground">
+                                                        {option.title}
+                                                    </p>
+                                                    <p className="mt-0.5 text-xs text-muted-foreground">
+                                                        {option.desc}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {linkType === "custom_url" ? (
@@ -301,6 +441,14 @@ export default function Edit({ menuLink, pageOptions, parentOptions }) {
                                                 {errors.url}
                                             </p>
                                         )}
+                                        <p className="text-xs text-muted-foreground">
+                                            {data.url
+                                                ? `${at("link_preview", uiLocale)}: ${data.url}`
+                                                : at(
+                                                      "link_preview_url_missing",
+                                                      uiLocale,
+                                                  )}
+                                        </p>
                                     </div>
                                 ) : (
                                     <div className="space-y-1.5">
@@ -351,6 +499,20 @@ export default function Edit({ menuLink, pageOptions, parentOptions }) {
                                                 {errors.page_id}
                                             </p>
                                         )}
+                                        <p className="text-xs text-muted-foreground">
+                                            {data.page_id
+                                                ? `${at("link_preview", uiLocale)}: /pages/${
+                                                      pageOptions.find(
+                                                          (p) =>
+                                                              String(p.id) ===
+                                                              data.page_id,
+                                                      )?.slug
+                                                  }`
+                                                : at(
+                                                      "link_preview_page_missing",
+                                                      uiLocale,
+                                                  )}
+                                        </p>
                                     </div>
                                 )}
 
