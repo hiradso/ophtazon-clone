@@ -2,6 +2,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { tt } from "@/lib/i18n";
 import { t } from "@/lib/translate";
+import { stripHtml } from "@/lib/richText";
 
 export default function Index({ categorySections, uncategorizedProducts, pages }) {
     const { locale } = usePage().props;
@@ -139,7 +140,9 @@ export default function Index({ categorySections, uncategorizedProducts, pages }
                                             })}
                                             className="text-sm text-muted-foreground hover:text-foreground hover:underline"
                                         >
-                                            {t(page.title, locale)}
+                                            {stripHtml(
+                                                t(page.title, locale),
+                                            )}
                                         </Link>
                                     </li>
                                 ))}
