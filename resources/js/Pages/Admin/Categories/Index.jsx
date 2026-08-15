@@ -121,7 +121,17 @@ export default function Index({ categories }) {
 
                                     {categories.map((category) => (
                                         <TableRow key={category.id}>
-                                            <TableCell className="align-middle font-medium">
+                                            <TableCell
+                                                className="align-middle font-medium"
+                                                style={{
+                                                    paddingInlineStart: `${1 + category.depth * 1.5}rem`,
+                                                }}
+                                            >
+                                                {category.depth > 0 && (
+                                                    <span className="me-1.5 text-muted-foreground">
+                                                        └
+                                                    </span>
+                                                )}
                                                 {category.name.en}
                                             </TableCell>
                                             <TableCell className="align-middle text-muted-foreground">

@@ -15,7 +15,23 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
+            'parent_id' => [
+                'nullable',
+                'integer',
+                'exists:categories,id',
+                function ($attribute, $value, $fail) {
+                    if (! $value) {
+                        return;
+                    }
+
+                    $parent = Category::find($value);
+
+                    // حداکثر ۳ سطح مجاز: دسته (۰) → زیردسته (۱) → نوع دستگاه (۲)
+                    if ($parent && $parent->depth() >= 2) {
+                        $fail('Categories can only be nested up to 3 levels deep.');
+                    }
+                },
+            ],
             'name' => ['required', 'array'],
             'name.en' => ['required', 'string', 'max:255'],
             'name.fr' => ['nullable', 'string', 'max:255'],

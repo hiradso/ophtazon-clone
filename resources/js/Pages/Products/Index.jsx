@@ -191,6 +191,7 @@ export default function Index({
                                     key={category.id}
                                     value={category.slug}
                                 >
+                                    {"— ".repeat(category.depth)}
                                     {t(category.name, locale)}
                                 </SelectItem>
                             ))}

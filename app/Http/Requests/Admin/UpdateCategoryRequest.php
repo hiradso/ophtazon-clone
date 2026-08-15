@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +15,8 @@ class UpdateCategoryRequest extends FormRequest
 
     public function rules(): array
     {
-        $categoryId = $this->route('category')->id;
+        $category = $this->route('category');
+        $categoryId = $category->id;
 
         return [
             'parent_id' => [
@@ -22,6 +24,26 @@ class UpdateCategoryRequest extends FormRequest
                 'integer',
                 'exists:categories,id',
                 Rule::notIn([$categoryId]),
+                function ($attribute, $value, $fail) use ($category) {
+                    if (! $value) {
+                        return;
+                    }
+
+                    // جلوگیری از چرخه: نمی‌شه یکی از فرزندان/نوه‌های خودِ
+                    // دسته رو به‌عنوان والد جدیدش انتخاب کرد.
+                    if (in_array((int) $value, $category->descendantIds(), true)) {
+                        $fail('A category cannot be nested under itself or one of its own subcategories.');
+
+                        return;
+                    }
+
+                    $parent = Category::find($value);
+
+                    // حداکثر ۳ سطح مجاز: دسته (۰) → زیردسته (۱) → نوع دستگاه (۲)
+                    if ($parent && $parent->depth() >= 2) {
+                        $fail('Categories can only be nested up to 3 levels deep.');
+                    }
+                },
             ],
             'name' => ['required', 'array'],
             'name.en' => ['required', 'string', 'max:255'],

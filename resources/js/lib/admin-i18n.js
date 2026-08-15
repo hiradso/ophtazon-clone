@@ -184,6 +184,8 @@ const adminTranslations = {
         delete_category_confirm_desc: "This action cannot be undone.",
         icon_url: "Icon URL (optional)",
         select_parent: "No parent (top-level)",
+        category_hierarchy_hint:
+            "Categories can be nested up to 3 levels: Category → Subcategory → Device Type.",
         editor_bold: "Bold",
         editor_strong: "Strong",
         editor_italic: "Italic",
@@ -617,6 +619,8 @@ const adminTranslations = {
         delete_category_confirm_desc: "این عملیات قابل بازگشت نیست.",
         icon_url: "آدرس آیکون (اختیاری)",
         select_parent: "بدون والد (سطح اصلی)",
+        category_hierarchy_hint:
+            "دسته‌بندی‌ها می‌تونن تا ۳ سطح تودرتو بشن: دسته → زیردسته → نوع دستگاه.",
         editor_bold: "درشت",
         editor_strong: "تأکید (Strong)",
         editor_italic: "کج",

@@ -16,11 +16,13 @@ class CategoryController extends Controller
     {
         $this->authorize('viewAny', Category::class);
 
+        $categories = Category::query()
+            ->withCount('products')
+            ->orderBy('sort_order')
+            ->get();
+
         return Inertia::render('Admin/Categories/Index', [
-            'categories' => Category::query()
-                ->withCount('products')
-                ->orderBy('sort_order')
-                ->get(),
+            'categories' => Category::treeOrdered($categories),
         ]);
     }
 
@@ -29,7 +31,7 @@ class CategoryController extends Controller
         $this->authorize('create', Category::class);
 
         return Inertia::render('Admin/Categories/Create', [
-            'parentOptions' => Category::whereNull('parent_id')->get(['id', 'name']),
+            'parentOptions' => $this->parentOptions(),
         ]);
     }
 
@@ -48,9 +50,7 @@ class CategoryController extends Controller
 
         return Inertia::render('Admin/Categories/Edit', [
             'category' => $category,
-            'parentOptions' => Category::whereNull('parent_id')
-                ->where('id', '!=', $category->id)
-                ->get(['id', 'name']),
+            'parentOptions' => $this->parentOptions($category),
         ]);
     }
 
@@ -76,5 +76,25 @@ class CategoryController extends Controller
         return redirect()
             ->route('admin.categories.index')
             ->with('success', 'category_deleted');
+    }
+
+    /**
+     * دسته‌هایی که می‌توان به‌عنوان والد انتخاب کرد — به ترتیب درختی
+     * (برای تورفتگی در UI) و بدون دسته‌های سطح ۳ (که چون خودشان
+     * پایین‌ترین سطح مجازند، نمی‌توانند فرزند بگیرند). موقع ویرایش،
+     * خود دسته و همه‌ی فرزندان/نوه‌هایش هم حذف می‌شوند تا چرخه در
+     * سلسله‌مراتب ایجاد نشود.
+     */
+    private function parentOptions(?Category $excluding = null): array
+    {
+        $all = Category::orderBy('sort_order')->get(['id', 'name', 'parent_id']);
+        $ordered = Category::treeOrdered($all);
+
+        $excludedIds = $excluding ? $excluding->descendantIds() : [];
+
+        return collect($ordered)
+            ->reject(fn ($category) => $category->depth >= 2 || in_array($category->id, $excludedIds, true))
+            ->values()
+            ->all();
     }
 }

@@ -192,11 +192,20 @@ export default function Create({ parentOptions }) {
                                                     key={parent.id}
                                                     value={String(parent.id)}
                                                 >
+                                                    {"— ".repeat(
+                                                        parent.depth,
+                                                    )}
                                                     {parent.name.en}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <p className="text-xs text-muted-foreground">
+                                        {at(
+                                            "category_hierarchy_hint",
+                                            uiLocale,
+                                        )}
+                                    </p>
                                 </div>
 
                                 <div className="space-y-1.5">

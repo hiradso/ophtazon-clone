@@ -19,7 +19,14 @@ class ProductController extends Controller
             ->where('status', ProductStatus::Available)
             ->with(['category', 'brand', 'store', 'images'])
             ->when($request->filled('category'), function ($query) use ($request) {
-                $query->whereHas('category', fn($q) => $q->where('slug', $request->input('category')));
+                // انتخاب یک دسته‌ی والد باید محصولات زیردسته‌ها/نوع
+                // دستگاه‌های زیرمجموعه‌اش رو هم شامل بشه، نه فقط تطبیق
+                // دقیق روی همون یک اسلاگ.
+                $category = Category::where('slug', $request->input('category'))->first();
+
+                if ($category) {
+                    $query->whereIn('category_id', $category->descendantIds());
+                }
             })
             ->when($request->filled('brand'), function ($query) use ($request) {
                 $query->where('brand_id', $request->input('brand'));
@@ -44,9 +51,13 @@ class ProductController extends Controller
             ->paginate(12)
             ->withQueryString();
 
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get(['id', 'name', 'slug', 'parent_id']);
+
         return Inertia::render('Products/Index', [
             'products' => $products,
-            'categories' => Category::where('is_active', true)->orderBy('sort_order')->get(['id', 'name', 'slug']),
+            'categories' => Category::treeOrdered($categories),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(['id', 'name']),
             'stores' => Store::where('is_active', true)->get(['id', 'name']),
             'filters' => $request->only(['category', 'brand', 'store', 'condition', 'min_price', 'max_price', 'q']),
