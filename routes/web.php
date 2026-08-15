@@ -28,6 +28,7 @@ use App\Http\Controllers\PageController as PublicPageController;
 use App\Http\Controllers\Admin\MenuLinkController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\HtmlSitemapController;
 use App\Http\Controllers\LocaleController;
 
 // فایل‌های ویژه‌ی سئو — بدون پیشوند زبان، همیشه در ریشه‌ی دامنه
@@ -80,6 +81,8 @@ Route::prefix('{locale}')
         Route::get('/products/{product:slug}', [ControllersProductController::class, 'show'])->name('products.show');
 
         Route::get('/pages/{page:slug}', [PublicPageController::class, 'show'])->name('pages.show');
+
+        Route::get('/sitemap', [HtmlSitemapController::class, 'index'])->name('sitemap.html');
 
         Route::post('/contact-requests', [ContactRequestController::class, 'store'])
             ->middleware('throttle:5,1')

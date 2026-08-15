@@ -147,9 +147,18 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-6 border-t border-border pt-4 text-center text-xs text-muted-foreground">
-                    &copy; {new Date().getFullYear()} {siteSettings.site_name}.{" "}
-                    {tt("all_rights_reserved", locale)}
+                <div className="mt-6 flex flex-col items-center gap-2 border-t border-border pt-4 text-center text-xs text-muted-foreground sm:flex-row sm:justify-between">
+                    <span>
+                        &copy; {new Date().getFullYear()}{" "}
+                        {siteSettings.site_name}.{" "}
+                        {tt("all_rights_reserved", locale)}
+                    </span>
+                    <a
+                        href={route("sitemap.html", { locale })}
+                        className="hover:text-foreground hover:underline"
+                    >
+                        {tt("sitemap", locale)}
+                    </a>
                 </div>
             </div>
         </footer>
