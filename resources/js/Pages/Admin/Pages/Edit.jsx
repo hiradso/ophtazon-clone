@@ -1,7 +1,6 @@
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -264,16 +263,13 @@ export default function Edit({ page, parentOptions }) {
                                 </div>
 
                                 <div className="space-y-2.5">
-                                    <Label htmlFor="slug">
-                                        {at("slug", uiLocale)}
-                                    </Label>
-                                    <Input
-                                        id="slug"
-                                        value={data.slug}
-                                        onChange={(e) =>
-                                            setData("slug", e.target.value)
-                                        }
-                                    />
+                                    <Label>{at("slug", uiLocale)}</Label>
+                                    <div
+                                        className="rounded-md border border-border bg-muted px-3 py-2 font-mono text-sm text-muted-foreground"
+                                        dir="ltr"
+                                    >
+                                        {data.slug || "—"}
+                                    </div>
                                     {errors.slug && (
                                         <p className="text-sm text-destructive">
                                             {errors.slug}
@@ -283,6 +279,7 @@ export default function Edit({ page, parentOptions }) {
                                         className="text-xs text-muted-foreground"
                                         dir="ltr"
                                     >
+                                        {at("slug_locked_hint", uiLocale)}{" "}
                                         {at("slug_hint_prefix", uiLocale)}
                                         {data.slug}
                                     </p>

@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -19,6 +19,7 @@ import RichTextEditor from "@/Components/RichTextEditor";
 import MediaPicker from "@/Components/MediaPicker";
 import { at } from "@/lib/admin-i18n";
 import { stripHtml } from "@/lib/richText";
+import { slugify } from "@/lib/slugify";
 
 const LOCALE_LABELS = {
     en: "English",
@@ -39,6 +40,13 @@ export default function Create({ parentOptions }) {
         meta_description: { en: "", fr: "", fa: "" },
         is_published: true,
     });
+
+    // اسلاگ همیشه خودکار از روی عنوان انگلیسی ساخته می‌شه — تایپ دستی
+    // باعث می‌شد ادمین‌های غیرفنی اسلاگ‌های اشتباه (بدون خط تیره، حروف
+    // بزرگ، فاصله) بسازن که با alpha_dash بک‌اند رد می‌شد.
+    useEffect(() => {
+        setData("slug", slugify(stripHtml(data.title.en)));
+    }, [data.title.en]);
 
     const submit = (e) => {
         e.preventDefault();
@@ -256,17 +264,13 @@ export default function Create({ parentOptions }) {
                                 </div>
 
                                 <div className="space-y-2.5">
-                                    <Label htmlFor="slug">
-                                        {at("slug", uiLocale)}
-                                    </Label>
-                                    <Input
-                                        id="slug"
-                                        value={data.slug}
-                                        onChange={(e) =>
-                                            setData("slug", e.target.value)
-                                        }
-                                        placeholder="about-us"
-                                    />
+                                    <Label>{at("slug", uiLocale)}</Label>
+                                    <div
+                                        className="rounded-md border border-border bg-muted px-3 py-2 font-mono text-sm text-muted-foreground"
+                                        dir="ltr"
+                                    >
+                                        {data.slug || "—"}
+                                    </div>
                                     {errors.slug && (
                                         <p className="text-sm text-destructive">
                                             {errors.slug}
@@ -276,6 +280,7 @@ export default function Create({ parentOptions }) {
                                         className="text-xs text-muted-foreground"
                                         dir="ltr"
                                     >
+                                        {at("slug_auto_hint", uiLocale)}{" "}
                                         {at("slug_hint_prefix", uiLocale)}
                                         {data.slug || "..."}
                                     </p>

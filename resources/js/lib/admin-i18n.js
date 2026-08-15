@@ -390,6 +390,9 @@ const adminTranslations = {
             "will be permanently deleted. This cannot be undone.",
         page_details: "Page Details",
         slug_hint_prefix: "Will be available at /pages/",
+        slug_auto_hint: "Generated automatically from the English title.",
+        slug_locked_hint:
+            "Can't be changed after creation, to avoid breaking existing links.",
         image_optional: "Image (optional)",
         display_style: "Display style",
         simple_banner: "Simple banner",
@@ -820,6 +823,9 @@ const adminTranslations = {
             "برای همیشه حذف خواهد شد. این عملیات قابل بازگشت نیست.",
         page_details: "جزئیات صفحه",
         slug_hint_prefix: "در آدرس /pages/ در دسترس خواهد بود:",
+        slug_auto_hint: "به‌صورت خودکار از روی عنوان انگلیسی ساخته می‌شود.",
+        slug_locked_hint:
+            "بعد از ساخته‌شدن صفحه قابل تغییر نیست، تا لینک‌های موجود خراب نشن.",
         image_optional: "تصویر (اختیاری)",
         display_style: "سبک نمایش",
         simple_banner: "بنر ساده",
