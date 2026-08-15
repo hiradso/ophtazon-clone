@@ -38,6 +38,13 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 // آدرس ریشه بدون زبان (/) به نسخه‌ی انگلیسی هدایت می‌شود
 Route::redirect('/', '/en', 301);
 
+// موقتی — فقط برای تست فیکس دراپ‌داون برند/فروشگاه. بعد از تست حتماً حذف می‌شود.
+Route::get('/__dev-login-admin', function () {
+    $admin = \App\Models\User::where('role', \App\Enums\UserRole::Admin)->firstOrFail();
+    \Illuminate\Support\Facades\Auth::login($admin);
+    return redirect('/admin/products/2/edit');
+});
+
 /*
 |--------------------------------------------------------------------------
 | سایت عمومی — همه با پیشوند زبان (/en, /fr, /fa)
