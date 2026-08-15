@@ -33,6 +33,8 @@ use Spatie\Translatable\HasTranslations;
     'meta_title',
     'meta_description',
     'og_image',
+    'brochure_path',
+    'brochure_original_name',
 ])]
 class Product extends Model
 {

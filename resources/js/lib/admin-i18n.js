@@ -92,6 +92,11 @@ const adminTranslations = {
         social_share_image: "Social share image (optional)",
         social_share_image_hint:
             "Shown when this product is shared on social media. If left empty, the first product photo will be used automatically.",
+        product_brochure: "Product Brochure (PDF)",
+        product_brochure_hint:
+            "Optional downloadable spec sheet or brochure. Customers will see a download link on the product page.",
+        no_brochure_uploaded: "No brochure uploaded yet.",
+        remove_brochure_confirm: "Remove this brochure?",
         add_product: "Add Product",
         edit_product: "Edit Product",
         save_product: "Save Product",
@@ -528,6 +533,11 @@ const adminTranslations = {
         social_share_image: "تصویر اشتراک‌گذاری اجتماعی (اختیاری)",
         social_share_image_hint:
             "هنگام اشتراک‌گذاری این محصول در شبکه‌های اجتماعی نمایش داده می‌شود. اگر خالی بماند، از اولین عکس محصول استفاده می‌شود.",
+        product_brochure: "بروشور محصول (PDF)",
+        product_brochure_hint:
+            "برگه‌ی مشخصات یا بروشور قابل‌دانلود (اختیاری). مشتری‌ها یه لینک دانلود تو صفحه‌ی محصول می‌بینن.",
+        no_brochure_uploaded: "هنوز بروشوری آپلود نشده.",
+        remove_brochure_confirm: "این بروشور حذف بشه؟",
         add_product: "افزودن محصول",
         edit_product: "ویرایش محصول",
         save_product: "ذخیره محصول",

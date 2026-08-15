@@ -27,6 +27,7 @@ const translations = {
         sitemap_static_pages: "Pages",
         sitemap_home: "Home",
         sitemap_all_products: "All products",
+        download_brochure: "Download brochure (PDF)",
         hero_default_title: "New & used ophthalmic equipment",
         hero_search_placeholder:
             "Search for an OCT, slit lamp, autorefractor...",
@@ -270,6 +271,7 @@ const translations = {
         sitemap_static_pages: "Pages",
         sitemap_home: "Accueil",
         sitemap_all_products: "Tous les produits",
+        download_brochure: "Télécharger la brochure (PDF)",
         hero_default_title: "Matériel ophtalmique neuf et d'occasion",
         hero_search_placeholder:
             "Rechercher un OCT, une lampe à fente, un autoréfractomètre...",
@@ -516,6 +518,7 @@ const translations = {
         sitemap_static_pages: "صفحات",
         sitemap_home: "صفحه اصلی",
         sitemap_all_products: "همه‌ی محصولات",
+        download_brochure: "دانلود بروشور (PDF)",
         hero_default_title: "تجهیزات چشم‌پزشکی نو و دست‌دوم",
         hero_search_placeholder: "جستجوی OCT، اسلیت‌لمپ، اتورفرکتور...",
         search: "جستجو",

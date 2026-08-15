@@ -31,6 +31,7 @@ import {
     MapPin,
     ShieldCheck,
     Flame,
+    Download,
 } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { t } from "@/lib/translate";
@@ -309,6 +310,19 @@ export default function Show({ product, relatedProducts }) {
                                 </Button>
                             </motion.div>
                         </div>
+
+                        {product.brochure_path && (
+                            <a
+                                href={`/storage/${product.brochure_path}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download={product.brochure_original_name}
+                                className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground hover:underline"
+                            >
+                                <Download className="size-4" />
+                                {tt("download_brochure", locale)}
+                            </a>
+                        )}
 
                         <Separator className="my-6" />
 

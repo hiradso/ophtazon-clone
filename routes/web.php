@@ -125,6 +125,10 @@ Route::middleware(['auth', 'role:admin,staff'])
             ->name('products.images.destroy');
         Route::put('products/{product}/countries', [ProductController::class, 'syncCountries'])
             ->name('products.countries.sync');
+        Route::post('products/{product}/brochure', [ProductController::class, 'storeBrochure'])
+            ->name('products.brochure.store');
+        Route::delete('products/{product}/brochure', [ProductController::class, 'destroyBrochure'])
+            ->name('products.brochure.destroy');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('brands', BrandController::class)->except(['show']);
         Route::resource('stores', StoreController::class)->except(['show']);

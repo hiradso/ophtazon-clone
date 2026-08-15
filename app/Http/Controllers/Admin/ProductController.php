@@ -128,6 +128,45 @@ class ProductController extends Controller
         return back()->with('success', 'product_image_removed');
     }
 
+    public function storeBrochure(Request $request, Product $product): RedirectResponse
+    {
+        $this->authorize('update', $product);
+
+        $request->validate([
+            'brochure' => ['required', 'file', 'mimes:pdf', 'max:10240'],
+        ]);
+
+        if ($product->brochure_path) {
+            Storage::disk('public')->delete($product->brochure_path);
+        }
+
+        $file = $request->file('brochure');
+        $path = $file->store('brochures', 'public');
+
+        $product->update([
+            'brochure_path' => $path,
+            'brochure_original_name' => $file->getClientOriginalName(),
+        ]);
+
+        return back()->with('success', 'product_brochure_uploaded');
+    }
+
+    public function destroyBrochure(Product $product): RedirectResponse
+    {
+        $this->authorize('update', $product);
+
+        if ($product->brochure_path) {
+            Storage::disk('public')->delete($product->brochure_path);
+        }
+
+        $product->update([
+            'brochure_path' => null,
+            'brochure_original_name' => null,
+        ]);
+
+        return back()->with('success', 'product_brochure_removed');
+    }
+
     public function syncCountries(Request $request, Product $product): RedirectResponse
     {
         $this->authorize('update', $product);

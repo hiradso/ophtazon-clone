@@ -17,7 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, ArrowRight, Trash2, Tag } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trash2, Tag, FileText } from "lucide-react";
 import MediaPicker from "@/Components/MediaPicker";
 import {
     getDiscountedPrice,
@@ -937,6 +937,9 @@ export default function Edit({
                         uiLocale={uiLocale}
                     />
 
+                    {/* بروشور PDF — فرم مستقل دیگر */}
+                    <ProductBrochure product={product} uiLocale={uiLocale} />
+
                     <div className="flex justify-end gap-3">
                         <Button
                             type="button"
@@ -1011,6 +1014,81 @@ function ProductImages({ product, uiLocale }) {
 
                     {/* کاشی افزودن تصویر جدید — دقیقاً به‌عنوان آخرین آیتم همون گالری */}
                     <MediaPicker value={null} onSelect={addImage} />
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+function ProductBrochure({ product, uiLocale }) {
+    const [processing, setProcessing] = useState(false);
+
+    const upload = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setProcessing(true);
+        router.post(
+            route("admin.products.brochure.store", product.id),
+            { brochure: file },
+            {
+                forceFormData: true,
+                onFinish: () => setProcessing(false),
+            },
+        );
+        e.target.value = "";
+    };
+
+    const remove = () => {
+        if (!confirm(at("remove_brochure_confirm", uiLocale))) return;
+        router.delete(route("admin.products.brochure.destroy", product.id));
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>{at("product_brochure", uiLocale)}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+                <p className="text-xs text-muted-foreground">
+                    {at("product_brochure_hint", uiLocale)}
+                </p>
+
+                {product.brochure_path ? (
+                    <div className="flex items-center justify-between gap-3 rounded-lg border border-border p-3">
+                        <a
+                            href={`/storage/${product.brochure_path}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex min-w-0 items-center gap-2 text-sm text-foreground hover:underline"
+                        >
+                            <FileText className="size-4 shrink-0 text-muted-foreground" />
+                            <span className="truncate">
+                                {product.brochure_original_name}
+                            </span>
+                        </a>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={remove}
+                        >
+                            <Trash2 className="size-4 text-destructive" />
+                        </Button>
+                    </div>
+                ) : (
+                    <p className="text-sm text-muted-foreground">
+                        {at("no_brochure_uploaded", uiLocale)}
+                    </p>
+                )}
+
+                <div>
+                    <Input
+                        type="file"
+                        accept="application/pdf"
+                        disabled={processing}
+                        onChange={upload}
+                    />
                 </div>
             </CardContent>
         </Card>
