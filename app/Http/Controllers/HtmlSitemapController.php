@@ -21,15 +21,21 @@ class HtmlSitemapController extends Controller
             ->orderBy('created_at', 'desc')
             ->get(['id', 'title', 'slug', 'category_id']);
 
+        // نکته‌ی مهم: دسترسی مستقیم به $category->name (getter جادویی)
+        // اسپیشیتی رو مجبور می‌کنه فقط ترجمه‌ی locale فعلی رو برگردونه (یه
+        // رشته‌ی ساده)، در حالی که فرانت‌اند (تابع t()) انتظار آبجکت کامل
+        // {en, fr, fa} رو داره — دقیقاً همون چیزی که وقتی خود مدل مستقیم به
+        // عنوان prop اینرشیا پاس داده می‌شه serialize می‌شه. برای همین اینجا
+        // صریحاً از getTranslations() استفاده می‌کنیم تا آبجکت کامل بمونه.
         $categorySections = $categories->map(function ($category) use ($products) {
             return [
                 'id' => $category->id,
-                'name' => $category->name,
+                'name' => $category->getTranslations('name'),
                 'slug' => $category->slug,
                 'products' => $products
                     ->where('category_id', $category->id)
                     ->map(fn ($product) => [
-                        'title' => $product->title,
+                        'title' => $product->getTranslations('title'),
                         'slug' => $product->slug,
                     ])
                     ->values(),
@@ -39,14 +45,18 @@ class HtmlSitemapController extends Controller
         $uncategorizedProducts = $products
             ->whereNotIn('category_id', $categories->pluck('id'))
             ->map(fn ($product) => [
-                'title' => $product->title,
+                'title' => $product->getTranslations('title'),
                 'slug' => $product->slug,
             ])
             ->values();
 
         $pages = Page::where('is_published', true)
-            ->orderBy('title')
-            ->get(['title', 'slug']);
+            ->orderBy('slug')
+            ->get(['title', 'slug'])
+            ->map(fn ($page) => [
+                'title' => $page->getTranslations('title'),
+                'slug' => $page->slug,
+            ]);
 
         return Inertia::render('Sitemap/Index', [
             'categorySections' => $categorySections,
