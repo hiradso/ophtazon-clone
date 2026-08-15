@@ -55,6 +55,14 @@ Route::get('/__dev-login-customer', function () {
     return redirect('/en');
 });
 
+// موقتی — فقط برای تایید اینکه سفارش تستی تو پنل ادمین درست نمایش داده
+// می‌شه. بعد از تست حتماً حذف می‌شود.
+Route::get('/__dev-login-admin', function () {
+    $admin = \App\Models\User::where('role', \App\Enums\UserRole::Admin)->firstOrFail();
+    \Illuminate\Support\Facades\Auth::login($admin);
+    return redirect('/admin/orders');
+});
+
 /*
 |--------------------------------------------------------------------------
 | سایت عمومی — همه با پیشوند زبان (/en, /fr, /fa)
