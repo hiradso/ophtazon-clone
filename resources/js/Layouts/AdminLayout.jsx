@@ -43,6 +43,7 @@ import {
     FolderTree,
     Award,
     ShieldCheck,
+    Users2,
     Building2,
     ChevronsUpDown,
     ChevronRight,
@@ -158,6 +159,12 @@ const siteContentGroup = {
             icon: Image,
             routeName: "admin.media.index",
             pattern: "admin.media.*",
+        },
+        {
+            labelKey: "team",
+            icon: Users2,
+            routeName: "admin.team-members.index",
+            pattern: "admin.team-members.*",
         },
     ],
 };

@@ -32,6 +32,11 @@ class SitemapController extends Controller
                 'priority' => '0.9',
                 'changefreq' => 'daily',
             ]);
+            $urls->push([
+                'loc' => route('team.index', ['locale' => $locale]),
+                'priority' => '0.5',
+                'changefreq' => 'monthly',
+            ]);
         }
 
         // محصولات موجود

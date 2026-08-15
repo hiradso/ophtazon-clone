@@ -31,6 +31,8 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\HtmlSitemapController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\Admin\TeamMemberController;
+use App\Http\Controllers\TeamController;
 
 // فایل‌های ویژه‌ی سئو — بدون پیشوند زبان، همیشه در ریشه‌ی دامنه
 Route::get('/robots.txt', [RobotsController::class, 'index'])->name('robots');
@@ -83,6 +85,8 @@ Route::prefix('{locale}')
 
         Route::get('/pages/{page:slug}', [PublicPageController::class, 'show'])->name('pages.show');
 
+        Route::get('/team', [TeamController::class, 'index'])->name('team.index');
+
         Route::get('/sitemap', [HtmlSitemapController::class, 'index'])->name('sitemap.html');
 
         Route::post('/contact-requests', [ContactRequestController::class, 'store'])
@@ -133,6 +137,7 @@ Route::middleware(['auth', 'role:admin,staff'])
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('brands', BrandController::class)->except(['show']);
         Route::resource('certifications', CertificationController::class)->except(['show']);
+        Route::resource('team-members', TeamMemberController::class)->except(['show']);
         Route::resource('stores', StoreController::class)->except(['show']);
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::resource('users', UserController::class)->except(['show']);

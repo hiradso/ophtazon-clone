@@ -41,6 +41,14 @@ export default function Index({ categorySections, uncategorizedProducts, pages }
                                     {tt("sitemap_all_products", locale)}
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    href={route("team.index", { locale })}
+                                    className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+                                >
+                                    {tt("our_team", locale)}
+                                </Link>
+                            </li>
                         </ul>
                     </section>
 
